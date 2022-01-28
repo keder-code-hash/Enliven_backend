@@ -1,18 +1,14 @@
-from users.jwtAuth import refresh_acsess_token
-from django.contrib.auth.models import User
+from users.jwtAuth import refresh_acsess_token 
 from django.urls import path
 from django.urls.conf import include
-from rest_framework.urlpatterns import format_suffix_patterns
-import rest_framework
-from . import views
+from rest_framework.urlpatterns import format_suffix_patterns 
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import Users, contactForm,register_view,login_view,custom_log_out,homeView,userProfileView,upDateProfile
+from .views import contactForm,register_view,login_view,custom_log_out,homeView,userProfileView,upDateProfile
 # from django.contrib.auth.views import logout
 
 
-urlpatterns=[ 
-    path('api/', Users.as_view()),
+urlpatterns=[  
     path('register/',register_view,name='register'),
     path('', homeView, name='homePage'),
     path('login/',login_view,name='login'), 
