@@ -1,0 +1,115 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>  
+    <div class="container-fluid mt-7">
+      <div class="row mt-5 ">
+        <div class="col-xl-4 order-xl-1 mb-5 mb-xl-0">
+          <div class="card card-profile shadow ml-5" >
+            <div class="row justify-content-center">
+              <div class="col-lg-offset-2">
+                <div class="card-profile-image "> 
+                  <img src="{{ user.profile_pic_url }}" class="rounded-circle" style="height:200px; width:200px "> 
+                </div>
+              </div>
+            </div>
+            <div class="card-body pt-0 pt-md-4">
+              <h3>
+                {{ user.user_name }}<span class="font-weight-light">,{{ age }}</span>
+              </h3>
+            </div>
+            </div>
+          </div>
+          <br/>
+          <br/>
+        </div>
+        <div class="ml-5 mt-4 col-sm-6 order-xl-2">
+          <div class="card shadow" style="background-color: aliceblue;">
+            <div class="card-header bg-white border-0">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h3 class="mb-0">My account</h3>
+                </div>
+                <div class="col-4 text-right">
+                  <a href="{% url 'updateProfile' %}" class="btn btn-sm btn-primary" >Update</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+                <h6 class="heading-small text-muted mb-4">User information</h6>
+                <div class="pl-lg-4">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group focused">
+                        <label class="form-control-label" for="input-username">Username</label>
+                        <input type="text" id="input-username" readonly class="form-control form-control-alternative" value="{{ user.user_name }}">
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-email">Email address</label>
+                        <input type="email" id="input-email" readonly class="form-control form-control-alternative" value="{{ user.email }}">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group focused">
+                        <label class="form-control-label" for="input-first-name">First name</label>
+                        <input type="text" id="input-first-name"readonly class="form-control form-control-alternative" value="{{ user.first_name }}">
+                      </div>
+                    </div>
+                      <div class="col-lg-6">
+                          <div class="form-group focused">
+                              <label class="form-control-label" for="input-last-name">Last name</label>
+                              <input type="text" id="input-last-name" readonly class="form-control form-control-alternative" value="{{ user.last_name }}">
+                          </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group focused">
+                          <label class="form-control-label" for="date_of_birth">Date of Birth</label>
+                          <input type="text" id="date_of_birth" readonly class="form-control form-control-alternative" value="{{ user.date_of_birth }}">
+                      </div>
+                    </div>
+                      <div class="col-lg-6">
+                        <div class="form-group focused">
+                          <label class="form-control-label" for="ph_no">Phone Number</label>
+                          <input type="text" id="ph_no"readonly class="form-control form-control-alternative" value="{{ user.ph_no }}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="my-4">
+                <!-- Description -->
+                <h6 class="heading-small text-muted mb-4">About me</h6>
+                <div class="pl-lg-4">
+                  <div class="form-group focused">
+                    <label>About Me</label>
+                    <textarea rows="4" readonly class="form-control form-control-alternative" >{{ user.bio }}</textarea>
+                  </div>
+                </div>
+                  <h6 class="heading-small text-muted mb-4">Interests </h6>
+                    <div class="pl-lg-4">
+                      <div class="form-group focused">
+                        <label>Interests</label>
+                        <textarea rows="4" readonly class="form-control form-control-alternative" >{{ user.interests }}</textarea>
+                      </div>
+                    </div>
+            </div>
+          </div>
+        </div>   
+      </div>
+    </div>
+  </div> 
+</body>
+</html>
+
+{% endblock %}
