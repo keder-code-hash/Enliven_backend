@@ -12,7 +12,6 @@ class RegisterForm(forms.Form):
 	user_password=forms.CharField(max_length=20,required=True)
 	user_password_conf=forms.CharField(max_length=20,required=True)
 
-	
 	def clean_emailid(self):
 		cleaned_data=super().clean()
 		emailid=cleaned_data.get('emailid')
@@ -20,6 +19,7 @@ class RegisterForm(forms.Form):
 			msg='Invalid emailid'
 			self.add_error('emailid',msg)
 		return emailid
+
 	def clean(self):
 		cleaned_data =super().clean()
 		passw=cleaned_data.get('user_password')
@@ -30,6 +30,7 @@ class RegisterForm(forms.Form):
 			self.add_error('user_password_conf',msg2)
 			self.add_error('user_password',msg1)
 		return cleaned_data
+
 
 class LogInForm(forms.Form):
 	emailid = forms.CharField(max_length=50,required=True)
@@ -59,6 +60,8 @@ class LogInForm(forms.Form):
 			else:
 				pass
 		return cleaned_data
+
+
 class profileForm(forms.Form):
 	user_name = forms.CharField(max_length=20,required=False)
 	first_name = forms.CharField(max_length=40,required=False)
@@ -67,12 +70,15 @@ class profileForm(forms.Form):
 	bio = forms.CharField(max_length=100,required=False)
 	interests = forms.CharField(max_length=200,required=False)
 	ph_no=forms.CharField(max_length=10,required=False)
+
 	def clean(self):
 		cleaned_data=super().clean()
 		return cleaned_data
 
+
 class resetPassInit(forms.Form):
 	email=forms.EmailField(max_length=200,required=True)
+
 	def clean(self):
 		cleaned_data =super().clean()
 		email=cleaned_data.get('email')
