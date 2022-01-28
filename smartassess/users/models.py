@@ -8,7 +8,7 @@ from django.conf import settings
 import jwt, datetime
 
 
-##createing a custom user manager for managing the model.
+# creating a custom user manager for managing the model.
 class CustomAccountManager(BaseUserManager):
     def create_user(self, email, user_name, last_name, first_name, password, **other_fields):
         if not email:
@@ -74,7 +74,7 @@ class Course(models.Model):
     course_details=models.JSONField()
     course_mentor=models.ManyToManyField(Register,related_name="course_mentors")
     enrolled_students=models.ManyToManyField(Register,related_name="enrolled_students")
-    created_at=models.DateTimeField(auto_now_add=True) 
+    created_at=models.DateTimeField(auto_now_add=True)
  
 
 # c1=Course(_id,subject_code,course_name,course_details)

@@ -21,3 +21,11 @@ def test_results(request):
 # self assessment
 def self_assessment(request):
     return HttpResponse("Self Assessment")
+
+
+def set_questions(request):
+    return HttpResponse("Set Questions (accessible by Teacher)")
+
+
+def view_results(request):
+    return HttpResponse("View Results (accessible by Teacher)")
