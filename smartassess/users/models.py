@@ -1,5 +1,6 @@
 from pyexpat import model
 from tkinter.tix import Tree
+from django import views
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -44,6 +45,7 @@ class Register(AbstractBaseUser, PermissionsMixin):
     ph_no = models.CharField( null=True,max_length=10)
 
     created_user = models.DateTimeField(auto_now_add=True)
+ 
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -65,5 +67,24 @@ class Register(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
-# class Cources(models.Model):
-# class Dept(models.Model):
+
+class Course(models.Model): 
+    code=models.CharField(primary_key=True,max_length=50)
+    course_name=models.CharField(max_length=50)
+    course_details=models.JSONField()
+    course_mentor=models.ManyToManyField(Register,related_name="course_mentors")
+    enrolled_students=models.ManyToManyField(Register,related_name="enrolled_students")
+    created_at=models.DateTimeField(auto_now_add=True) 
+ 
+
+# c1=Course(_id,subject_code,course_name,course_details)
+# c1.save() 
+# Mentor1=Register.obejcts().get()
+# Mentor2=Register.obejcts().get()
+# c1.course_mentor.add(Mentor1)
+# c1.course_mentor.add(Mentor)
+
+# access cource via student
+# Course.objects.filter(enrolled_students__id=12)
+# access students via course
+# Register.objects.filter(cource__course_name=CSE)
