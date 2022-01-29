@@ -45,12 +45,13 @@ class Register(AbstractBaseUser, PermissionsMixin):
     ph_no = models.CharField( null=True,max_length=10)
 
     created_user = models.DateTimeField(auto_now_add=True)
- 
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+
+    user_role = models.CharField(default='s', blank=True, max_length=5)
 
     # define a object of customUserManager
     objects = CustomAccountManager()

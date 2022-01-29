@@ -70,7 +70,11 @@ def login_view(request):
             }
             user_data=Register.objects.get(email__exact=data.get('email'))
             if user_data.check_password(data.get('password'))==True:
-                response=HttpResponseRedirect(reverse('homePage'))
+                if user_data.user_role == 't':
+                    response=HttpResponseRedirect(reverse('teacher_dashboard'))
+                if user_data.user_role == 's':
+                    response=HttpResponseRedirect(reverse('student_dashboard'))
+
                 data={
                     'last_login':datetime.datetime.now(datetime.timezone.utc)
                 }
@@ -270,38 +274,86 @@ def contactForm(request):
 
 # @csrf_exempt
 # def resetPasswordInit(request):
-    if request.method=='POST':
-        email=request.POST.get('email')
-        user=Register.objects.filter(email=email)
-        print(email)
-        if user.exists() is False:
-            msg={
-                "st":"er",
-                "ms":"please give the verified email with your account"
-            }
-            return JsonResponse(msg)
-        else:
-            msg={
-                "st":"su",
-                "ms":"We have e-mailed your password reset link!"
-            }
-            access_token=get_access_token(Register.objects.get(email=email)) 
-            ctx={
-                'resetPass_url':'http://127.0.0.1:8000/'+'reset_password/'+access_token
-            }
-            message = get_template("emails/reset_pass.html").render(ctx)
-            mail = EmailMessage(
-                subject="Reset Password",
-                body=message,
-                from_email="kedernath.mallick.tint022@gmail.com",
-                to=["kedernath.mallick.tint022@gmail.com"],
-                reply_to=["kedernath.mallick.tint022@gmail.com"],
-            )
-            mail.content_subtype = "html"
-            mail.send() 
-            
-            return JsonResponse(msg)
-    context={
-        'is_authenticated':is_authenticated_user(request),
+#     if request.method=='POST':
+#         email=request.POST.get('email')
+#         user=Register.objects.filter(email=email)
+#         print(email)
+#         if user.exists() is False:
+#             msg={
+#                 "st":"er",
+#                 "ms":"please give the verified email with your account"
+#             }
+#             return JsonResponse(msg)
+#         else:
+#             msg={
+#                 "st":"su",
+#                 "ms":"We have e-mailed your password reset link!"
+#             }
+#             access_token=get_access_token(Register.objects.get(email=email))
+#             ctx={
+#                 'resetPass_url':'http://127.0.0.1:8000/'+'reset_password/'+access_token
+#             }
+#             message = get_template("emails/reset_pass.html").render(ctx)
+#             mail = EmailMessage(
+#                 subject="Reset Password",
+#                 body=message,
+#                 from_email="kedernath.mallick.tint022@gmail.com",
+#                 to=["kedernath.mallick.tint022@gmail.com"],
+#                 reply_to=["kedernath.mallick.tint022@gmail.com"],
+#             )
+#             mail.content_subtype = "html"
+#             mail.send()
+#
+#             return JsonResponse(msg)
+#     context={
+#         'is_authenticated':is_authenticated_user(request),
+#     }
+#     return render(request,'resetPasswordInit.html',context)
+
+
+def get_user_type(request):
+    access_token = request.COOKIES.get('accesstoken')
+    if access_token is not None:
+        try:
+            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms="HS256")
+            email = payload['email']
+            user = Register.objects.get(email=email)
+            if user is not None:
+                return user.user_role
+
+        except jwt.ExpiredSignatureError as ex:
+            custom_log_out(request)
+        except jwt.DecodeError:
+            return False
+        except Register.DoesNotExist as ne:
+            raise exceptions.AuthenticationFailed('invalid email id')
+    else:
+        return False
+
+
+
+def teacher_dashboard(request):
+    data = [1,2,3,4,5,6,7,8,9,10]
+
+    context = {
+        'is_authenticated': is_authenticated_user(request),
+        'exam_pages': data
     }
-    return render(request,'resetPasswordInit.html',context)
+
+    if get_user_type(request) == 't':
+        return render(request, 'TeacherDashboard.html', context)
+    else:
+        return render(request, 'Error.html', context)
+
+
+def student_dashboard(request):
+    data = [1,2,3,4,5,6,7,8,9,10]
+
+    context = {
+        'is_authenticated': is_authenticated_user(request),
+        'exam_pages': data
+    }
+    if get_user_type(request) == 's':
+        return render(request, 'StudentDashboard.html', context)
+    else:
+        return render(request, 'Error.html', context)
