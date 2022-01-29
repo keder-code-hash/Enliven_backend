@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # importing Django modules
 from django.http import HttpResponse
-
+from  users.views import is_authenticated_user
 
 # index page
 def index(request):
@@ -24,8 +24,12 @@ def self_assessment(request):
 
 
 # set questions for examination (accessible by teacher only)
-def set_questions(request):
-    return HttpResponse("Set Questions (accessible by Teacher)")
+def set_questions(request): 
+
+    context={
+            'is_authenticated':is_authenticated_user(request) 
+        } 
+    return render(request,'Examset.html',context)
 
 
 # view results of all students (accessible by teacher only)
