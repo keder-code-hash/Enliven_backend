@@ -270,38 +270,38 @@ def contactForm(request):
 
 # @csrf_exempt
 # def resetPasswordInit(request):
-    if request.method=='POST':
-        email=request.POST.get('email')
-        user=Register.objects.filter(email=email)
-        print(email)
-        if user.exists() is False:
-            msg={
-                "st":"er",
-                "ms":"please give the verified email with your account"
-            }
-            return JsonResponse(msg)
-        else:
-            msg={
-                "st":"su",
-                "ms":"We have e-mailed your password reset link!"
-            }
-            access_token=get_access_token(Register.objects.get(email=email)) 
-            ctx={
-                'resetPass_url':'http://127.0.0.1:8000/'+'reset_password/'+access_token
-            }
-            message = get_template("emails/reset_pass.html").render(ctx)
-            mail = EmailMessage(
-                subject="Reset Password",
-                body=message,
-                from_email="kedernath.mallick.tint022@gmail.com",
-                to=["kedernath.mallick.tint022@gmail.com"],
-                reply_to=["kedernath.mallick.tint022@gmail.com"],
-            )
-            mail.content_subtype = "html"
-            mail.send() 
+#     if request.method=='POST':
+#         email=request.POST.get('email')
+#         user=Register.objects.filter(email=email)
+#         print(email)
+#         if user.exists() is False:
+#             msg={
+#                 "st":"er",
+#                 "ms":"please give the verified email with your account"
+#             }
+#             return JsonResponse(msg)
+#         else:
+#             msg={
+#                 "st":"su",
+#                 "ms":"We have e-mailed your password reset link!"
+#             }
+#             access_token=get_access_token(Register.objects.get(email=email)) 
+#             ctx={
+#                 'resetPass_url':'http://127.0.0.1:8000/'+'reset_password/'+access_token
+#             }
+#             message = get_template("emails/reset_pass.html").render(ctx)
+#             mail = EmailMessage(
+#                 subject="Reset Password",
+#                 body=message,
+#                 from_email="kedernath.mallick.tint022@gmail.com",
+#                 to=["kedernath.mallick.tint022@gmail.com"],
+#                 reply_to=["kedernath.mallick.tint022@gmail.com"],
+#             )
+#             mail.content_subtype = "html"
+#             mail.send() 
             
-            return JsonResponse(msg)
-    context={
-        'is_authenticated':is_authenticated_user(request),
-    }
-    return render(request,'resetPasswordInit.html',context)
+#             return JsonResponse(msg)
+#     context={
+#         'is_authenticated':is_authenticated_user(request),
+#     }
+#     return render(request,'resetPasswordInit.html',context)
