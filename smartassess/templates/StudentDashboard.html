@@ -11,6 +11,10 @@
   <meta charset="UTF-8">
   <title>Dashboard</title>
   <style>
+    a {
+      text-decoration: none;
+    }
+
     .wrapper {
       display: flex;
       align-items: center;
@@ -35,8 +39,8 @@
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
               content.</p>
-            <a href="#" class="card-link">Attempt</a>
-            <a href={% url 'result' %} class="card-link">View Results</a>
+            <a href="#" class="btn btn-success float-left" role="button">Attempt</a>
+            <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>
       </div>

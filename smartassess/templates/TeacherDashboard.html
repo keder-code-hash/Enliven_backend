@@ -13,6 +13,10 @@
 </head>
 
 <style>
+  a {
+    text-decoration: none;
+  }
+
   .add {
     padding-top: 13%;
     padding-bottom: 13%;
@@ -52,7 +56,7 @@
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
               content.</p>
-            <a href={% url 'view_all_results' %} class="card-link">View Results</a>
+            <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>
       </div>
