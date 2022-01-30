@@ -72,6 +72,7 @@ body{
 }
    
 */ 
+
 /* Media Query for low resolution  mobs */
 @media (min-width: 300px) and (max-width: 767px) {
     .showOtherPost{
