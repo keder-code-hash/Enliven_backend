@@ -1,0 +1,49 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MARKS SHEET USING HTML TABLES</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Keywords" content="html, css, html tables, table">
+    <meta name="Description" content="html table">
+    <!-- add icon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+    <div class="container">
+        <h2>HTML TABLE</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No.</th>
+                    <th>{{ subject }}</th>
+                    <th>Detailed View</th>
+                <tr>
+            </thead>
+            <tbody>
+                {% for value in details %}
+                <tr>
+                    <td>{{ value.name }}</td>
+                    <td>{{ value.roll }}</td>
+                    <td>{{ value.marks }}</td>
+                    <td><a href="#" class="btn float-left" role="button"><img
+                                src="https://img.icons8.com/fluency/24/000000/link.png" /></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+{% endblock %}
