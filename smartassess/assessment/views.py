@@ -25,8 +25,9 @@ def self_assessment(request):
 
 # set questions for examination (accessible by teacher only)
 def set_questions(request): 
-
+    questions_list=[1,2,3,4,5,6]
     context={
+            "questions_num":questions_list,
             'is_authenticated':is_authenticated_user(request) 
         } 
     return render(request,'Examset.html',context)
