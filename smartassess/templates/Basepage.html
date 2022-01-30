@@ -35,59 +35,53 @@
             <meta name="Keder" content="Keder Nath Mallick"> -->
 
 
+            <!-- Webpage Title -->
+            <title>
+                {% block title %}
+                {% endblock title %}
+            </title>
 
-    <!-- Webpage Title -->
-    <title>SmartAssessment</title>
-
-
-    <!-- Favicon  -->
-    <link rel="icon" href={% static 'images/favicon.png' %}>
-</head>
-
-<body>
-    <div class="container-fluid" style="overflow: auto;">
-        <!-- <div class="row"> -->
-        <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light shadow"
-            aria-label="Main navigation">
+            {% block headcontent %}
+            {% endblock headcontent %}
+            
+            
+            <!-- Favicon  -->
+            <link rel="icon" href={% static 'images/favicon.png' %}>
+    </head>
+<body style="background-color: #f5f5f5;">
+    <div class="container-fluid"  style="overflow: auto;">
+        <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light shadow pt-1" aria-label="Main navigation">
             <div class="container-fluid">
-
-                <!-- Image Logo -->
-                <a class="navbar-brand logo-image" href={% url 'homePage' %}>SA</a>
-                <!-- Text Logo - Use this if you don't have a graphic logo -->
-                <!-- <a class="navbar-brand logo-text" href="index.html">Zinc</a> -->
-
-                <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse"
-                    aria-label="Toggle navigation">
+    
+                <!-- Image Logo --> 
+                <a class="navbar-brand logo-image" href={% url 'homePage' %}><img src={% static 'images/favicon.png' %} style="width:2rem;"></a>
+    
+                <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+    
                 <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav navbar-nav-scroll ml-auto">
                         {% if is_authenticated %}
-                        <li class="nav-item py-0 px-0" data-toggle="collapse" data-target=".navbar-collapse ">
-                            <a class="btn-solid-sm" href="{% url 'profile' %}" class=" btn btn-outline-light px-5"
-                                role="button">MyProfile</a>
-                        </li>
-                        <li class="nav-item py-0 px-0">
-                            <a class="btn-solid-sm" href={%url 'logout' %} class=" btn btn-outline-light px-5"
-                                role="button">LogOut</a>
-                        </li>
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                                <a href="{% block btnurl %} {% endblock %}" class=" btn btn-outline-primary px-3 m-1" style="text-decoration:none;" role="button" >{% block btnname %}{% endblock btnname %}</a>
+                            </li> 
+                            <li class="nav-item" >
+                                <a href={%url 'logout' %} class="btn btn-outline-danger px-3 m-1" style="text-decoration:none;" role="button">LogOut</a>
+                            </li>
                         {% else %}
-                        <li class="nav-item py-0 px-0" data-toggle="collapse" data-target=".navbar-collapse">
-                            <a class="btn-solid-sm" href={%url 'register' %} class="btn btn-outline-light px-5 "
-                                role="button">Signup</a>
-                        </li>
-                        <li class="nav-item py-0 px-0" data-toggle="collapse" data-target=".navbar-collapse">
-                            <a class="btn-solid-sm" href={%url 'login' %} class=" btn btn-outline-light px-5"
-                                role="button">Login</a>
-                        </li>
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                            <a href={%url 'register' %} class="btn btn-outline-primary px-3 m-1" style="text-decoration:none;" role="button" >Signup</a>
+                            </li>
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                                <a href={%url 'login' %} class="btn btn-outline-success px-3 m-1" style="text-decoration:none;" role="button" >Login</a>
+                            </li>
                         {% endif %}
-                    </ul>
+                    </ul> 
                 </div> <!-- end of navbar-collapse -->
             </div> <!-- end of container -->
         </nav>
-        <!-- </div> -->
-
+        
     </div>
     <br></br>
     <br></br>

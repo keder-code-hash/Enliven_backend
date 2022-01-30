@@ -1,34 +1,27 @@
 {% extends 'Basepage.html' %}
 {% load static %}
 {% load rest_framework %}
+{% block title %}Dashboard{% endblock title %}
+{% block btnurl %}
+  {% url 'profile' %}
+{% endblock %}
+{% block btnname %}My Profile{% endblock btnname %}
+{% block headcontent %}
+<style>
+  .wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+  }
+</style>
+{% endblock headcontent %}
+
 {% block content %}
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-  <style>
-    a {
-      text-decoration: none;
-    }
-
-    .wrapper {
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      justify-content: center;
-      width: 100%;
-      min-height: 100%;
-      padding: 20px;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
+<div class="container">
     <h2>Examinations</h2>
     <div class="row">
       {% for i in exam_pages %}
@@ -47,9 +40,5 @@
       {% endfor %}
     </div>
   </div>
-  </div>
-</body>
-
-</html>
-
+</div>
 {% endblock %}
