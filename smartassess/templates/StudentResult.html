@@ -1,0 +1,100 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+
+<style>
+    hr {
+        margin-top: 20px;
+        border-top: 2px dashed black;
+        margin-bottom: 20px;
+    }
+
+    .row {
+        margin-bottom: 10px;
+    }
+
+    .qsntn_nav {
+        margin-left: 0 !important;
+        padding: 20px;
+        width: 15vw;
+        height: 800px;
+    }
+
+    .content {
+        padding: 10px;
+        width: 50vw;
+    }
+
+    .nav-btn {
+        margin-bottom: 10px;
+        width: 3vw;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="exam_details">
+                <h1>{{ exam_title }}</h1>
+                <h2>Score: {{ score }}</h2>
+                <h2>Total Marks: {{ total_marks }}</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div class="qsntn_nav" style="border: 2px solid black">
+                    <div class="row">
+                        {% for detail in details %}
+                        <div class="col-4">
+                            <div class="btn btn-outline-primary nav-btn">
+                                {{ forloop.counter }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                {% for detail in details %}
+                <div class="row">
+                    <div class="question content" style="border: 2px solid black">
+                        <div>
+                            <u><b>Question:</b> {{ detail.q_no }}</u>
+                        </div>
+                        <div>
+                            {{ detail.qsn }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="std_ans content" style="border: 2px solid black; background-color: #ccfcf5;">
+                        {{ detail.std_ans }}</div>
+                </div>
+                <div class="row">
+                    <div class="stn_ans content" style="border: 2px solid black; background-color: #c4e6ff;">
+                        {{ detail.stn_ans }}</div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <!-- Histogram View -->
+        </div>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}
