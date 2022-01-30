@@ -12,38 +12,49 @@
 </head>
 
 <style>
-.add {
-    padding-top: 20%;
-    margin: auto;
-}
+  .add {
+      padding-top: 13%;
+      padding-bottom: 13%;
+      margin: auto;
+  }
+  .wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+  }
 </style>
 
 <body>
-
-    <div class="ml-5">
-        <div class="card mb-4" style="width: 18rem; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;">
+  <div class="container">
+    <h2>Examinations</h2>
+    <div class="row">
+      <div class="col-sm-4 wrapper">
+        <div class="card mb-4 shadow" style="width: 20rem;">
           <div class="card-body add" >
             <a class="btn" href="{% url 'setquestion' %}">
               <img src="https://img.icons8.com/external-bearicons-blue-bearicons/128/000000/external-plus-essential-collection-bearicons-blue-bearicons.png"/>
             </a>
           </div>
         </div>
-        </div>
-
-    <div class="row ml-4">
+    </div>
     {% for i in exam_pages %}
-            <div class="col">
-            <div class="card mb-4" style="width: 18rem; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;">
-              <div class="card-body">
-                <h5 class="card-title">Exam {{i}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="card-link">View Results</a>
-              </div>
+        <div class="col-sm-4 wrapper">
+          <div class="card mb-4 shadow" style="width: 20rem;">
+            <div class="card-body">
+              <h5 class="card-title">Exam {{i}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="card-link">View Results</a>
             </div>
-        </div>
+          </div>
+      </div>
     {% endfor %}
     </div>
+  </div>
 </body>
 
 </html>
