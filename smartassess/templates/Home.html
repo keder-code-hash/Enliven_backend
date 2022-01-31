@@ -1,38 +1,57 @@
 {% extends 'Basepage.html' %}
-{% block content %}
-<!DOCTYPE html>
 {% load rest_framework %}
 {% load static %}
-<html lang="en">
-<head>
+{% block title %}Smart Assessment{% endblock title %}
+
+{% block showuser %}
+  {% if user_name != "" %}
+    <li class="nav-item">
+      <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+        <img class="rounded-circle mr-1" width="22px" src={{ profile_pic_url }} style="border: 1px solid black; padding:2px;">
+        {{ user_name }}
+      </button>
+    </li>
+  {% endif %}
+{% endblock showuser %}
+
+{% block btnurl %}
+  {% if user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
+{% endblock %}
+
+{% block btnname %}Dashboard{% endblock btnname %}
+
+{% block headcontent %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href={% static 'dynamicLoad.css' %}>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href={% static 'css/Home.css' %}>
     <link rel="stylesheet" href={% static 'css/App.css' %}>
-</head> 
-<body>
-    <form action="{% url 'homePage' %}" method="get">
-        <header id="header" class="header">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-xl-5">
-                        <div class="text-container">
-                            <div class="section-title" style="font-weight: 500;font-size: 1rem;">Welcome to SmartAssessment</div>
-                            <h1 class="h1-large" style="font-weight: 900;font-size: 3rem;">An automation based smart assessment system</h1>
-                            <p class="p-large">Self Assessment is more easier tah you think!!😊😊</p> 
-                        </div> 
-                    </div> 
-                    <div class="col-lg-6 col-xl-7">
-                        <div class="image-container">
-                            <img class="img-fluid" src={% static 'images/exam-back.png' %} alt="alternative">
-                        </div> 
+{% endblock headcontent %}
+
+{% block content %}
+<form action="{% url 'homePage' %}" method="get">
+    <header id="header" class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-xl-5">
+                    <div class="text-container">
+                        <div class="section-title" style="font-weight: 500;font-size: 1rem;">Welcome to SmartAssessment</div>
+                        <h1 class="h1-large" style="font-weight: 900;font-size: 3rem;">An automation based smart assessment system</h1>
+                        <p class="p-large">Self Assessment is more easier tah you think!!😊😊</p> 
                     </div> 
                 </div> 
-            </div>  
-        </header>
-    </form>
-</body>
-</html>
+                <div class="col-lg-6 col-xl-7">
+                    <div class="image-container">
+                        <img class="img-fluid" src={% static 'images/exam-back.png' %} alt="alternative">
+                    </div> 
+                </div> 
+            </div> 
+        </div>  
+    </header>
+</form>
 {% endblock %}

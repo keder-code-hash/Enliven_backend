@@ -72,6 +72,7 @@ body{
 }
    
 */ 
+
 /* Media Query for low resolution  mobs */
 @media (min-width: 300px) and (max-width: 767px) {
     .showOtherPost{
@@ -485,7 +486,13 @@ section.cards {
 }
 
 .shadow {
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,.15);
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.wrapper {
+  padding: 20px;
 }
 
 /* blog card design */

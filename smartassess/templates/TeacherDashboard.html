@@ -1,17 +1,24 @@
 {% extends 'Basepage.html' %}
 {% load static %}
 {% load rest_framework %}
-{% block content %}
+{% block title %}Dashboard{% endblock title %}
 
+{% block showuser %}
+<li class="nav-item">
+  <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+    <img class="rounded-circle mr-1" width="22px" src={{ profile_pic_url }} style="border: 1px solid black; padding:2px;">
+    {{ user_name }}
+  </button>
+</li>
+{% endblock showuser %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block btnurl %}
+  {% url 'profile' %}
+{% endblock %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-</head>
+{% block btnname %}My Profile{% endblock btnname %}
 
+{% block headcontent %}
 <style>
   a {
     text-decoration: none;
@@ -33,8 +40,9 @@
     padding: 20px;
   }
 </style>
+{% endblock headcontent %}
 
-<body>
+{% block content %}
   <div class="container">
     <h2>Examinations</h2>
     <div class="row">
@@ -63,8 +71,5 @@
       {% endfor %}
     </div>
   </div>
-</body>
-
-</html>
 
 {% endblock %}
