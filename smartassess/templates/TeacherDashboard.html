@@ -40,19 +40,71 @@
     padding: 20px;
   }
 </style>
+
+<script>
+  function saveExamName(){
+    var userId = "{{ user_name }}";
+    var examName = document.getElementById("examName").value;
+    var topicName = document.getElementById("topicName").value;
+    var examDetails = document.getElementById("examDetails").value;
+    
+    if(examName === "" || topicName === "")
+      alert("Exam Name and Subject name is required!");
+
+    else{
+      const xhttp = new XMLHttpRequest();
+      xhttp.onload = function() {
+        window.location.href = "{% url 'setquestion' %}";
+      }
+      xhttp.open("POST", "{% url 'saveExamName' %}");
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("user_id="+userId+"&exam_name="+examName+"&topic="+topicName+"&exam_details="+examDetails);
+    }
+
+  }
+</script>
+
 {% endblock headcontent %}
 
 {% block content %}
   <div class="container">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="examName">Exam Name:</label>
+              <input type="text" class="form-control" id="examName" required>
+              <label for="topicName">Subject / Topic: </label>
+              <input type="text" class="form-control" id="topicName" required>
+              <label for="examDetails">Exam Details:</label>
+              <textarea class="form-control" id="examDetails" rows="3"></textarea>
+            </div>
+          </div>
+          <p align="center">
+            <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
+          </p>
+        </div>
+      </div>
+    </div>
+
     <h2>Examinations</h2>
     <div class="row">
       <div class="col-sm-4 wrapper">
         <div class="card mb-4 shadow" style="width: 20rem;">
           <div class="card-body add">
-            <a class="btn" href="{% url 'setquestion' %}">
+            <button class="btn" data-toggle="modal" data-target="#exampleModal">
               <img
                 src="https://img.icons8.com/external-bearicons-blue-bearicons/128/000000/external-plus-essential-collection-bearicons-blue-bearicons.png" />
-            </a>
+            </button>
           </div>
         </div>
       </div>

@@ -2,6 +2,23 @@
 {% load static %}
 {% load rest_framework %}
 
+{% block title %}Set Questions{% endblock title %}
+
+{% block showuser %}
+<li class="nav-item">
+  <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }} style="border: 1px solid black; padding:2px;">
+    {{ user.user_name }}
+  </button>
+</li>
+{% endblock showuser %}
+
+{% block btnurl %}
+  {% url 'profile' %}
+{% endblock %}
+
+{% block btnname %}My Profile{% endblock btnname %}
+
 {% block headcontent %}
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -129,11 +146,12 @@
 {% block content %}
 <div class="container-fluid">
 
+  <h4>Exam Name: {{ data.exam_name }}</h4>
   <div class="row ml-2">
     <div class="col-sm-2 mb-1 mt-1">
-      <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
-        {% for i in questions_num %}
-        <button class="btn btn-outline-success" style="margin: 4px ;padding: 2px;width: 25px;">{{i}}</button>
+      <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
+        {% for i in qno %}
+          <button class="btn btn-outline-success" style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i }})">{{ i }}</button>
         {% endfor %}
       </div>
     </div>
@@ -162,10 +180,31 @@
   });
 
   function saveQn(){
+    var userId = "{{ user.user_name }}";
     var question = document.getElementById("question").value;
-    var a = quill.getText();
-    console.log(question);
-    console.log(a);
+    var answer = quill.getText();
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      $("#questionList").append('<button class="btn btn-outline-success" style="margin: 4px ;padding: 2px;width: 25px;" onclick=loadQuestion('+this.responseText+')>'+this.responseText+'</button>')
+    }
+    xhttp.open("POST", "{% url 'tempSaveQnA' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id="+userId+"&question="+question+"&answer="+answer);
   }
+
+  function loadQuestion(qno){
+    var userId = "{{ user.user_name }}";
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      var obj = JSON.parse(this.response);
+      document.getElementById("question").value = obj["question"];
+      quill.setText(obj["answer"]);
+    }
+    xhttp.open("POST", "{% url 'fetchQnA' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id="+userId+"&question_id="+qno);
+  }
+
 </script>
+
 {% endblock %}
