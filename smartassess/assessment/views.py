@@ -146,14 +146,17 @@ def set_questions(request):
     with open(file_url, 'r+') as file:
         data = json.load(file).get(user.user_name)
 
-    qno = list(range(1, len(data.get('qna'))+1))
+    qno = list(range(1, len(data.get('qna'))+2))
+    max_qno = len(qno)
     if qno == []:
         qno = [1]
+        max_qno = 1
     context = {
         "is_authenticated": is_authenticated_user(request),
         "user":user,
         "data":data,
-        "qno" : qno
+        "qno" : qno,
+        "max_qno" : max_qno
     }
     if context["is_authenticated"] and user.user_role == 't':
         return render(request, "Examset.html", context)
