@@ -371,10 +371,28 @@ def get_user_type(request):
         except jwt.DecodeError:
             return False
         except Register.DoesNotExist as ne:
-            raise exceptions.AuthenticationFailed("invalid email id")
+            raise exceptions.AuthenticationFailed("Invalid email id")
     else:
         return False
 
+def get_user(request):
+    access_token = request.COOKIES.get("accesstoken")
+    if access_token is not None:
+        try:
+            payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms="HS256")
+            email = payload["email"]
+            user = Register.objects.get(email=email)
+            if user is not None:
+                return user
+
+        except jwt.ExpiredSignatureError as ex:
+            custom_log_out(request)
+        except jwt.DecodeError:
+            return None
+        except Register.DoesNotExist as ne:
+            raise exceptions.AuthenticationFailed("Invalid email id")
+    else:
+        return None
 
 def teacher_dashboard(request):
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
