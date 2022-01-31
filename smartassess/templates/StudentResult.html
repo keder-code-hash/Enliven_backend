@@ -3,6 +3,7 @@
 {% load rest_framework %}
 {% block content %}
 
+{% block headcontent %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result</title>
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 </head>
 
 <style>
@@ -78,7 +81,7 @@
         align-items: bottom;
     }
 </style>
-
+{% endblock headcontent %}
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -109,46 +112,21 @@
                         <div>
                             <p id='questions_num'><u><b>Question:</b> 1</u></p>
                         </div>
-                        <div class="qstn">
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt
-                                quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?
-                                Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet
-                                consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate
-                                illo aut, maiores amet explicabo sequi minus quia nulla atque? Culpa harum saepe vero?
-                                Magnam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo hic error eos
-                                facere temporibus voluptatem, ipsum cumque voluptatum, neque est aut libero dolorem quis
-                                exercitationem nemo suscipit fugit. Vitae, perspiciatis? Lorem ipsum dolor sit, amet
-                                consectetur adipisicing elit. Eveniet reiciendis ea error adipisci cumque neque aperiam
-                                consectetur sapiente, facere voluptates non fuga voluptas. Commodi, excepturi pariatur
-                                at ullam cumque accusamus?</p>
+                        <div class="qstn" >
+                            <p id="act_question">
+
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="std_ans content">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda facilis quisquam possimus
-                        suscipit quasi perferendis commodi dolor nostrum necessitatibus. Facere cupiditate hic eum.
-                        Laborum minima voluptas, esse deleniti delectus cumque?</div>
+                        <div id='standard_ans_editor' style="height: 200px;"></div> 
+                    </div>
                 </div>
                 <div class="row">
                     <div class="stn_ans content">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia
-                        architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quae
-                        temporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur
-                        adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiat
-                        laboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum
-                        dolor sit, amet consectetur adipisicing elit. Ratione similique itaque porro voluptatum fugit
-                        saepe non. Ex quia delectus dolorum nihil quaerat? Ipsa atque, dolores dolorum repellendus
-                        reiciendis aut inventore! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis eum
-                        explicabo odit beatae dolorum expedita minus, magni saepe laudantium, incidunt sit nulla ratione
-                        dolorem optio laborum, sequi dignissimos deleniti modi? Lorem ipsum dolor sit amet consectetur
-                        adipisicing elit. Autem unde, aspernatur, eaque dicta ad ex maiores quidem commodi suscipit in
-                        repellat consectetur adipisci, voluptate animi quae iure beatae ea magni?Lorem ipsum dolor sit
-                        amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa tempore
-                        voluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit
-                        harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperiores
-                        quo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur
-                        illum iusto? Iste earum laborum quod ipsa dolore.
+                        <div id='student_ans_editor' style="height: 200px;"></div>
                     </div>
                 </div>
             </div>
@@ -164,6 +142,22 @@
         <div class="row">
             <!-- Histogram View -->
         </div>
+        <script>
+            var standard_ans_quill = new Quill('#standard_ans_editor', {
+                theme: 'snow'
+              });
+            var student_ans_quill = new Quill('#student_ans_editor', {
+            theme: 'snow'
+            });
+            var actual_qstn=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?  Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate"
+            var student_ans='<b> Lorem ipsum dolor </b> sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quaetemporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiatlaboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum'
+            var standard_ans='amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa temporevoluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperioresquo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur'
+
+            standard_ans_quill.setText(standard_ans);
+            student_ans_quill.setText(student_ans);
+            var text = document.createTextNode(actual_qstn);
+            document.getElementById("act_question").appendChild(text);
+        </script>
     </div>
 </body>
 
