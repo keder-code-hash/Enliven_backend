@@ -3,6 +3,27 @@
 {% load static %}
 {% block title %}Smart Assessment{% endblock title %}
 
+{% block showuser %}
+  {% if user_name != "" %}
+    <li class="nav-item">
+      <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+        <img class="rounded-circle mr-1" width="22px" src={{ profile_pic_url }} style="border: 1px solid black; padding:2px;">
+        {{ user_name }}
+      </button>
+    </li>
+  {% endif %}
+{% endblock showuser %}
+
+{% block btnurl %}
+  {% if user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
+{% endblock %}
+
+{% block btnname %}Dashboard{% endblock btnname %}
+
 {% block headcontent %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

@@ -142,7 +142,24 @@ def is_authenticated_user(request):
 
 def homeView(request):
     if request.method == "GET":
-        context = {"is_authenticated": is_authenticated_user(request)}
+        is_auth = is_authenticated_user(request)
+        if is_auth:
+            access = request.COOKIES.get("accesstoken")
+            decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
+            email_id = decoded_data.get("email")
+            user = Register.objects.get(email__iexact=email_id)
+            context = {
+                "is_authenticated": is_authenticated_user(request), 
+                "user_name": user.user_name,
+                "user_role": user.user_role,
+                "profile_pic_url": user.profile_pic_url,
+            }
+        else:
+            context = {
+                "is_authenticated": is_auth,
+                "user_name": ""
+            }
+
         return render(request, "Home.html", context)
 
 
@@ -361,8 +378,16 @@ def get_user_type(request):
 
 def teacher_dashboard(request):
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-    context = {"is_authenticated": is_authenticated_user(request), "exam_pages": data}
+    access = request.COOKIES.get("accesstoken")
+    decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
+    email_id = decoded_data.get("email")
+    user = Register.objects.get(email__iexact=email_id)
+    context = {
+        "is_authenticated": is_authenticated_user(request), 
+        "user_name": user.user_name,
+        "profile_pic_url": user.profile_pic_url,
+        "exam_pages": data
+        }
 
     if get_user_type(request) == "t":
         return render(request, "TeacherDashboard.html", context)
@@ -372,8 +397,16 @@ def teacher_dashboard(request):
 
 def student_dashboard(request):
     data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-
-    context = {"is_authenticated": is_authenticated_user(request), "exam_pages": data}
+    access = request.COOKIES.get("accesstoken")
+    decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
+    email_id = decoded_data.get("email")
+    user = Register.objects.get(email__iexact=email_id)
+    context = {
+        "is_authenticated": is_authenticated_user(request), 
+        "user_name": user.user_name,
+        "profile_pic_url": user.profile_pic_url,
+        "exam_pages": data
+        }
     if get_user_type(request) == "s":
         return render(request, "StudentDashboard.html", context)
     else:

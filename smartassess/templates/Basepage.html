@@ -63,6 +63,8 @@
                 <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav navbar-nav-scroll ml-auto">
                         {% if is_authenticated %}
+                            {% block showuser %}
+                            {% endblock showuser %}
                             <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
                                 <a href="{% block btnurl %} {% endblock %}" class=" btn btn-outline-primary px-3 m-1" style="text-decoration:none;" role="button" >{% block btnname %}{% endblock btnname %}</a>
                             </li> 
