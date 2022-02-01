@@ -28,6 +28,9 @@
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 </head>
 <style>
+  .exam_details {
+    margin-left: 5vw;
+  }
   .switch {
     position: relative;
     display: inline-block;
@@ -145,8 +148,13 @@
 
 {% block content %}
 <div class="container-fluid">
+  <div class="row">
+    <div class="exam_details">
+        <h2 class='display-4'>{{ data.exam_name }}</h2>
+        <h4 style="font-weight: 300;">Full Marks: <b>{{ 100 }}</b></h4>
+    </div>
+  </div>
 
-  <h4>Exam Name: {{ data.exam_name }}</h4>
   <div class="row ml-2">
     <div class="col-sm-2 mb-1 mt-1">
       <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">

@@ -1,5 +1,4 @@
 from tokenize import blank_re
-import black
 from django.db import models
 from users.models import Course, Register
 
