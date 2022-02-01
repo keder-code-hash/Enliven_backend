@@ -224,20 +224,24 @@
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function() {
       var flag = this.responseText;
-      $("#btn_"+currentQnNo).remove();
-      $(".noBtn").each(function(){
-        console.log(this);
-      })
-      /*
-      for(let i = currentQnNo+1; i <= maxQnNo; i++){
-        var obj = document.getElementById('btn_'+i);
-        console.log(obj);
-        obj.interHTML = i-1;
-        obj.setAttribute('id', 'btn_'+(i-1));
+      if(flag === '1'){
+        $("#btn_"+currentQnNo).remove();
+        $(".noBtn").each(function(i){
+          if(i >= currentQnNo-1){
+            var j = Number(this.innerHTML);
+            this.innerHTML = j-1;
+            this.setAttribute('id', 'btn_'+(j-1));
+            this.setAttribute('onclick', 'loadQuestion('+(j-1)+')');
+          }
+        })
+        maxQnNo = maxQnNo-1;
+        currentQnNo = maxQnNo;
+        document.getElementById("question").value = '';
+        quill.setText('');
       }
-      */
-      document.getElementById("question").value = '';
-      quill.setText('');
+      else{
+        alert("Unable to delete!");
+      }
     }
     xhttp.open("POST", "{% url 'deleteQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
