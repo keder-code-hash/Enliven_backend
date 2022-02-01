@@ -114,7 +114,7 @@ def test_results(request):
     return render(request, "StudentResult.html", context)
 
 
-# view all results
+# view results of all students (accessible by teacher only)
 def view_all_results(request):
     result = [
         {"name": "Arghya", "roll": 3685128, "marks": 60},
@@ -141,32 +141,29 @@ def self_assessment(request):
 # set questions for examination (accessible by teacher only)
 def set_questions(request):
     user = get_user(request)
-    file_url = staticfiles_storage.path('data/questions.json')
+    file_url = staticfiles_storage.path("data/questions.json")
     data = ""
-    with open(file_url, 'r+') as file:
+    with open(file_url, "r+") as file:
         data = json.load(file).get(user.user_name)
 
-    qno = list(range(1, len(data.get('qna'))+2))
+    qno = list(range(1, len(data.get("qna")) + 2))
     max_qno = len(qno)
     if qno == []:
         qno = [1]
         max_qno = 1
     context = {
         "is_authenticated": is_authenticated_user(request),
-        "user":user,
-        "data":data,
-        "qno" : qno,
-        "max_qno" : max_qno
+        "user": user,
+        "data": data,
+        "qno": qno,
+        "max_qno": max_qno,
     }
-    if context["is_authenticated"] and user.user_role == 't':
+    if context["is_authenticated"] and user.user_role == "t":
         return render(request, "Examset.html", context)
     else:
-        err_log = {
-            "msg" : "Are you logged in?"
-        }
+        err_log = {"msg": "Are you logged in?"}
         return render(request, "Error.html", err_log)
 
 
-# view results of all students (accessible by teacher only)
 def view_results(request):
     return HttpResponse("View Results (accessible by Teacher)")
