@@ -1,7 +1,6 @@
 from django.db import models
 from users.models import Course, Register
 
-
 '''
 Exam
     id
