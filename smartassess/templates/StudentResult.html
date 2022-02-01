@@ -1,0 +1,166 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block content %}
+
+{% block headcontent %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+</head>
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    .row {
+        margin-bottom: 10px;
+    }
+
+    .exam_details {
+        margin-left: 5vw;
+    }
+
+    .qsntn_nav {
+        padding: 20px;
+        width: 15vw;
+        height: 80vh;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    }
+
+    .qna {
+        padding: 30px;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    }
+
+    .content {
+        padding: 10px;
+        width: 70vw;
+        overflow-y: auto;
+        box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
+    }
+
+    .nav-btn {
+        margin-bottom: 10px;
+        width: 3vw;
+    }
+
+    .question {
+        height: 85px;
+    }
+
+    .qstn {
+        height: 9vh;
+        overflow-y: auto;
+    }
+
+    .stn_ans {
+        height: 27vh;
+        background-color: #bad2ff;
+    }
+
+    .std_ans {
+        margin-top: 50px;
+        height: 27vh;
+        background-color: #b3ffc5;
+    }
+
+    #questions_num {
+        font-size: 25px;
+    }
+
+    .controls {
+        align-items: bottom;
+    }
+</style>
+{% endblock headcontent %}
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="exam_details">
+                <h1 class='display-4'>{{ exam_title }}</h1>
+                <h2 style="font-weight: 300;">Score: <b>{{ score }}</b></h2>
+                <h2 style="font-weight: 300;">Full Marks: <b>{{ total_marks }}</b></h2>
+                <br><br>
+            </div>
+        </div>
+        <div class="row m-5">
+            <div class="col-2 mr-4">
+                <div class="qsntn_nav">
+                    <div class="row">
+                        {% for detail in details %}
+                        <div class="col-4">
+                            <div class="btn btn-outline-primary nav-btn">
+                                {{ forloop.counter }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 qna">
+                <div class="row">
+                    <div class="question">
+                        <div>
+                            <p id='questions_num'><u><b>Question:</b> 1</u></p>
+                        </div>
+                        <div class="qstn" >
+                            <p id="act_question">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="std_ans content">
+                        <div id='standard_ans_editor' style="height: 200px;"></div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="stn_ans content">
+                        <div id='student_ans_editor' style="height: 200px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col ml-3 controls">
+                <div class="row">
+                    <a href={% url 'result' %} class="btn btn-primary float-right" role="button">Previous</a>
+                </div>
+                <div class="row">
+                    <a href={% url 'result' %} class="btn btn-primary float-right" role="button">Next</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Histogram View -->
+        </div>
+        <script>
+            var standard_ans_quill = new Quill('#standard_ans_editor', {
+                theme: 'snow'
+              });
+            var student_ans_quill = new Quill('#student_ans_editor', {
+            theme: 'snow'
+            });
+            var actual_qstn=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?  Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate"
+            var student_ans='<b> Lorem ipsum dolor </b> sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quaetemporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiatlaboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum'
+            var standard_ans='amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa temporevoluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperioresquo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur'
+
+            standard_ans_quill.setText(standard_ans);
+            student_ans_quill.setText(student_ans);
+            var text = document.createTextNode(actual_qstn);
+            document.getElementById("act_question").appendChild(text);
+        </script>
+    </div>
+</body>
+
+</html>
+
+{% endblock %}
