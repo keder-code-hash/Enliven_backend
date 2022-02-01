@@ -1,9 +1,10 @@
+from tokenize import blank_re
+import black
 from django.db import models
 from users.models import Course, Register
 
 
 class Exam(models.Model):
-    _id = models.BigIntegerField(unique=True, primary_key=True, blank=False)
     exam_name = models.CharField(max_length=130, blank=False)
     marks = models.IntegerField(blank=False)
     course = models.CharField(max_length=130, blank=False)
@@ -16,7 +17,6 @@ class Exam(models.Model):
 
 
 class Question(models.Model):
-    _id = models.BigIntegerField(unique=True, primary_key=True, blank=False)
     exam_id = models.BigIntegerField(blank=False)
     question = models.CharField(max_length=130, blank=False)
     standard_ans = models.CharField(max_length=130, blank=False)
@@ -25,7 +25,6 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    _id = models.BigIntegerField(unique=True, primary_key=True, blank=False)
     exam_id = models.BigIntegerField(blank=False)
     question_id = models.BigIntegerField(unique=True, blank=False)
     answer = models.CharField(max_length=130, blank=False)
@@ -35,7 +34,6 @@ class Answer(models.Model):
 
 
 class Evaluation(models.Model):
-    _id = models.BigIntegerField(unique=True, primary_key=True, blank=False)
     exam_id = models.BigIntegerField(blank=False)
     question_id = models.BigIntegerField(unique=True, blank=False)
     answer_id = models.BigIntegerField(unique=True, blank=False)
@@ -44,6 +42,14 @@ class Evaluation(models.Model):
     )
     score = models.IntegerField(blank=False)
     match_percentage = models.FloatField(blank=False)
+
+
+class Monitor(models.Model):
+    exam_id = models.BigIntegerField(blank=False)
+    sudent_id = models.EmailField(blank=False)
+    image = models.ImageField(blank=False)
+    taken_at = models.DateTimeField(auto_now_add=True)
+    is_original = models.BooleanField(default=False)
 
 
 """
@@ -82,5 +88,11 @@ Question
     standard_ans 
     question_created_by 
     created_at
+
+Monitor
+    exam_id
+    std_id
+    image
+    taken_at
 
 """
