@@ -73,8 +73,8 @@ class Course(models.Model):
     code=models.CharField(primary_key=True,max_length=50)
     course_name=models.CharField(max_length=50)
     course_details=models.JSONField()
-    course_mentor=models.ManyToManyField(Register,related_name="course_mentors")
-    enrolled_students=models.ManyToManyField(Register,related_name="enrolled_students")
+    # course_mentor=models.ManyToManyField(Register,related_name="course_mentors")
+    # enrolled_students=models.ManyToManyField(Register,related_name="enrolled_students")
     created_at=models.DateTimeField(auto_now_add=True)
  
 
