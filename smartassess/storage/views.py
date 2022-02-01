@@ -89,24 +89,20 @@ def delete_questions(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
         qno = int(request.POST.get("question_id"))
-        flag = 0
+        flag = 1
         file_url = staticfiles_storage.path('data/questions.json')
-        with open(file_url, 'r') as file:
+        with open(file_url, 'r+') as file:
             main_data = json.load(file)
             data = main_data.get(user_id)
             try:
-                qna_dict = data.get('qna')[qno-1]
-                for q, a in qna_dict.items():
-                    qna = {
-                        "question" : q,
-                        "answer" : a
-                    }
+                data.get('qna').pop(qno-1)
+                main_data.update({user_id : data})
+                file.seek(0)
+                json.dump(main_data, file)
+                file.truncate()
             except IndexError:
-                qna = {
-                        "question" : "",
-                        "answer" : ""
-                    }
-        
+                flag = 0
         return HttpResponse(flag)
+
     else:
         return HttpResponse("Invaild Request")
