@@ -1,5 +1,3 @@
-from tokenize import blank_re
-import black
 from django.db import models
 from users.models import Course, Register
 
@@ -26,7 +24,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     exam_id = models.BigIntegerField(blank=False)
-    question_id = models.BigIntegerField(unique=True, blank=False)
+    question_id = models.BigIntegerField(blank=False)
     answer = models.CharField(max_length=130, blank=False)
     answer_duration = models.TimeField(blank=False)
     answered_by = models.ManyToManyField(Register)
