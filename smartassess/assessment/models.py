@@ -1,55 +1,97 @@
+from tokenize import blank_re
 from django.db import models
-from users.models import Course
+from users.models import Course, Register
+
+
+class Exam(models.Model):
+    exam_name = models.CharField(max_length=130, blank=False)
+    marks = models.IntegerField(blank=False)
+    course = models.CharField(max_length=130, blank=False)
+    description = models.CharField(
+        max_length=130,
+    )
+    duration = models.TimeField(blank=False)
+    created_by = models.ManyToManyField(Register)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Question(models.Model):
-    question_id = models.BigIntegerField(unique=True, primary_key=True)
-    question = models.CharField(max_length=100, unique=True)
-    marks = models.IntegerField(blank=False)
-
-    DIFFICULTY = (("E", "Easy"), ("M", "Medium"), ("H", "Hard"))
-    level = models.CharField(max_length=20, choices=DIFFICULTY, default="E")
+    exam_id = models.BigIntegerField(blank=False)
+    question = models.CharField(max_length=130, blank=False)
+    standard_ans = models.CharField(max_length=130, blank=False)
+    created_by = models.ManyToManyField(Register)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Answer(models.Model):
-    ans_id = models.BigIntegerField(unique=True, primary_key=True)
-    answer = models.CharField(max_length=130)
-    std_id = models.ManyToManyField(Question, related_name="answerd_by")
+    exam_id = models.BigIntegerField(blank=False)
+    question_id = models.BigIntegerField(unique=True, blank=False)
+    answer = models.CharField(max_length=130, blank=False)
+    answer_duration = models.TimeField(blank=False)
+    answered_by = models.ManyToManyField(Register)
+    answered_at = models.DateTimeField(auto_now_add=True)
 
 
-# set questions
-class StandardQnA(models.Model):
-    _id = models.BigIntegerField(primary_key=True, unique=True)
-    question = models.ManyToManyField(Question)
-    std_ans = models.ManyToManyField(Answer)
+class Evaluation(models.Model):
+    exam_id = models.BigIntegerField(blank=False)
+    question_id = models.BigIntegerField(unique=True, blank=False)
+    answer_id = models.BigIntegerField(unique=True, blank=False)
+    remarks = models.CharField(
+        max_length=130,
+    )
+    score = models.IntegerField(blank=False)
+    match_percentage = models.FloatField(blank=False)
 
 
-class QnA(models.Model):
-    question = models.OneToOneField(Question, on_delete=models.CASCADE)
-    student_ans = models.OneToOneField(Answer, on_delete=models.CASCADE)
+class Monitor(models.Model):
+    exam_id = models.BigIntegerField(blank=False)
+    sudent_id = models.EmailField(blank=False)
+    image = models.ImageField(blank=False)
+    taken_at = models.DateTimeField(auto_now_add=True)
+    is_original = models.BooleanField(default=False)
 
 
-# take exam
-class Exam(models.Model):
-    _id = models.BigIntegerField(primary_key=True, unique=True)
-    course = models.ManyToManyField(Course, related_name="course")
-    qna = models.OneToOneField(QnA, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
-    duration = models.TimeField(blank=False)
-    total_questions = models.IntegerField()
-    full_marks = models.IntegerField()
+"""
+Evaluation
+    id
+    exam_id
+    question_id 
+    answer_id
+    remarks
+    marks/score
+    matched_percentage
 
+Answer
+    id 
+    exam_id
+    question_id
+    ansewer
+    answered_duration
+    answered_by
+    answered_at
 
-class Result(models.Model):
-    _id = models.BigIntegerField(primary_key=True, unique=True)
-    standard_qna = models.OneToOneField(StandardQnA, on_delete=models.CASCADE)
-    answer = models.OneToOneField(Answer, on_delete=models.CASCADE)
-    marks_obtained = models.FloatField(blank=False)
+Exam
+    id
+    exam_name
+    marks
+    course
+    desc
+    time/duration
+    created_by
+    created_at
+    
+Question
+    id
+    exam_id
+    question
+    standard_ans 
+    question_created_by 
+    created_at
 
+Monitor
+    exam_id
+    std_id
+    image
+    taken_at
 
-class AssessmentResult(models.Model):
-    _id = models.BigIntegerField(primary_key=True, unique=True)
-    exam_id = models.OneToOneField(Exam, on_delete=models.CASCADE)
-    result = models.ManyToManyField(Result)
-    total_marks_obtained = models.IntegerField(blank=False)
-    evaluation_date = models.DateTimeField(auto_now_add=True)
+"""
