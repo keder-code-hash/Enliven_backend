@@ -92,8 +92,10 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
                 answer_object.save()
                 answer_object.answered_by.add(answered_by)
 
+            # email has to be checked if the existed answer_by and new answered_by are same or not,if not same add the answer otherwise leave it.
+            answered_object_email=Register.objects.get(answer__id=answer_object.id).email 
             # same to same answer can be given for exact same exam and exact same question and exact same duration
-            if answer_created is False and answer==answer_object.answer: 
+            if answer_created is False and answer==answer_object.answer and answered_object_email!=answered_by.email: 
                 answer_object.answered_by.add(answered_by)
                 answer_created=True
             
