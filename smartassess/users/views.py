@@ -180,12 +180,7 @@ def userProfileView(request):
                 "user": user,
                 "age": age,
             }
-            # debug
-            ######################
-            print("\n\n\n")
-            print(context)
-            print("\n\n\n")
-            #######################
+
             return render(request, "Userprofile.html", context)
         except Register.DoesNotExist as err:
             raise exceptions.AuthenticationFailed("Invalid email id.")
