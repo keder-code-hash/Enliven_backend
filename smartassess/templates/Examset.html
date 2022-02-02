@@ -151,7 +151,7 @@
   <div class="row">
     <div class="exam_details">
         <h2 class='display-4'>{{ data.exam_name }}</h2>
-        <h4 style="font-weight: 300;">Full Marks: <b>{{ 100 }}</b></h4>
+        <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
     </div>
   </div>
 
@@ -176,7 +176,7 @@
         <div class="" style="padding-top: 10px;">
           <button type="button" class="btn btn-outline-primary" onclick="saveQn()">Submit</button>
           <button type="button" class="btn btn-outline-danger" onclick="deleteQn()">Delete</button>
-          <button type="button" class="btn btn-outline-success">Final Submit</button>
+          <button type="button" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
         </div>
       </div>
     </div>
@@ -254,6 +254,24 @@
     xhttp.open("POST", "{% url 'deleteQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("user_id="+userId+"&question_id="+qno);
+  }
+
+  function finalSubmit(){
+    saveQn();
+    var user_id = "{{ user.user_name }}";
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      var flag = this.responseText;
+      if(flag === '1'){
+        window.location.href = "{% url 'teacher_dashboard' %}";
+      }
+      else{
+        alert("Unable to Submit!");
+      }
+    }
+    xhttp.open("POST", "{% url 'finalSubmit' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id="+user_id);
   }
 
 </script>
