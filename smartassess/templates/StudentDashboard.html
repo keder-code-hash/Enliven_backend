@@ -82,7 +82,7 @@
             <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
               content.</p>
-            <a class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal">Attempt</a>
+            <a id="attempt" class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
             <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>
@@ -121,6 +121,7 @@
           </div>
           <p align="center">
             <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
+            <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
           </p>
         </div>
       </div>
@@ -128,72 +129,82 @@
   </div>
 </div>
 <script>
-  /* JS comes here */
-  (function() {
+  /* JS comes here */ 
 
-      var width = 320; // We will scale the photo width to this
-      var height = 0; // This will be computed based on the input stream
+  var width = 320; // We will scale the photo width to this
+  var height = 0; // This will be computed based on the input stream
 
-      var streaming = false;
+  var streaming = false;
 
-      var video = null;
-      var canvas = null;
-      var photo = null;
-      var startbutton = null;
+  var video = null;
+  var canvas = null;
+  var photo = null;
+  var startbutton = null; 
 
-      function startup() {
-          video = document.getElementById('video');
-          canvas = document.getElementById('canvas');
-          photo = document.getElementById('photo');
-          startbutton = document.getElementById('startbutton');
+  var streamObject;
+  
+  function startup() {
+      video = document.getElementById('video');
+      canvas = document.getElementById('canvas');
+      photo = document.getElementById('photo');
+      startbutton = document.getElementById('startbutton');
 
-          navigator.mediaDevices.getUserMedia({
-                  video: true,
-                  audio: false
-              })
-              .then(function(stream) {
-                  video.srcObject = stream;
-                  video.play();
-              })
-              .catch(function(err) {
-                  console.log("An error occurred: " + err);
-              });
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false
+      })
+      .then(function(stream) {
+        video.srcObject = stream; 
+        streamObject=stream;
+        video.play(); 
 
-          video.addEventListener('canplay', function(ev) {
-              if (!streaming) {
-                  height = video.videoHeight / (video.videoWidth / width);
+        var killcam=document.getElementById("killCamera");
+        killcam.addEventListener('click',(ev)=>{
+          var track = stream.getTracks()[0];  
+          track.stop();
+        },false) 
+      })
+      .catch(function(err) {
+        console.log("An error occurred: " + err);
+      }); 
 
-                  if (isNaN(height)) {
-                      height = width / (4 / 3);
-                  }
 
-                  video.setAttribute('width', width);
-                  video.setAttribute('height', height);
-                  canvas.setAttribute('width', width);
-                  canvas.setAttribute('height', height);
-                  streaming = true;
+
+      video.addEventListener('canplay', function(ev) {
+          if (!streaming) {
+              height = video.videoHeight / (video.videoWidth / width);
+
+              if (isNaN(height)) {
+                  height = width / (4 / 3);
               }
-          }, false);
 
-          startbutton.addEventListener('click', function(ev) {
-              takepicture();
-              ev.preventDefault();
-          }, false);
+              video.setAttribute('width', width);
+              video.setAttribute('height', height);
+              canvas.setAttribute('width', width);
+              canvas.setAttribute('height', height);
+              streaming = true;
+          }
+      }, false);
 
-          clearphoto();
-      }
+      startbutton.addEventListener('click', function(ev) {
+          takepicture();
+          ev.preventDefault();
+      }, false);
+
+      clearphoto();
+  }
 
 
-      function clearphoto() {
-          var context = canvas.getContext('2d');
-          context.fillStyle = "#AAA";
-          context.fillRect(0, 0, canvas.width, canvas.height);
+  function clearphoto() {
+      var context = canvas.getContext('2d');
+      context.fillStyle = "#AAA";
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
-          var data = canvas.toDataURL('image/png');
-          photo.setAttribute('src', data);
-      }
+      var data = canvas.toDataURL('image/png');
+      photo.setAttribute('src', data);
+  }
 
-      function takepicture() {
+  function takepicture() {
           var context = canvas.getContext('2d');
           if (width && height) {
               canvas.width = width;
@@ -206,8 +217,9 @@
               clearphoto();
           }
       }
-
-      window.addEventListener('load', startup, false);
-  })();
+      
+  function loadImage(examid){ 
+    startup();
+  } 
   </script>
 {% endblock %}
