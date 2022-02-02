@@ -397,10 +397,10 @@ def teacher_dashboard(request):
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
     exam_data = fetch_exam_by_userid(email_id)
-    file_url = staticfiles_storage.path('data/questions.json')
+    file_url = staticfiles_storage.path('data/questions.json') 
     with open(file_url, 'r') as file:
         exam_name = json.load(file).get(user.user_name).get("exam_name")
-
+     
     for exam in exam_data:
         if exam["exam_name"] == exam_name:
             exam["editable"] = True
