@@ -1,3 +1,4 @@
+from multiprocessing import context
 from re import sub
 from django.shortcuts import render
 import json
@@ -134,8 +135,9 @@ def view_all_results(request):
 
 
 # self assessment
-def self_assessment(request):
-    return HttpResponse("Self Assessment")
+def assessment(request):
+    context = {"is_authenticated": is_authenticated_user(request)}
+    return render(request, "AttemptExam.html", context)
 
 
 # set questions for examination (accessible by teacher only)
