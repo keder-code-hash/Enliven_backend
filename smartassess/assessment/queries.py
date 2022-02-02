@@ -1,9 +1,15 @@
 from multiprocessing.connection import answer_challenge
+from click import FileError
+from django.forms import model_to_dict
 from django.http import JsonResponse
+from itsdangerous import json
 from .models import *
 from users.models import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+import os
+from django.core import serializers
+
 
 question="What is OS?"
 standard_answer="An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs."
@@ -103,18 +109,96 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
     except ObjectDoesNotExist:
         return None,False
 
+# save exam from json
+def save_exam_from_json(filepath):
+    if os.path.exists(filepath):
+        try:
+            json_data=open(filepath,mode='r',encoding='utf-8')
+            exam_set=json.loads(json_data.read())
+            
+            # exam setter obj
+            exam_setter_user_name=list(exam_set.keys())[0]
+            exam_stter_obj=Register.objects.get(user_name__iexact=exam_setter_user_name)
+            exam_dets_json=list(exam_set.values())[0]
+            exam_name=exam_dets_json.get('exam_name')
+            course=exam_dets_json.get('topic')
+            exam_details=exam_dets_json.get('exam_details')
+            duration=datetime.time(00,30,00)
+
+            # create exam
+            exam_id,status=create_exam(exam_name=exam_name,marks=100,duration=duration,created_by=exam_stter_obj,course_name=course,description=exam_details)
+ 
+            json_data.close()
+
+            return exam_id,status
+        except FileError:
+            print("File does not exist")
+            return None,False
+
+# save final question answer dataset
+def save_exam_qna(filepath,exam_id):
+    if os.path.exists(filepath):
+        try:
+            json_data=open(filepath,mode='r',encoding='utf-8')
+            exam_set=json.loads(json_data.read())
+            
+            # exam setter obj
+            exam_setter_user_name=list(exam_set.keys())[0]
+            exam_stter_obj=Register.objects.get(user_name__iexact=exam_setter_user_name)
+            exam_dets_json=list(exam_set.values())[0] 
+ 
+            question_ids=[]
+            question_answer_pairs=exam_dets_json.get("qna")
+            for items in question_answer_pairs:
+                quest=list(items.keys())[0]
+                ans=list(items.values())[0]
+                q_id,q_status=set_questions(question=quest,exam_id=exam_id,standard_answer=ans,created_by=exam_stter_obj)
+                question_ids.append(q_id)
+
+            json_data.close()
+
+            return question_ids
+        except FileError:
+            print("File does not exist")
+            return False
+
+# fetch all details against any exam from db
+def fetch_exam_details_by_id(exam_id=None):
+    exam_obj=Exam.objects.filter(id=exam_id).values() 
+    question_answer_pairs=[]
+    
+    question_all_pairs_obj=Question.objects.filter(exam_id=exam_id).values() 
+    for item in list(question_all_pairs_obj): 
+        question_answer_pairs.append(item)
+
+    return list(exam_obj)[0],question_answer_pairs
+
+# fetch all details against any exam from db
+def fetch_exam_details_by_name(exam_name=None):
+    exam_obj=Exam.objects.filter(exam_name=exam_name).values() 
+    question_answer_pairs=[]
+    exam_id=list(exam_obj)[0].id
+    
+    question_all_pairs_obj=Question.objects.filter(exam_id=exam_id).values() 
+    for item in list(question_all_pairs_obj): 
+        question_answer_pairs.append(item)
+
+    return list(exam_obj)[0],question_answer_pairs
 
 def test(request):
     if request.method=="GET":
-        # exam of 30 minutes
-        exam_dur = datetime.time(00, 30, 00)
-        id,status=create_exam("Test1",100,duration=exam_dur,created_by=Register.objects.get(email__iexact="root@gmail.com"),course_name="OOPS",description="Test course")
+        # # exam of 30 minutes
+        # exam_dur = datetime.time(00, 30, 00)
+        # id,status=create_exam("Test1",100,duration=exam_dur,created_by=Register.objects.get(email__iexact="root@gmail.com"),course_name="OOPS",description="Test course")
 
 
-        q_id,q_status=set_questions(question="What is OS?",exam_id=12,standard_answer="An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",created_by=Register.objects.get(email__iexact="root@gmail.com"))
+        # q_id,q_status=set_questions(question="What is OS?",exam_id=12,standard_answer="An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",created_by=Register.objects.get(email__iexact="root@gmail.com"))
 
 
-        answer_duration=datetime.time(00,3,00)
-        a_id,a_status=set_student_answer(exam_id=2,question_id=1,answer="OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks.",answer_duration=answer_duration,answered_by=Register.objects.get(email__iexact="admin@gmail.com"))
+        # answer_duration=datetime.time(00,3,00)
+        # a_id,a_status=set_student_answer(exam_id=2,question_id=1,answer="OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks.",answer_duration=answer_duration,answered_by=Register.objects.get(email__iexact="admin@gmail.com"))
 
-        return JsonResponse({"st":a_id,"create_status":a_status})
+        # res,resp=save_exam_qna("./staticfiles/data/questions.json",3)
+
+        res,resp=fetch_exam_details_by_id(exam_id=3)
+        return JsonResponse({"st":res,"create_status":resp})
