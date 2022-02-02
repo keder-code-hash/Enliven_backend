@@ -20,6 +20,8 @@ class Question(models.Model):
     standard_ans = models.CharField(max_length=130, blank=False)
     created_by = models.ManyToManyField(Register)
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.question
 
 
 class Answer(models.Model):
