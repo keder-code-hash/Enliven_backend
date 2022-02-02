@@ -164,6 +164,9 @@
               Duration: {{ i.duration }}<br>
               Description: {{ i.description }}
             </p>
+            {% if i.editable is True %}
+              <a href={% url 'setquestion' %} class="btn btn-info float-left" role="button">Edit</a>
+            {% endif %}
             <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>

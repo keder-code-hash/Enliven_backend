@@ -38,7 +38,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from django.template import Context, context
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 # from
 
 
@@ -397,7 +397,16 @@ def teacher_dashboard(request):
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
     exam_data = fetch_exam_by_userid(email_id)
-    # print(exam_data)
+    file_url = staticfiles_storage.path('data/questions.json')
+    with open(file_url, 'r') as file:
+        exam_name = json.load(file).get(user.user_name).get("exam_name")
+
+    for exam in exam_data:
+        if exam["exam_name"] == exam_name:
+            exam["editable"] = True
+        else:
+            exam["editable"] = False
+
     context = {
         "is_authenticated": is_authenticated_user(request), 
         "user_name": user.user_name,
