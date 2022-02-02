@@ -156,8 +156,9 @@ def save_exam_qna(filepath,exam_id):
                 question_ids.append(q_id)
 
             json_data.close()
+            # return question_ids
+            return True
 
-            return question_ids
         except FileError:
             print("File does not exist")
             return False
@@ -177,13 +178,17 @@ def fetch_exam_details_by_id(exam_id=None):
 def fetch_exam_details_by_name(exam_name=None):
     exam_obj=Exam.objects.filter(exam_name=exam_name).values() 
     question_answer_pairs=[]
-    exam_id=list(exam_obj)[0].id
+    exam_id=list(exam_obj)[0].get('id')
     
     question_all_pairs_obj=Question.objects.filter(exam_id=exam_id).values() 
     for item in list(question_all_pairs_obj): 
         question_answer_pairs.append(item)
 
     return list(exam_obj)[0],question_answer_pairs
+
+def fetch_exam_by_userid(user_id):
+    exam_obj=Exam.objects.filter(created_by__email=user_id).values()
+    return list(exam_obj)
 
 def test(request):
     if request.method=="GET":
