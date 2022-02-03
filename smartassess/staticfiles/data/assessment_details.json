@@ -1,0 +1,22 @@
+{
+    "exam": {
+        "id": 1,
+        "exam_name": "Test",
+        "marks": 100,
+        "course": "OOPS",
+        "description": "Test course",
+        "duration": {
+            "hour": 0,
+            "minute": 30
+        }
+    },
+    "ass_set": [
+        {
+            "id": 1,
+            "exam_id": 1,
+            "question": "What is OS?",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        }
+    ]
+}

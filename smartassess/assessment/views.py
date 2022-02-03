@@ -1,7 +1,12 @@
+import email
+from email.policy import HTTP
+from http.client import HTTPResponse
 import json
+from unittest import result
+from urllib.request import HTTPRedirectHandler
 
 # importing Django modules
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from users.views import is_authenticated_user, get_user
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -9,110 +14,56 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.views.decorators.csrf import csrf_exempt
 
 # Custom module imports
-from assessment.models import Question
+from assessment.models import Answer, Exam, Question
 
 
-# index page
-def index(request):
-    return HttpResponse("Landing Page")
-
-
-# test page
-def test(request):
-    return HttpResponse("Test Page")
-
-
+@csrf_exempt
+def load_assessment_result(request):
+    if request.method=="POST":
+        user=get_user(request=request)
+        email_id=user.email
+        exam_id=request.POST.get("exam_id")
+        exam_dets=Exam.objects.filter(id=exam_id).values()
+        data=Question.objects.filter(exam_id=exam_id).values() 
+        all_questions=list(data)
+        try:
+            file_url = staticfiles_storage.path('data/assessment_details.json')
+            json_data=open(file_url,mode='w',encoding='utf-8')
+            for question in all_questions:
+                student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
+                question['student_answer']=student_answer.answer
+                question.pop("created_at") 
+            exam_dets=list(exam_dets)[0] 
+            time={
+                "hour":exam_dets["duration"].hour,
+                "minute":exam_dets["duration"].minute
+            } 
+            exam_dets["duration"]=time
+            exam_dets.pop("created_at")
+            print()
+            assessment_set={
+                "exam":exam_dets,
+                "ass_set":all_questions
+            }
+            json_obj=json.dumps(assessment_set,indent=4)
+            json_data.write(json_obj)
+            return JsonResponse({"st":1})
+        except FileNotFoundError: 
+            return JsonResponse({"st":0})
 # test results
 def test_results(request):
-    exam_title = "Object Oriented Programming"
-    total_marks = 100
-    score = 80
-    details = [
-        {
-            "q_no": 1,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 2,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 3,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 4,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 5,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-    ]
+    try:
+        file_url = staticfiles_storage.path('data/assessment_details.json')
+        json_data=open(file_url,mode='r',encoding='utf-8')
+        data=json.loads(json_data.read())
+        exam_details=data.get('exam')
+        actual_ans=data.get('ass_set')
+    except:
+        pass
 
     context = {
-        "details": details,
-        "score": score,
-        "exam_title": exam_title,
-        "total_marks": total_marks,
+        "exam":exam_details,
+        "actual_ans":actual_ans,
         "is_authenticated": is_authenticated_user(request),
     }
 
