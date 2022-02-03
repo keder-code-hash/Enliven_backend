@@ -1,0 +1,76 @@
+{
+    "exam": [
+        {
+            "id": 1,
+            "exam_name": "Test",
+            "marks": 100,
+            "course": "OOPS",
+            "description": "Test course",
+            "duration": {
+                "hour": 0,
+                "minute": 30
+            },
+            "created_at": ""
+        },
+        {
+            "id": 2,
+            "exam_name": "Test1",
+            "marks": 100,
+            "course": "OOPS",
+            "description": "Test course",
+            "duration": {
+                "hour": 0,
+                "minute": 30
+            },
+            "created_at": ""
+        },
+        {
+            "id": 3,
+            "exam_name": "Exam",
+            "marks": 100,
+            "course": "OS",
+            "description": "test",
+            "duration": {
+                "hour": 0,
+                "minute": 30
+            },
+            "created_at": ""
+        },
+        {
+            "id": 5,
+            "exam_name": "Exam-1",
+            "marks": 40,
+            "course": "OS",
+            "description": "testing",
+            "duration": {
+                "hour": 1,
+                "minute": 15
+            },
+            "created_at": ""
+        },
+        {
+            "id": 6,
+            "exam_name": "edit testing",
+            "marks": 12,
+            "course": "OOPS",
+            "description": "edit function testing\n",
+            "duration": {
+                "hour": 1,
+                "minute": 22
+            },
+            "created_at": ""
+        },
+        {
+            "id": 7,
+            "exam_name": "test",
+            "marks": 12,
+            "course": "test",
+            "description": "hii",
+            "duration": {
+                "hour": 1,
+                "minute": 11
+            },
+            "created_at": ""
+        }
+    ]
+}
