@@ -8,4 +8,6 @@ urlpatterns = [
     path("deleteqna/", delete_questions, name="deleteQnA"),
     path("finalsubmit/", final_submit, name="finalSubmit"),
     path("save_answer/", save_answer, name="save_answer"),
+
+    
 ]

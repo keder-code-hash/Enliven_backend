@@ -145,9 +145,20 @@ def assessment(request):
         exam_id = request.body.decode("utf-8")
 
     exam_id = 3
-    question_list = Question.objects.filter(exam_id=exam_id).values()
+    question_list = Question.objects.filter(exam_id=exam_id).values() 
     question_list = list(question_list)
-    print(question_list)
+    try:
+        file_url = staticfiles_storage.path('data/all_questions.json')
+        json_data=open(file_url,mode='w',encoding='utf-8')
+        for exam in question_list: 
+            exam["created_at"]="" 
+            exam['student_answer']=""
+        exams={"questions":question_list}
+        json_obj=json.dumps(exams,indent=4)
+        json_data.write(json_obj)
+    except FileNotFoundError:
+        pass
+    # print(question_list)
 
     context = {
         "is_authenticated": is_authenticated_user(request),
