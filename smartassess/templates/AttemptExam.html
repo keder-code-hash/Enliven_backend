@@ -163,7 +163,8 @@
                 {% for i in qno %}
                 <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
                     style="margin: 4px ;padding: 2px;width: 25px;"
-                    onclick="loadQuestion('{{ forloop.counter }}')">{{forloop.counter }}</button>
+                    onclick="loadQuestion('{{ i.id }}')">{{forloop.counter }}
+                </button>
                 {% endfor %}
             </div>
         </div>
@@ -188,30 +189,25 @@
 <script>
 
     var currentQnNo = Number('{{ max_qno }}');
-    var maxQnNo = Number('{{ max_qno }}');
+    var maxQnNo = Number('{{ max_qno }}'); 
 
     var quill = new Quill('#editor', {
         theme: 'snow'
     });
 
-    function saveAns() {
-        var studentId = "{{ user.user_name }}";
+    function saveAns() { 
         var question = document.getElementById("question").value;
         var answer = quill.getText();
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
-            var flag = this.responseText;
-            if (flag === '0') {
-                maxQnNo = maxQnNo + 1;
-                currentQnNo = maxQnNo;
-                $("#questionList").append('<button class="btn btn-outline-success noBtn" id="btn_' + maxQnNo + '" style="margin: 4px ;padding: 2px;width: 25px;" onclick=loadQuestion(' + maxQnNo + ')>' + maxQnNo + '</button>');
-                document.getElementById("question").value = '';
-                quill.setText('');
-            }
+            // var flag = this.responseText;
+            
         }
-        xhttp.open("POST", "{% url 'save_answer' %}");
+        xhttp.open("POST", "{% url 'tempSaveQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("user_id=" + studentId + "&question=" + question + "&answer=" + answer);
+        xhttp.send("question_id=" + currentQnNo + "&answer=" + answer);
+
+
     }
 
     function loadQuestion(qno) {
@@ -219,10 +215,8 @@
         var userId = "{{ user.user_name }}";
         const xhttp = new XMLHttpRequest();
 
-        xhttp.onload = function () {
-            var obj = JSON.parse(this.response);
-            document.getElementById("question").value = obj["question"];
-            quill.setText(obj["answer"]);
+        xhttp.onload = function () { 
+            document.getElementById("question").innerHTML = this.responseText; 
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

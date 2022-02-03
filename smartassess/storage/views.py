@@ -9,9 +9,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.staticfiles.storage import staticfiles_storage
+from pip import main
 
 # Custom Library imports
-from users.views import get_user, is_authenticated_user
+from users.views import get_user, get_user_type, is_authenticated_user
 from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna
 from assessment.models import Question
 
@@ -60,29 +61,52 @@ def save_examname(request):
 @csrf_exempt
 def save_questions(request):
     if request.method == "POST":
-        user_id = request.POST.get("user_id")
-        question = request.POST.get("question")
-        answer = request.POST.get("answer")
-        qno = int(request.POST.get("qno"))
-        new_question = {question: answer}
-        flag = 0
-        file_url = staticfiles_storage.path("data/questions.json")
-        with open(file_url, "r+") as file:
-            main_data = json.load(file)
-            data = main_data.get(user_id)
-            length = len(data.get("qna"))
-            if qno <= length:
-                data.get("qna")[qno - 1] = new_question
-                flag = 1
+        user_type=get_user_type(request)
+        # print("hiii")
+        if user_type=='s': 
+            qno = request.POST.get("question_id")
+            answer = request.POST.get("answer")
+            file_url = staticfiles_storage.path("data/all_questions.json")
+            json_data=open(file_url,mode='r+',encoding='utf-8')
+            main_data =json.loads(json_data.read()) 
+            question_data = main_data.get("questions") 
+            try:
+                for question in question_data:
+                    if question.get("id")==qno:
+                        question["student_answer"]=answer
+                print(main_data)
+                json_obj=json.dumps(main_data,indent=4)
+                json_data.write(json_obj)
+                json_data.close()
+            except:
+                pass
+            return HttpResponse("success")
+        elif user_type=='t':
+            user_id = request.POST.get("user_id")
+            question = request.POST.get("question")
+            answer = request.POST.get("answer")
+            qno = int(request.POST.get("qno"))
+            new_question = {question: answer}
+            flag = 0
+            file_url = staticfiles_storage.path("data/questions.json")
+            with open(file_url, "r+") as file:
+                main_data = json.load(file)
+                data = main_data.get(user_id)
+                length = len(data.get("qna"))
+                if qno <= length:
+                    data.get("qna")[qno - 1] = new_question
+                    flag = 1
 
-            else:
-                data.get("qna").append(new_question)
+                else:
+                    data.get("qna").append(new_question)
 
-            main_data.update({user_id: data})
-            file.seek(0)
-            json.dump(main_data, file)
+                main_data.update({user_id: data})
+                file.seek(0)
+                json.dump(main_data, file)
 
-        return HttpResponse(flag)
+            return HttpResponse(flag)
+        else:
+            pass
 
     else:
         return HttpResponse("Invaild Request")
@@ -92,19 +116,37 @@ def save_questions(request):
 def fetch_questions(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
-        qno = int(request.POST.get("question_id"))
-        file_url = staticfiles_storage.path("data/questions.json")
-        with open(file_url, "r") as file:
-            main_data = json.load(file)
-            data = main_data.get(user_id)
-            try:
-                qna_dict = data.get("qna")[qno - 1]
-                for q, a in qna_dict.items():
-                    qna = {"question": q, "answer": a}
-            except IndexError:
-                qna = {"question": "", "answer": ""}
+        user_type=get_user_type(request=request)
+        if user_type=="s":
+            qno = int(request.POST.get("question_id"))
+            file_url = staticfiles_storage.path("data/all_questions.json")
+            with open(file_url, "r") as file:
+                main_data = json.load(file)
+                question_data = main_data.get("questions")
+                qstn={}
+                try:
+                    for question in question_data:
+                        if question.get("id")==qno:
+                            qstn=question.get("question")
+                except:
+                    pass
+            return HttpResponse(qstn)
+        elif user_type=="t":
+            qno = int(request.POST.get("question_id"))
+            file_url = staticfiles_storage.path("data/questions.json")
+            with open(file_url, "r") as file:
+                main_data = json.load(file)
+                data = main_data.get(user_id)
+                try:
+                    qna_dict = data.get("qna")[qno - 1]
+                    for q, a in qna_dict.items():
+                        qna = {"question": q, "answer": a}
+                except IndexError:
+                    qna = {"question": "", "answer": ""}
 
-        return JsonResponse(qna)
+            return JsonResponse(qna)
+        else:
+            pass
     else:
         return HttpResponse("Invaild Request")
 
