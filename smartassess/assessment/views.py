@@ -1,18 +1,12 @@
-import email
-from email.policy import HTTP
-from http.client import HTTPResponse
-import json
-from unittest import result
-from urllib.request import HTTPRedirectHandler
+import json 
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render 
 from users.views import is_authenticated_user, get_user
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.staticfiles.storage import staticfiles_storage 
 from django.views.decorators.csrf import csrf_exempt
-
+from django.core.exceptions import ObjectDoesNotExist
 # Custom module imports
 from assessment.models import Answer, Exam, Question
 
@@ -23,31 +17,34 @@ def load_assessment_result(request):
         user=get_user(request=request)
         email_id=user.email
         exam_id=request.POST.get("exam_id")
-        exam_dets=Exam.objects.filter(id=exam_id).values()
-        data=Question.objects.filter(exam_id=exam_id).values() 
-        all_questions=list(data)
         try:
-            file_url = staticfiles_storage.path('data/assessment_details.json')
-            json_data=open(file_url,mode='w',encoding='utf-8')
-            for question in all_questions:
-                student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
-                question['student_answer']=student_answer.answer
-                question.pop("created_at") 
-            exam_dets=list(exam_dets)[0] 
-            time={
-                "hour":exam_dets["duration"].hour,
-                "minute":exam_dets["duration"].minute
-            } 
-            exam_dets["duration"]=time
-            exam_dets.pop("created_at")
-            print()
-            assessment_set={
-                "exam":exam_dets,
-                "ass_set":all_questions
-            }
-            json_obj=json.dumps(assessment_set,indent=4)
-            json_data.write(json_obj)
-            return JsonResponse({"st":1})
+            exam_dets=Exam.objects.filter(id=exam_id).values()
+            data=Question.objects.filter(exam_id=exam_id).values() 
+            all_questions=list(data)
+            try:
+                file_url = staticfiles_storage.path('data/assessment_details.json')
+                json_data=open(file_url,mode='w',encoding='utf-8')
+                for question in all_questions:
+                    student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
+                    question['student_answer']=student_answer.answer
+                    question.pop("created_at") 
+                exam_dets=list(exam_dets)[0] 
+                time={
+                    "hour":exam_dets["duration"].hour,
+                    "minute":exam_dets["duration"].minute
+                } 
+                exam_dets["duration"]=time
+                exam_dets.pop("created_at")
+                print()
+                assessment_set={
+                    "exam":exam_dets,
+                    "ass_set":all_questions
+                }
+                json_obj=json.dumps(assessment_set,indent=4)
+                json_data.write(json_obj)
+                return JsonResponse({"st":1})
+            except ObjectDoesNotExist:
+                return JsonResponse({"st":0})
         except FileNotFoundError: 
             return JsonResponse({"st":0})
 # test results
@@ -64,11 +61,31 @@ def test_results(request):
     context = {
         "exam":exam_details,
         "actual_ans":actual_ans,
+        "question_no":len(actual_ans),
         "is_authenticated": is_authenticated_user(request),
     }
 
     return render(request, "StudentResult.html", context)
+@csrf_exempt
+def fetch_stnd_QnA(request):
+    if request.method=="POST":
+        id=request.POST.get('set_id')
+        try:
+            file_url = staticfiles_storage.path('data/assessment_details.json')
+            json_data=open(file_url,mode='r',encoding='utf-8')
+            data=json.loads(json_data.read())  
+            actual_ans=data.get('ass_set')[int(id)-1]
+            json_data.close()
+            print(actual_ans)
+            context = { 
+                "actual_ans":actual_ans, 
+            } 
+            return JsonResponse(context)
+        except:
+            pass
+        return JsonResponse({})
 
+        
 
 # view results of all students (accessible by teacher only)
 def view_all_results(request):

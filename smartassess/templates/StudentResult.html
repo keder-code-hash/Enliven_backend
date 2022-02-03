@@ -80,44 +80,80 @@
   <div class="row ml-2">
     <div class="col-sm-2"></div>
     <div class="col-sm-10" style="display:block;">
-      <a href={% url 'result' %} class="btn btn-primary float-left" role="button">Previous</a>
+      <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
 
-      <a href={% url 'result' %} class="btn btn-primary float-right" role="button">Next</a>
+      <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
     </div>
   </div>
   <div class="row">
     <!-- Histogram View -->
   </div>
   <script>
-    function loadQuestion(qno) {
-      currentQnNo = qno;
-      var userId = "{{ user.user_name }}";
-      const xhttp = new XMLHttpRequest();
-
-      xhttp.onload = function () {
-        var obj = JSON.parse(this.response);
-        document.getElementById("question").value = obj["question"];
-        quill.setText(obj["answer"]);
-      }
-      xhttp.open("POST", "{% url 'fetchQnA' %}");
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("user_id=" + userId + "&question_id=" + qno);
-    }
-
+    
     var standard_ans_quill = new Quill('#standard_ans_editor', {
       theme: 'snow'
     });
     var student_ans_quill = new Quill('#student_ans_editor', {
       theme: 'snow'
     });
-    var actual_qstn = " Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?  Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate"
-    var student_ans = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quaetemporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiatlaboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum'
-    var standard_ans = 'amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa temporevoluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperioresquo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur'
 
-    standard_ans_quill.setText(standard_ans);
-    student_ans_quill.setText(student_ans);
-    var text = document.createTextNode(actual_qstn);
-    document.getElementById("question").appendChild(text);
+    var currentQnNo=1;
+    var maxQuestionNo="{{question_no}}";
+
+    function loadQuestion(id) {
+      currentQnNo = id;
+      var setId = id;
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onload = function () {
+        var obj = JSON.parse(this.response)["actual_ans"]; 
+        document.getElementById("question").innerHTML = obj["question"];
+        standard_ans_quill.setText(obj["standard_ans"]);
+        student_ans_quill.setText(obj["student_answer"]);
+        var quillCollection=document.getElementsByClassName('ql-editor')
+        for (let i = 0; i < quillCollection.length; i++) { 
+            quillCollection[i].setAttribute("contenteditable", "false");
+        }
+        buttonValidation();
+      }
+      xhttp.open("POST", "{% url 'fetch_stnd_qna' %}");
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("set_id=" +id);
+    }
+
+    function loadPreviousQuestion(){
+      currentQnNo-=1;
+      loadQuestion(currentQnNo);
+      console.log("prev"+currentQnNo);
+
+    }
+    function loadNextQuestion(){
+      currentQnNo+=1;
+      loadQuestion(currentQnNo);
+      console.log("next"+currentQnNo);
+    }
+    
+    function buttonValidation(){
+      if(currentQnNo==1){
+        document.getElementById("prevButton").disabled = true;
+        document.getElementById("prevButton").style.display = "none";
+      } 
+      if(currentQnNo>=maxQuestionNo){
+        document.getElementById("nextButton").disabled = true;
+        document.getElementById("nextButton").style.display = "none";
+      }
+      if(currentQnNo < maxQuestionNo){ 
+        document.getElementById("nextButton").disabled = false;
+        document.getElementById("nextButton").style.display = "initial"; 
+      } 
+      if(currentQnNo>1){
+        document.getElementById("prevButton").disabled = false;
+        document.getElementById("prevButton").style.display = "initial";
+      }
+    }
+    $(window).on("load", function(){ 
+        document.getElementById("btn_1").click();
+    })
   </script>
 </div>
 
