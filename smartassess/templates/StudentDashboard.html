@@ -6,7 +6,8 @@
 {% block showuser %}
 <li class="nav-item">
   <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
-    <img class="rounded-circle mr-1" width="22px" src={{ profile_pic_url }} style="border: 1px solid black; padding:2px;">
+    <img class="rounded-circle mr-1" width="22px" src={{ profile_pic_url }}
+      style="border: 1px solid black; padding:2px;">
     {{ user_name }}
   </button>
 </li>
@@ -20,117 +21,123 @@
 <style>
   a {
     text-decoration: none;
-  } 
-    /* CSS comes here */
-    #video {
-        border: 1px solid black;
-        width: 320px;
-        height: 240px;
-    }
+  }
 
-    #photo {
-        border: 1px solid black;
-        width: 320px;
-        height: 240px;
-    }
+  /* CSS comes here */
+  #video {
+    border: 1px solid black;
+    width: 320px;
+    height: 240px;
+  }
 
-    #canvas {
-        display: none;
-    }
+  #photo {
+    border: 1px solid black;
+    width: 320px;
+    height: 240px;
+  }
 
-    .camera {
-        width: 340px;
-        display: inline-block;
-    }
+  #canvas {
+    display: none;
+  }
 
-    .output {
-        width: 340px;
-        display: inline-block;
-    }
+  .camera {
+    width: 340px;
+    display: inline-block;
+  }
 
-    #startbutton {
-        display: block;
-        position: relative;
-        margin-left: auto;
-        margin-right: auto;
-        bottom: 36px;
-        padding: 5px;
-        background-color: #6a67ce;
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        font-size: 14px;
-        color: rgba(255, 255, 255, 1.0);
-        cursor: pointer;
-    }
+  .output {
+    width: 340px;
+    display: inline-block;
+  }
 
-    .contentarea {
-        font-size: 16px;
-        font-family: Arial;
-        text-align: center;
-    }
+  #startbutton {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 36px;
+    padding: 5px;
+    background-color: #6a67ce;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1.0);
+    cursor: pointer;
+  }
+
+  .contentarea {
+    font-size: 16px;
+    font-family: Arial;
+    text-align: center;
+  }
 </style>
 {% endblock headcontent %}
 
 {% block content %}
 <div class="container">
-    <h2>Examinations</h2>
-    <div class="row">
-      {% for exam in exam_data %}
-      <div class="col-sm-4 wrapper">
-        <div class="card mb-4 shadow" style="width: 20rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{exam.exam_name}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">{{exam.course}}</h6>
-            <p class="card-text">Full Marks: {{exam.marks}}</p>
-            <p class="card-text">{{exam.description}}</p>
-            <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
-            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
-            <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
-          </div>
+  <h2>Examinations</h2>
+  <div class="row">
+    {% for exam in exam_data %}
+    <div class="col-sm-4 wrapper">
+      <div class="card mb-4 shadow" style="width: 20rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{exam.exam_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{exam.course}}</h6>
+          <p class="card-text">Full Marks: {{exam.marks}}</p>
+          <p class="card-text">{{exam.description}}</p>
+          <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
+          <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal"
+            data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
+          <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
         </div>
       </div>
-      {% endfor %}
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <div class="row">
-                <div class="col">
-                  <div class="contentarea">
-                    <h1>
-                        Using Javascript to capture Photo
-                    </h1>
-                    <div class="camera">
-                        <video id="video">Video stream not available.</video>
-                    </div>
-                    <div><button id="startbutton">Take photo</button></div>
-                    <canvas id="canvas"></canvas>
-                    <div class="output">
-                        <img id="photo" alt="The screen capture will appear in this box.">
-                    </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <div class="contentarea">
+                <h1>
+                  Using Javascript to capture Photo
+                </h1>
+                <div class="camera">
+                  <video id="video">Video stream not available.</video>
                 </div>
+                <div><button id="startbutton">Take photo</button></div>
+                <canvas id="canvas"></canvas>
+                <div class="output">
+                  <img id="photo" alt="The screen capture will appear in this box.">
                 </div>
               </div>
             </div>
           </div>
-          <p align="center">
-            <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
-            <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
-          </p>
         </div>
+        <p align="center">
+          <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
+          <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
+        </p>
       </div>
+      <p align="center">
+        <a href={% url 'assessment' %} class="btn btn-info" role="button">Enter Assessment</a>
+      </p>
     </div>
   </div>
 </div>
+</div>
+</div>
 <script>
-  /* JS comes here */ 
+  /* JS comes here */
 
   var width = 320; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
@@ -140,87 +147,87 @@
   var video = null;
   var canvas = null;
   var photo = null;
-  var startbutton = null; 
+  var startbutton = null;
 
   var streamObject;
-  
+
   function startup() {
-      video = document.getElementById('video');
-      canvas = document.getElementById('canvas');
-      photo = document.getElementById('photo');
-      startbutton = document.getElementById('startbutton');
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    photo = document.getElementById('photo');
+    startbutton = document.getElementById('startbutton');
 
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false
-      })
-      .then(function(stream) {
-        video.srcObject = stream; 
-        streamObject=stream;
-        video.play(); 
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    })
+      .then(function (stream) {
+        video.srcObject = stream;
+        streamObject = stream;
+        video.play();
 
-        var killcam=document.getElementById("killCamera");
-        killcam.addEventListener('click',(ev)=>{
-          var track = stream.getTracks()[0];  
+        var killcam = document.getElementById("killCamera");
+        killcam.addEventListener('click', (ev) => {
+          var track = stream.getTracks()[0];
           track.stop();
-        },false) 
+        }, false)
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log("An error occurred: " + err);
-      }); 
+      });
 
 
 
-      video.addEventListener('canplay', function(ev) {
-          if (!streaming) {
-              height = video.videoHeight / (video.videoWidth / width);
+    video.addEventListener('canplay', function (ev) {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
 
-              if (isNaN(height)) {
-                  height = width / (4 / 3);
-              }
+        if (isNaN(height)) {
+          height = width / (4 / 3);
+        }
 
-              video.setAttribute('width', width);
-              video.setAttribute('height', height);
-              canvas.setAttribute('width', width);
-              canvas.setAttribute('height', height);
-              streaming = true;
-          }
-      }, false);
+        video.setAttribute('width', width);
+        video.setAttribute('height', height);
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        streaming = true;
+      }
+    }, false);
 
-      startbutton.addEventListener('click', function(ev) {
-          takepicture();
-          ev.preventDefault();
-      }, false);
+    startbutton.addEventListener('click', function (ev) {
+      takepicture();
+      ev.preventDefault();
+    }, false);
 
-      clearphoto();
+    clearphoto();
   }
 
 
   function clearphoto() {
-      var context = canvas.getContext('2d');
-      context.fillStyle = "#AAA";
-      context.fillRect(0, 0, canvas.width, canvas.height);
+    var context = canvas.getContext('2d');
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-      var data = canvas.toDataURL('image/png');
-      photo.setAttribute('src', data);
+    var data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
   }
 
   function takepicture() {
-          var context = canvas.getContext('2d');
-          if (width && height) {
-              canvas.width = width;
-              canvas.height = height;
-              context.drawImage(video, 0, 0, width, height);
+    var context = canvas.getContext('2d');
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
 
-              var data = canvas.toDataURL('image/png');
-              photo.setAttribute('src', data);
-          } else {
-              clearphoto();
-          }
-      }
-      
-  function loadImage(examid){ 
+      var data = canvas.toDataURL('image/png');
+      photo.setAttribute('src', data);
+    } else {
+      clearphoto();
+    }
+  }
+
+  function loadImage(examid) {
     startup();
   } 
-  </script>
+</script>
 {% endblock %}

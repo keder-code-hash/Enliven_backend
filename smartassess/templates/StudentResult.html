@@ -8,100 +8,119 @@
 {% block showuser %}
 <li class="nav-item">
   <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
-    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }} style="border: 1px solid black; padding:2px;">
+    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }}
+      style="border: 1px solid black; padding:2px;">
     {{ user.user_name }}
   </button>
 </li>
 {% endblock showuser %}
 
 {% block btnurl %}
-  {% url 'profile' %}
+{% url 'profile' %}
 {% endblock %}
 
 {% block btnname %}My Profile{% endblock btnname %}
 
 {% block headcontent %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result</title>
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-    <style>
-        .exam_details {
-            margin-left: 5vw;
-        }
-        a{
-            text-decoration: none;
-        }
-    </style>
-    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Result</title>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+<style>
+  .exam_details {
+    margin-left: 5vw;
+  }
+
+  a {
+    text-decoration: none;
+  }
+</style>
+
 {% endblock headcontent %}
 
 {% block content %}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="exam_details">
-            <h1 class='display-4'>{{ exam_title }}</h1>
-            <h2 style="font-weight: 300;">Score: <b>{{ score }}</b></h2>
-            <h2 style="font-weight: 300;">Full Marks: <b>{{ total_marks }}</b></h2>
-            <br><br>
-        </div>
+  <div class="row">
+    <div class="exam_details">
+      <h1 class='display-4'>{{ exam_title }}</h1>
+      <h2 style="font-weight: 300;">Score: <b>{{ score }}</b></h2>
+      <h2 style="font-weight: 300;">Full Marks: <b>{{ total_marks }}</b></h2>
+      <br><br>
     </div>
-    <div class="row ml-2">
-        <div class="col-sm-2 mb-1 mt-1">
-            <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
-              {% for i in details %}
-                <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}" style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ forloop.counter }})">{{ forloop.counter }}</button>
-              {% endfor %}
-            </div>
-        </div>
-        <div class="col-sm-10">
-            <div class="shadow wrapper" style="height: 90vh; overflow-y: auto;">
-              <label>Question:</label>
-              <p id="question"></p>
-              <br>
-              <label>
-                Your Answer:
-              </label>
-              <div id='student_ans_editor' style="height: 200px;"></div>
-              <br>
-              <label>
-                Correct Answer:
-              </label>
-              <div id='standard_ans_editor' style="height: 200px;"></div>
-            </div>
-          </div>
+  </div>
+  <div class="row ml-2">
+    <div class="col-sm-2 mb-1 mt-1">
+      <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
+        {% for i in details %}
+        <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
+          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ forloop.counter }})">{{
+          forloop.counter }}</button>
+        {% endfor %}
+      </div>
     </div>
-    <br>
-    <div class="row ml-2">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10"  style="display:block;">
-            <a href={% url 'result' %} class="btn btn-primary float-left" role="button">Previous</a>
+    <div class="col-sm-10">
+      <div class="shadow wrapper" style="height: 90vh; overflow-y: auto;">
+        <label>Question:</label>
+        <p id="question"></p>
+        <br>
+        <label>
+          Your Answer:
+        </label>
+        <div id='student_ans_editor' style="height: 200px;"></div>
+        <br>
+        <label>
+          Correct Answer:
+        </label>
+        <div id='standard_ans_editor' style="height: 200px;"></div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row ml-2">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10" style="display:block;">
+      <a href={% url 'result' %} class="btn btn-primary float-left" role="button">Previous</a>
 
-            <a href={% url 'result' %} class="btn btn-primary float-right" role="button">Next</a>
-        </div>
+      <a href={% url 'result' %} class="btn btn-primary float-right" role="button">Next</a>
     </div>
-    <div class="row">
-        <!-- Histogram View -->
-    </div>
-    <script>
-        var standard_ans_quill = new Quill('#standard_ans_editor', {
-            theme: 'snow'
-            });
-        var student_ans_quill = new Quill('#student_ans_editor', {
-        theme: 'snow'
-        });
-        var actual_qstn=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?  Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate"
-        var student_ans='Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quaetemporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiatlaboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum'
-        var standard_ans='amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa temporevoluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperioresquo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur'
+  </div>
+  <div class="row">
+    <!-- Histogram View -->
+  </div>
+  <script>
+    function loadQuestion(qno) {
+      currentQnNo = qno;
+      var userId = "{{ user.user_name }}";
+      const xhttp = new XMLHttpRequest();
 
-        standard_ans_quill.setText(standard_ans);
-        student_ans_quill.setText(student_ans);
-        var text = document.createTextNode(actual_qstn);
-        document.getElementById("question").appendChild(text);
-    </script>
+      xhttp.onload = function () {
+        var obj = JSON.parse(this.response);
+        document.getElementById("question").value = obj["question"];
+        quill.setText(obj["answer"]);
+      }
+      xhttp.open("POST", "{% url 'fetchQnA' %}");
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("user_id=" + userId + "&question_id=" + qno);
+    }
+
+    var standard_ans_quill = new Quill('#standard_ans_editor', {
+      theme: 'snow'
+    });
+    var student_ans_quill = new Quill('#student_ans_editor', {
+      theme: 'snow'
+    });
+    var actual_qstn = " Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde, cum sint deserunt quisquam adipisci deleniti cumque quae non voluptatibus nisi temporibus veniam suscipit?  Labore quos repudiandae excepturi dolorum veritatis error! Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam hic dolores reprehenderit eveniet earum cupiditate"
+    var student_ans = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore voluptatibus fuga mollitia architecto maxime rem cupiditate unde? Sapiente obcaecati quam id explicabo libero. Quaetemporibus labore quia, consectetur eligendi quo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur quod nostrum, quas minus tempora sequi deserunt aliquid ea! Fugiatlaboriosam quo ipsum iusto, nisi perspiciatis voluptas nobis totam vitae laborum? Lorem ipsum'
+    var standard_ans = 'amet consectetur adipisicing elit. Voluptatibus quas numquam aliquam vitae ut ipsa temporevoluptate illum, debitis ratione minus non consequuntur excepturi nostrum error. Magnam fugit harum animi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis sint asperioresquo, debitis labore expedita repellat assumenda cumque perferendis corporis, illo aspernatur'
+
+    standard_ans_quill.setText(standard_ans);
+    student_ans_quill.setText(student_ans);
+    var text = document.createTextNode(actual_qstn);
+    document.getElementById("question").appendChild(text);
+  </script>
 </div>
 
 {% endblock %}

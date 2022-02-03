@@ -7,14 +7,15 @@
 {% block showuser %}
 <li class="nav-item">
   <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
-    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }} style="border: 1px solid black; padding:2px;">
+    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }}
+      style="border: 1px solid black; padding:2px;">
     {{ user.user_name }}
   </button>
 </li>
 {% endblock showuser %}
 
 {% block btnurl %}
-  {% url 'profile' %}
+{% url 'profile' %}
 {% endblock %}
 
 {% block btnname %}My Profile{% endblock btnname %}
@@ -31,6 +32,7 @@
   .exam_details {
     margin-left: 5vw;
   }
+
   .switch {
     position: relative;
     display: inline-block;
@@ -150,8 +152,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="exam_details">
-        <h2 class='display-4'>{{ data.exam_name }}</h2>
-        <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
+      <h2 class='display-4'>{{ data.exam_name }}</h2>
+      <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
     </div>
   </div>
 
@@ -159,7 +161,8 @@
     <div class="col-sm-2 mb-1 mt-1">
       <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
         {% for i in qno %}
-          <button class="btn btn-outline-success noBtn" id="btn_{{ i }}" style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i }})">{{ i }}</button>
+        <button class="btn btn-outline-success noBtn" id="btn_{{ i }}" style="margin: 4px ;padding: 2px;width: 25px;"
+          onclick="loadQuestion('{{ i }}')">{{ i }}</button>
         {% endfor %}
       </div>
     </div>
@@ -167,7 +170,8 @@
     <div class="col-sm-10">
       <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
         <label>Question:</label>
-        <textarea class="form-control" aria-label="With textarea" id="question" placeholder="Put your Question Here"></textarea>
+        <textarea class="form-control" aria-label="With textarea" id="question"
+          placeholder="Put your Question Here"></textarea>
         <br>
         <label>
           Answer: <em>(Highlight the <strong>keywords</strong> in your answer)</em>
@@ -192,86 +196,86 @@
     theme: 'snow'
   });
 
-  function saveQn(){
+  function saveQn() {
     var userId = "{{ user.user_name }}";
     var question = document.getElementById("question").value;
     var answer = quill.getText();
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       var flag = this.responseText;
-      if (flag === '0'){
-        maxQnNo = maxQnNo+1;
+      if (flag === '0') {
+        maxQnNo = maxQnNo + 1;
         currentQnNo = maxQnNo;
-        $("#questionList").append('<button class="btn btn-outline-success noBtn" id="btn_'+maxQnNo+'" style="margin: 4px ;padding: 2px;width: 25px;" onclick=loadQuestion('+maxQnNo+')>'+maxQnNo+'</button>');
+        $("#questionList").append('<button class="btn btn-outline-success noBtn" id="btn_' + maxQnNo + '" style="margin: 4px ;padding: 2px;width: 25px;" onclick=loadQuestion(' + maxQnNo + ')>' + maxQnNo + '</button>');
         document.getElementById("question").value = '';
         quill.setText('');
       }
     }
     xhttp.open("POST", "{% url 'tempSaveQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("user_id="+userId+"&question="+question+"&answer="+answer+"&qno="+currentQnNo);
+    xhttp.send("user_id=" + userId + "&question=" + question + "&answer=" + answer + "&qno=" + currentQnNo);
   }
 
-  function loadQuestion(qno){
+  function loadQuestion(qno) {
     currentQnNo = qno;
     var userId = "{{ user.user_name }}";
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       var obj = JSON.parse(this.response);
       document.getElementById("question").value = obj["question"];
       quill.setText(obj["answer"]);
     }
     xhttp.open("POST", "{% url 'fetchQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("user_id="+userId+"&question_id="+qno);
+    xhttp.send("user_id=" + userId + "&question_id=" + qno);
   }
 
-  function deleteQn(){
+  function deleteQn() {
     var qno = currentQnNo;
     var userId = "{{ user.user_name }}";
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       var flag = this.responseText;
-      if(flag === '1'){
-        $("#btn_"+currentQnNo).remove();
-        $(".noBtn").each(function(i){
-          if(i >= currentQnNo-1){
+      if (flag === '1') {
+        $("#btn_" + currentQnNo).remove();
+        $(".noBtn").each(function (i) {
+          if (i >= currentQnNo - 1) {
             var j = Number(this.innerHTML);
-            this.innerHTML = j-1;
-            this.setAttribute('id', 'btn_'+(j-1));
-            this.setAttribute('onclick', 'loadQuestion('+(j-1)+')');
+            this.innerHTML = j - 1;
+            this.setAttribute('id', 'btn_' + (j - 1));
+            this.setAttribute('onclick', 'loadQuestion(' + (j - 1) + ')');
           }
         })
-        maxQnNo = maxQnNo-1;
+        maxQnNo = maxQnNo - 1;
         currentQnNo = maxQnNo;
         document.getElementById("question").value = '';
         quill.setText('');
       }
-      else{
+      else {
         alert("Unable to delete!");
       }
     }
     xhttp.open("POST", "{% url 'deleteQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("user_id="+userId+"&question_id="+qno);
+    xhttp.send("user_id=" + userId + "&question_id=" + qno);
   }
 
-  function finalSubmit(){
+  function finalSubmit() {
     saveQn();
     var user_id = "{{ user.user_name }}";
     const xhttp = new XMLHttpRequest();
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       var flag = this.responseText;
-      if(flag === '1'){
+      if (flag === '1') {
         window.location.href = "{% url 'teacher_dashboard' %}";
       }
-      else{
+      else {
         alert("Unable to Submit!");
       }
     }
     xhttp.open("POST", "{% url 'finalSubmit' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("user_id="+user_id);
+    xhttp.send("user_id=" + user_id);
   }
 
 </script>
