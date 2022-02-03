@@ -1,6 +1,7 @@
 # Standard Library imports
 import json
 import datetime
+from textwrap import indent
 
 # Django Library imports
 from django.http import HttpResponse
@@ -62,25 +63,29 @@ def save_examname(request):
 def save_questions(request):
     if request.method == "POST":
         user_type=get_user_type(request)
-        # print("hiii")
         if user_type=='s': 
-            qno = request.POST.get("question_id")
+            qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
             file_url = staticfiles_storage.path("data/all_questions.json")
-            json_data=open(file_url,mode='r+',encoding='utf-8')
-            main_data =json.loads(json_data.read()) 
-            question_data = main_data.get("questions") 
             try:
-                for question in question_data:
-                    if question.get("id")==qno:
-                        question["student_answer"]=answer
-                print(main_data)
-                json_obj=json.dumps(main_data,indent=4)
-                json_data.write(json_obj)
-                json_data.close()
+                with open(file_url, "r+") as file:
+                    main_data = json.load(file)
+                    data = main_data.get("questions")
+                    for q in data:
+                        if q.get('id') == qno:
+                            q["student_answer"] = answer
+
+                    print(data)
+                    main_data.update({"questions": data})
+                    file.seek(0)
+                    file.truncate()
+                    json.dump(main_data, file)
+                
+                return HttpResponse("success")
+
             except:
-                pass
-            return HttpResponse("success")
+                return HttpResponse("unsuccess")
+
         elif user_type=='t':
             user_id = request.POST.get("user_id")
             question = request.POST.get("question")
@@ -127,10 +132,15 @@ def fetch_questions(request):
                 try:
                     for question in question_data:
                         if question.get("id")==qno:
-                            qstn=question.get("question")
+                            qstn={
+                                "question" : question.get("question"),
+                                "answer" : question.get("student_answer")
+                            }
                 except:
                     pass
-            return HttpResponse(qstn)
+            return JsonResponse(qstn)
+
+
         elif user_type=="t":
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/questions.json")
@@ -197,15 +207,3 @@ def final_submit(request):
     else:
         return HttpResponse("Invaild Request")
 
-
-############################## Answer ################################
-
-
-@csrf_exempt
-def save_answer(request):
-    exam_id = None
-
-    if request.method == "POST":
-        exam_id = request.body.decode("utf-8")
-
-    print(exam_id)  # debug

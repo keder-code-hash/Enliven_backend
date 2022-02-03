@@ -135,8 +135,7 @@
 {% block showuser %}
 <li class="nav-item">
     <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
-        <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }}
-            style="border: 1px solid black; padding:2px;">
+        <img class="rounded-circle mr-1" width="22px" src="{{ user.profile_pic_url }}" style="border: 1px solid black; padding:2px;">
         {{ user.user_name }}
     </button>
 </li>
@@ -146,7 +145,7 @@
 {% url 'profile' %}
 {% endblock %}
 
-{% block btnname %}Assessment{% endblock btnname %}
+{% block btnname %}My Profile{% endblock btnname %}
 
 {% block content %}
 <div class="container-fluid">
@@ -161,9 +160,7 @@
         <div class="col-sm-2 mb-1 mt-1">
             <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
                 {% for i in qno %}
-                <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
-                    style="margin: 4px ;padding: 2px;width: 25px;"
-                    onclick="loadQuestion('{{ i.id }}')">{{forloop.counter }}
+                <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}" style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }}, {{ forloop.counter }})">{{ forloop.counter }}
                 </button>
                 {% endfor %}
             </div>
@@ -177,8 +174,8 @@
                     Answer:
                 </label>
                 <div id='editor' style="height: 200px;"></div>
-                <div class="" style="padding-top: 10px;">
-                    <button type="button" class="btn btn-outline-primary" onclick="saveAns()">Submit</button>
+                <div style="padding-top: 10px;">
+                    <button type="button" id="saveAnsBtn" class="btn btn-outline-primary" onclick="saveAns()">Save Ans</button>
                     <button type="button" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
                 </div>
             </div>
@@ -188,9 +185,9 @@
 
 <script>
 
-    var currentQnNo = Number('{{ max_qno }}');
-    var maxQnNo = Number('{{ max_qno }}'); 
-
+    var questionId;
+    var currentQnNo = 1;
+    var maxQnNo = Number('{{ max_no }}');
     var quill = new Quill('#editor', {
         theme: 'snow'
     });
@@ -200,23 +197,37 @@
         var answer = quill.getText();
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
-            // var flag = this.responseText;
+           if (this.responseText === "success"){
+               currentQnNo+=1;
+                if(currentQnNo == maxQnNo+1){
+                    document.getElementById("saveAnsBtn").disabled = true;
+                    document.getElementById("saveAnsBtn").style.display = "none";
+                    
+                }
+                else
+                    document.getElementById("btn_"+currentQnNo).click();
+           }
             
         }
         xhttp.open("POST", "{% url 'tempSaveQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("question_id=" + currentQnNo + "&answer=" + answer);
-
-
+        xhttp.send("question_id=" + questionId + "&answer=" + answer);
     }
 
-    function loadQuestion(qno) {
-        currentQnNo = qno;
+    function loadQuestion(qno, no) {
+        currentQnNo = no;
+        if(currentQnNo < maxQnNo){
+            document.getElementById("saveAnsBtn").disabled = false;
+            document.getElementById("saveAnsBtn").style.display = "initial";
+        }
+        questionId = qno;
         var userId = "{{ user.user_name }}";
         const xhttp = new XMLHttpRequest();
 
         xhttp.onload = function () { 
-            document.getElementById("question").innerHTML = this.responseText; 
+            var obj = JSON.parse(this.response);
+            document.getElementById("question").innerHTML = obj["question"];
+            quill.setText(obj["answer"]);
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -240,6 +251,10 @@
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("user_id=" + user_id);
     }
+
+    $(window).on("load", function(){
+        document.getElementById("btn_1").click();
+    })
 
 </script>
 {% endblock %}
