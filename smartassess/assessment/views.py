@@ -1,12 +1,16 @@
-from multiprocessing import context
-from re import sub
-from django.shortcuts import render
 import json
 
 # importing Django modules
 from django.http import HttpResponse
+from django.shortcuts import render
 from users.views import is_authenticated_user, get_user
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.core.exceptions import MultipleObjectsReturned
+from django.views.decorators.csrf import csrf_exempt
+
+# Custom module imports
+from assessment.models import Question
+
 
 # index page
 def index(request):
@@ -135,8 +139,21 @@ def view_all_results(request):
 
 
 # self assessment
+@csrf_exempt
 def assessment(request):
-    context = {"is_authenticated": is_authenticated_user(request)}
+    if request.method == "POST":
+        exam_id = request.body.decode("utf-8")
+
+    exam_id = 3
+    question_list = Question.objects.filter(exam_id=exam_id).values()
+    question_list = list(question_list)
+    print(question_list)
+
+    context = {
+        "is_authenticated": is_authenticated_user(request),
+        "question_list": question_list,
+        "qno": question_list,
+    }
     return render(request, "AttemptExam.html", context)
 
 

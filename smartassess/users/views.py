@@ -3,6 +3,8 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.http.response import HttpResponse, JsonResponse
 from rest_framework.views import APIView
+
+from assessment.queries import fetch_exam_by_userid
 from .serializers import userSerializer, RegisterSerializers, RegisterUpdateSerializer
 from .models import Register
 from rest_framework import serializers, status
@@ -36,7 +38,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from django.template import Context, context
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 # from
 
 
@@ -390,16 +392,30 @@ def get_user(request):
         return None
 
 def teacher_dashboard(request):
-    data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     access = request.COOKIES.get("accesstoken")
     decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
+    exam_data = fetch_exam_by_userid(email_id)
+    file_url = staticfiles_storage.path('data/questions.json')
+    try:
+        with open(file_url, 'r') as file:
+            exam_name = json.load(file).get(user.user_name).get("exam_name")
+
+        for exam in exam_data:
+            if exam["exam_name"] == exam_name:
+                exam["editable"] = True
+            else:
+                exam["editable"] = False
+
+    except AttributeError:
+        pass
+
     context = {
         "is_authenticated": is_authenticated_user(request), 
         "user_name": user.user_name,
         "profile_pic_url": user.profile_pic_url,
-        "exam_pages": data
+        "exam": exam_data
         }
 
     if get_user_type(request) == "t":

@@ -19,6 +19,24 @@
 {% block btnname %}My Profile{% endblock btnname %}
 
 {% block headcontent %}
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js">
+    </script>
+ 
+    <!-- Include Moment.js CDN -->
+    <script type="text/javascript" src=
+"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js">
+    </script>
+ 
+    <!-- Include Bootstrap DateTimePicker CDN -->
+    <link
+        href=
+"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
+        rel="stylesheet">
+ 
+    <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js">
+        </script>
 <style>
   a {
     text-decoration: none;
@@ -47,6 +65,9 @@
     var examName = document.getElementById("examName").value;
     var topicName = document.getElementById("topicName").value;
     var examDetails = document.getElementById("examDetails").value;
+    var marks =  document.getElementById("marks").value;
+    var hr =  document.getElementById("hr").value;
+    var min =  document.getElementById("min").value;
     
     if(examName === "" || topicName === "")
       alert("Exam Name and Subject name is required!");
@@ -54,11 +75,15 @@
     else{
       const xhttp = new XMLHttpRequest();
       xhttp.onload = function() {
-        window.location.href = "{% url 'setquestion' %}";
+        let flag = this.responseText;
+        if(flag === '1')
+          window.location.href = "{% url 'setquestion' %}";
+        else
+          alert("Exam cannot be created!");
       }
       xhttp.open("POST", "{% url 'saveExamName' %}");
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("user_id="+userId+"&exam_name="+examName+"&topic="+topicName+"&exam_details="+examDetails);
+      xhttp.send("user_id="+userId+"&exam_name="+examName+"&topic="+topicName+"&exam_details="+examDetails+"&marks="+marks+"&hr="+hr+"&min="+min);
     }
 
   }
@@ -81,10 +106,30 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-              <label for="examName">Exam Name:</label>
-              <input type="text" class="form-control" id="examName" required>
-              <label for="topicName">Subject / Topic: </label>
-              <input type="text" class="form-control" id="topicName" required>
+              <div class="row">
+                <div class="col">
+                  <label for="examName">Exam Name:</label>
+                  <input type="text" class="form-control" id="examName" required>
+                </div>
+                <div class="col">
+                  <label for="topicName">Subject / Topic: </label>
+                  <input type="text" class="form-control" id="topicName" required>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <label for="marks">Total Marks: </label>
+                  <input type="text" class="form-control" id="marks" required>
+                </div>
+                <div class="col">
+                  <label for="duration">Hours: </label>
+                  <input type="text" class="form-control" id="hr" placeholder="HH" required>
+                </div>
+                <div class="col">
+                  <label for="duration">Minutes: </label>
+                  <input type="text" class="form-control" id="min" placeholder="MM" required>
+                </div>
+              </div>
               <label for="examDetails">Exam Details:</label>
               <textarea class="form-control" id="examDetails" rows="3"></textarea>
             </div>
@@ -108,14 +153,20 @@
           </div>
         </div>
       </div>
-      {% for i in exam_pages %}
+      {% for i in exam %}
       <div class="col-sm-4 wrapper">
         <div class="card mb-4 shadow" style="width: 20rem;">
           <div class="card-body">
-            <h5 class="card-title">Exam {{i}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
+            <h5 class="card-title">{{ i.exam_name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ i.course }}</h6>
+            <p class="card-text">
+              Full Marks: {{ i.marks }}<br>
+              Duration: {{ i.duration }}<br>
+              Description: {{ i.description }}
+            </p>
+            {% if i.editable is True %}
+              <a href={% url 'setquestion' %} class="btn btn-info float-left" role="button">Edit</a>
+            {% endif %}
             <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>
@@ -123,5 +174,10 @@
       {% endfor %}
     </div>
   </div>
+  <script>
+    $('#duration').datetimepicker({
+      format: 'hh:mm'
+    });
+  </script>
 
 {% endblock %}
