@@ -146,7 +146,7 @@
         window.location.href = "{% url 'result'%}";
       }
       else{
-
+        alert("NO answer sheet found!!")
       }
     }
     xhttp.open("POST", "{% url 'loadResult' %}");

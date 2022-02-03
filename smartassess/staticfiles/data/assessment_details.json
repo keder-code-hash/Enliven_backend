@@ -14,7 +14,42 @@
         {
             "id": 1,
             "exam_id": 1,
-            "question": "What is OS?",
+            "question": "What is OS?1",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        },
+        {
+            "id": 2,
+            "exam_id": 1,
+            "question": "What is OS?2",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        },
+        {
+            "id": 3,
+            "exam_id": 1,
+            "question": "What is OS?3",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        },
+        {
+            "id": 4,
+            "exam_id": 1,
+            "question": "What is OS?4",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        },
+        {
+            "id": 5,
+            "exam_id": 1,
+            "question": "What is OS?5",
+            "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
+            "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+        },
+        {
+            "id": 6,
+            "exam_id": 1,
+            "question": "What is OS?6",
             "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
             "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
         }
