@@ -86,7 +86,7 @@
           <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
           <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal"
             data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
-          <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
+          <a class="btn btn-info float-right" role="button" onclick="loadResult({{ exam.id }})">View Results</a>
         </div>
       </div>
     </div>
@@ -136,6 +136,23 @@
 </div>
 </div>
 <script>
+  function loadResult(exam_id){
+    var exam_id=exam_id;
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function () {
+      var obj = JSON.parse(this.response);
+      if(obj["st"]===1){
+        window.location.href = "{% url 'result'%}";
+      }
+      else{
+
+      }
+    }
+    xhttp.open("POST", "{% url 'loadResult' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("exam_id=" + exam_id);
+  }
   /* JS comes here */
 
   var width = 320; // We will scale the photo width to this
