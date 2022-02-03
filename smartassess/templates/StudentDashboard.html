@@ -74,15 +74,16 @@
 <div class="container">
     <h2>Examinations</h2>
     <div class="row">
-      {% for i in exam_pages %}
+      {% for exam in exam_data %}
       <div class="col-sm-4 wrapper">
         <div class="card mb-4 shadow" style="width: 20rem;">
           <div class="card-body">
-            <h5 class="card-title">Exam {{i}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-              content.</p>
-            <a id="attempt" class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
+            <h5 class="card-title">{{exam.exam_name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{exam.course}}</h6>
+            <p class="card-text">Full Marks: {{exam.marks}}</p>
+            <p class="card-text">{{exam.description}}</p>
+            <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
+            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
             <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
           </div>
         </div>
