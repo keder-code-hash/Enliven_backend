@@ -162,8 +162,8 @@
             <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
                 {% for i in qno %}
                 <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
-                    style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion('{{ forloop.counter }}')">{{
-                    forloop.counter }}</button>
+                    style="margin: 4px ;padding: 2px;width: 25px;"
+                    onclick="loadQuestion('{{ forloop.counter }}')">{{forloop.counter }}</button>
                 {% endfor %}
             </div>
         </div>
