@@ -76,157 +76,158 @@
 <div class="container">
   <h2>Examinations</h2>
   <div class="row">
-    {% for i in exam_pages %}
+    {% for exam in exam_data %}
     <div class="col-sm-4 wrapper">
       <div class="card mb-4 shadow" style="width: 20rem;">
         <div class="card-body">
-          <h5 class="card-title">Exam {{i}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
-          <a class="btn btn-success float-left" role="button" data-toggle="modal" data-target="#exampleModal"
-            onclick="sendExamId('{{ i }}')">Attempt</a>
+          <h5 class="card-title">{{exam.exam_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{exam.course}}</h6>
+          <p class="card-text">Full Marks: {{exam.marks}}</p>
+          <p class="card-text">{{exam.description}}</p>
+          <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
+          <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal"
+            data-target="#exampleModal" onclick="loadImage({{ i }})">Attempt</a>
           <a href={% url 'result' %} class="btn btn-info float-right" role="button">View Results</a>
         </div>
       </div>
     </div>
-    {% endfor %}
   </div>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <div class="row">
-              <div class="col">
-                <div class="contentarea">
-                  <h1>
-                    Using Javascript to capture Photo
-                  </h1>
-                  <div class="camera">
-                    <video id="video">Video stream not available.</video>
-                  </div>
-                  <div><button id="startbutton">Take photo</button></div>
-                  <canvas id="canvas"></canvas>
-                  <div class="output">
-                    <img id="photo" alt="The screen capture will appear in this box.">
-                  </div>
+  {% endfor %}
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <div class="contentarea">
+                <h1>
+                  Using Javascript to capture Photo
+                </h1>
+                <div class="camera">
+                  <video id="video">Video stream not available.</video>
+                </div>
+                <div><button id="startbutton">Take photo</button></div>
+                <canvas id="canvas"></canvas>
+                <div class="output">
+                  <img id="photo" alt="The screen capture will appear in this box.">
                 </div>
               </div>
             </div>
           </div>
         </div>
         <p align="center">
-          <a href={% url 'assessment' %} class="btn btn-info" role="button">Enter Assessment</a>
+          <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
+          <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
         </p>
       </div>
+      <p align="center">
+        <a href={% url 'assessment' %} class="btn btn-info" role="button">Enter Assessment</a>
+      </p>
     </div>
   </div>
 </div>
 </div>
+</div>
 <script>
-  /********************* Send Exam ID JS ************************/
-  function sendExamId(exam_id) {
-    const xhttp = new XMLHttpRequest();
+  /* JS comes here */
 
-    console.log(exam_id)
-    xhttp.open('POST', "{% url 'assessment' %}")
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(exam_id)
-    console.log(exam_id)
+  var width = 320; // We will scale the photo width to this
+  var height = 0; // This will be computed based on the input stream
 
-    // xhttp.open('POST', "{% url 'save_answer' %}")
-    // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    // xhttp.send(exam_id)
+  var streaming = false;
+
+  var video = null;
+  var canvas = null;
+  var photo = null;
+  var startbutton = null;
+
+  var streamObject;
+
+  function startup() {
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    photo = document.getElementById('photo');
+    startbutton = document.getElementById('startbutton');
+
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    })
+      .then(function (stream) {
+        video.srcObject = stream;
+        streamObject = stream;
+        video.play();
+
+        var killcam = document.getElementById("killCamera");
+        killcam.addEventListener('click', (ev) => {
+          var track = stream.getTracks()[0];
+          track.stop();
+        }, false)
+      })
+      .catch(function (err) {
+        console.log("An error occurred: " + err);
+      });
+
+
+
+    video.addEventListener('canplay', function (ev) {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
+
+        if (isNaN(height)) {
+          height = width / (4 / 3);
+        }
+
+        video.setAttribute('width', width);
+        video.setAttribute('height', height);
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        streaming = true;
+      }
+    }, false);
+
+    startbutton.addEventListener('click', function (ev) {
+      takepicture();
+      ev.preventDefault();
+    }, false);
+
+    clearphoto();
   }
 
-  /********************* Camera Capture JS ************************/
-  /* JS comes here */
-  (function () {
 
-    var width = 320; // We will scale the photo width to this
-    var height = 0; // This will be computed based on the input stream
+  function clearphoto() {
+    var context = canvas.getContext('2d');
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-    var streaming = false;
+    var data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+  }
 
-    var video = null;
-    var canvas = null;
-    var photo = null;
-    var startbutton = null;
-
-    function startup() {
-      video = document.getElementById('video');
-      canvas = document.getElementById('canvas');
-      photo = document.getElementById('photo');
-      startbutton = document.getElementById('startbutton');
-
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: false
-      })
-        .then(function (stream) {
-          video.srcObject = stream;
-          video.play();
-        })
-        .catch(function (err) {
-          console.log("An error occurred: " + err);
-        });
-
-      video.addEventListener('canplay', function (ev) {
-        if (!streaming) {
-          height = video.videoHeight / (video.videoWidth / width);
-
-          if (isNaN(height)) {
-            height = width / (4 / 3);
-          }
-
-          video.setAttribute('width', width);
-          video.setAttribute('height', height);
-          canvas.setAttribute('width', width);
-          canvas.setAttribute('height', height);
-          streaming = true;
-        }
-      }, false);
-
-      startbutton.addEventListener('click', function (ev) {
-        takepicture();
-        ev.preventDefault();
-      }, false);
-
-      clearphoto();
-    }
-
-
-    function clearphoto() {
-      var context = canvas.getContext('2d');
-      context.fillStyle = "#AAA";
-      context.fillRect(0, 0, canvas.width, canvas.height);
+  function takepicture() {
+    var context = canvas.getContext('2d');
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
 
       var data = canvas.toDataURL('image/png');
       photo.setAttribute('src', data);
+    } else {
+      clearphoto();
     }
+  }
 
-    function takepicture() {
-      var context = canvas.getContext('2d');
-      if (width && height) {
-        canvas.width = width;
-        canvas.height = height;
-        context.drawImage(video, 0, 0, width, height);
-
-        var data = canvas.toDataURL('image/png');
-        photo.setAttribute('src', data);
-      } else {
-        clearphoto();
-      }
-    }
-
-    window.addEventListener('load', startup, false);
-  })();
+  function loadImage(examid) {
+    startup();
+  } 
 </script>
 {% endblock %}

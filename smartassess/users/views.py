@@ -1,8 +1,10 @@
+import email
 from typing import Dict
 import json
 from django.contrib.auth.hashers import make_password
 from django.http.response import HttpResponse, JsonResponse
 from rest_framework.views import APIView
+from assessment.models import Exam
 
 from assessment.queries import fetch_exam_by_userid
 from .serializers import userSerializer, RegisterSerializers, RegisterUpdateSerializer
@@ -424,17 +426,33 @@ def teacher_dashboard(request):
         return render(request, "Error.html", context)
 
 
-def student_dashboard(request):
-    data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+def student_dashboard(request): 
     access = request.COOKIES.get("accesstoken")
     decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
+    exam_data=Exam.objects.filter().all().values() 
+    exam_data=list(exam_data)
+    try:
+        file_url = staticfiles_storage.path('data/exam_details.json')
+        json_data=open(file_url,mode='w',encoding='utf-8')
+        for exam in exam_data:
+            time={
+                "hour":exam["duration"].hour,
+                "minute":exam["duration"].minute
+            } 
+            exam["duration"]=time
+            exam["created_at"]="" 
+        exams={"exam":exam_data}
+        json_obj=json.dumps(exams,indent=4)
+        json_data.write(json_obj)
+    except FileNotFoundError:
+        pass
     context = {
         "is_authenticated": is_authenticated_user(request), 
         "user_name": user.user_name,
         "profile_pic_url": user.profile_pic_url,
-        "exam_pages": data
+        "exam_data": exam_data
         }
     if get_user_type(request) == "s":
         return render(request, "StudentDashboard.html", context)
