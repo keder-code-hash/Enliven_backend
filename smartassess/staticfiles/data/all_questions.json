@@ -4,33 +4,25 @@
             "id": 2,
             "exam_id": 3,
             "question": "q1",
-            "standard_ans": "a1 changed\n",
-            "created_at": "",
             "student_answer": ""
         },
         {
             "id": 3,
             "exam_id": 3,
             "question": "q3",
-            "standard_ans": "a3\n",
-            "created_at": "",
             "student_answer": ""
         },
         {
             "id": 4,
             "exam_id": 3,
             "question": "q4",
-            "standard_ans": "a4\n",
-            "created_at": "",
             "student_answer": ""
         },
         {
             "id": 5,
             "exam_id": 3,
             "question": "What is Inheritance?",
-            "standard_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).\n",
-            "created_at": "",
             "student_answer": ""
         }
     ]
-} 
+}

@@ -151,8 +151,10 @@ def assessment(request):
         file_url = staticfiles_storage.path('data/all_questions.json')
         json_data=open(file_url,mode='w',encoding='utf-8')
         for exam in question_list: 
-            exam["created_at"]="" 
             exam['student_answer']=""
+            exam.pop("created_at")
+            exam.pop("standard_ans")
+
         exams={"questions":question_list}
         json_obj=json.dumps(exams,indent=4)
         json_data.write(json_obj)
@@ -162,8 +164,8 @@ def assessment(request):
 
     context = {
         "is_authenticated": is_authenticated_user(request),
-        "question_list": question_list,
         "qno": question_list,
+        "max_no": len(question_list)
     }
     return render(request, "AttemptExam.html", context)
 
