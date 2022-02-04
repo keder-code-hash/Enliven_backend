@@ -16,6 +16,7 @@ urlpatterns = (
         path('fetch_stnd_qna/',fetch_stnd_QnA,name="fetch_stnd_qna"),
         path('fetch_exam_qn/',save_assessment_answer,name="fetch_exam_qn"),
 
+        path('testing_db/',test,name="test"),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
