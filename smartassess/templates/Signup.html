@@ -1,0 +1,73 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block content %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    </head>
+    <body>
+    <form  action="{%url 'register' %}"method="POST">
+        {% csrf_token %}
+        <div class="container-fluid p-5 pb-5 mx-auto">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-sm-8">
+                    <div class="card text-blank border-8">
+                        <div class="card-body">
+                            <div class="card-title text-center">
+                                <h5>Sign Up Here</h5>
+                            </div>
+                            <div class="card-text">
+                                <div>
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-6">
+                                            <input  id="fisrt_name" type="text" name="first_name" class="form-control" placeholder="First Name" value="{{fisrt_name}}">
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <input type="text" name="last_name" id="last_name"  class="form-control" placeholder="Last Name" value="{{last_name}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="user_name" id="user_name" class="form-control" placeholder="user name" value="{{user_name}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="emailid" id="emailid" class="form-control" placeholder="Put email here" value="{{emailid}}">
+                                        {% if form.emailid.errors %}
+                                        <div class="p-3 mb-2 bg-danger text-white">
+                                            {{form.emailid.errors}} 
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+										<input type="password" name="user_password" id="user_password" class="form-control" placeholder="Password" value="{{user_password}}">
+										<small class="text-small text-muted">
+                                            we will never share your password
+                                        </small>
+									</div>
+									<div class="form-group">
+										<input type="password" id="user_password_conf" name="user_password_conf" class="form-control" placeholder="Confirm Password" value="{{user_password_conf}}">
+                                        {% if form.user_password_conf.errors %}
+                                        <div class="p-3 mb-2 bg-danger text-white">
+                                            {{form.user_password_conf.errors}}
+                                        </div> 
+                                        {% endif %}
+									</div>
+                                    <div class="text-center">
+										<button type="submit" class="btn btn-block btn-warning" >Submit</button>
+									</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+{% endblock %}

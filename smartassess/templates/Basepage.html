@@ -1,0 +1,219 @@
+{% load rest_framework %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href={% static 'css/App.css' %}>
+
+    <!-- <link href={% static 'css/bootstrap.min.css' %} rel="stylesheet"> -->
+    <link href={% static 'css/fontawesome-all.min.css' %} rel="stylesheet">
+    <link href={% static 'css/swiper.css' %} rel="stylesheet">
+    <link href={% static 'css/styles.css' %} rel="stylesheet">
+    <link rel="stylesheet" href={% static 'css/App.css' %}>
+    <!-- SEO Meta Tags -->
+    <!-- <meta name="BlogIt" content="Blogging Web Application">
+            <meta name="Keder" content="Keder Nath Mallick"> -->
+
+
+            <!-- Webpage Title -->
+            <title>
+                {% block title %}
+                {% endblock title %}
+            </title>
+
+            {% block headcontent %}
+            {% endblock headcontent %}
+            
+            
+            <!-- Favicon  -->
+            <link rel="icon" href={% static 'images/favicon.png' %}>
+    </head>
+<body style="background-color: #f5f5f5;">
+    <div class="container-fluid"  style="overflow: auto;">
+        <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light shadow pt-1" aria-label="Main navigation">
+            <div class="container-fluid">
+    
+                <!-- Image Logo --> 
+                <a class="navbar-brand logo-image" href={% url 'homePage' %}><img src={% static 'images/favicon.png' %} style="width:2rem;"></a>
+    
+                <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                    <ul class="navbar-nav navbar-nav-scroll ml-auto">
+                        {% if is_authenticated %}
+                            {% block showuser %}
+                            {% endblock showuser %}
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                                <a href="{% block btnurl %} {% endblock %}" class=" btn btn-outline-primary px-3 m-1" style="text-decoration:none;" role="button" >{% block btnname %}{% endblock btnname %}</a>
+                            </li> 
+                            <li class="nav-item" >
+                                <a href={%url 'logout' %} class="btn btn-outline-danger px-3 m-1" style="text-decoration:none;" role="button">LogOut</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                            <a href={%url 'register' %} class="btn btn-outline-primary px-3 m-1" style="text-decoration:none;" role="button" >Signup</a>
+                            </li>
+                            <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse">
+                                <a href={%url 'login' %} class="btn btn-outline-success px-3 m-1" style="text-decoration:none;" role="button" >Login</a>
+                            </li>
+                        {% endif %}
+                    </ul> 
+                </div> <!-- end of navbar-collapse -->
+            </div> <!-- end of container -->
+        </nav>
+        
+    </div>
+    <br></br>
+    <br></br>
+    {% block content %}
+
+    {% endblock %}
+    <br>
+
+    <!-- Footer -->
+    <footer class="page-footer font-small pt-4 shadow">
+        <br>
+        <!-- Footer Links -->
+        <div class="container-fluid text-center text-md-left">
+    
+        <!-- Grid row -->
+        <div class="row">
+    
+            <!-- Grid column -->
+            <div class="col-md-6 mt-md-0 mt-3">
+    
+            <!-- Content -->
+            <h5 class="text-uppercase">Smart Assessment</h5>
+            <p>An automation based smart assessment system</p>
+    
+            </div>
+            <!-- Grid column -->
+    
+            <hr class="clearfix w-100 d-md-none pb-3">
+    
+            <!-- Grid column -->
+            <div class="col-md-3 mb-md-0 mb-3">
+    
+            <!-- Links -->
+            <h5 class="text-uppercase">Links</h5>
+    
+            <ul class="list-unstyled">
+                <li>
+                <a href="#!">Link 1</a>
+                </li>
+                <li>
+                <a href="#!">Link 2</a>
+                </li>
+                <li>
+                <a href="#!">Link 3</a>
+                </li>
+                <li>
+                <a href="#!">Link 4</a>
+                </li>
+            </ul>
+    
+            </div>
+            <!-- Grid column -->
+    
+            <!-- Grid column -->
+            <div class="col-md-3 mb-md-0 mb-3">
+    
+            <!-- Links -->
+            <h5 class="text-uppercase">Links</h5>
+    
+            <ul class="list-unstyled">
+                <li>
+                <a href="#!">Link 1</a>
+                </li>
+                <li>
+                <a href="#!">Link 2</a>
+                </li>
+                <li>
+                <a href="#!">Link 3</a>
+                </li>
+                <li>
+                <a href="#!">Link 4</a>
+                </li>
+            </ul>
+    
+            </div>
+            <!-- Grid column -->
+    
+        </div>
+        <!-- Grid row -->
+    
+        </div>
+        <!-- Footer Links -->
+    
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2022 Copyright:
+        KAP
+        </div>
+        <!-- Copyright -->
+  
+  </footer>
+  <!-- Footer -->
+
+    <script>
+        $(document).on('submit', "#contactForm", function (event) {
+            submitFormcont();
+            event.preventDefault();
+            return false;
+        });
+        function submitFormcont() {
+            $('#contact-modal').removeClass("show");
+            $('#contact-modal').css("display", "none");
+            $("body").removeClass("modal-open");
+            $(".modal-backdrop").remove();
+            // console.log($('form#contactForm').serialize());
+            $.ajax({
+                type: "POST",
+                url: "{% url 'contact' %}",
+                cache: false,
+                data: $('form#contactForm').serialize(),
+                success: function (response) {
+                    // $("#contact").html(response)
+                    // $("#contact-modal").modal('hide');
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }
+    </script>
+    <!-- </div> -->
+
+    <button onclick="topFunction()" id="myBtn">
+        <img src={% static 'images/up-arrow.png' %} alt="alternative">
+    </button>
+    <!-- <script src={% static  '/js/bootstrap.min.js' %}  type="text/javascript"></script> Bootstrap framework -->
+    <script src={% static 'js/swiper.min.js' %} type="text/javascript"></script>
+    <!-- Swiper for image and text sliders -->
+    <!--  <script src={% static 'js/purecounter.min.js' %} type="text/javascript"></script> Purecounter counter for statistics numbers -->
+    <!-- <script src={% static 'js/isotope.pkgd.min.js' %} type="text/javascript"></script> Isotope for filter -->
+    <script src={% static 'js/scripts.js' %} type="text/javascript"></script>
+</body>
+
+</html>

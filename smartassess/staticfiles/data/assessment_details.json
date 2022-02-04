@@ -1,0 +1,50 @@
+{
+    "exam": {
+        "id": 8,
+        "exam_name": "Exam-01",
+        "marks": 20,
+        "course": "Physics",
+        "description": "Small unit test on physics.",
+        "duration": {
+            "hour": 0,
+            "minute": 40
+        }
+    },
+    "ass_set": [
+        {
+            "id": 18,
+            "exam_id": 8,
+            "question": "What is energy?",
+            "standard_ans": "Energy is the ability to do work.\n",
+            "student_answer": "Energy the capacity for doing work.\n"
+        },
+        {
+            "id": 19,
+            "exam_id": 8,
+            "question": "Define force.",
+            "standard_ans": "In physics, a force is an influence that can change the motion of an object.\n",
+            "student_answer": "Push or pull of an object is considered a force.\n"
+        },
+        {
+            "id": 20,
+            "exam_id": 8,
+            "question": "What is Friction?",
+            "standard_ans": "Friction is the resistance to motion of one object moving relative to another\n",
+            "student_answer": "Friction is force which act toward applied force on a object.\n"
+        },
+        {
+            "id": 21,
+            "exam_id": 8,
+            "question": "Newton's third law.",
+            "standard_ans": "For every action (force) in nature there is an equal and opposite reaction.\n",
+            "student_answer": "Every action has an equal and opposite reaction.\n"
+        },
+        {
+            "id": 22,
+            "exam_id": 8,
+            "question": "What is velocity?",
+            "standard_ans": "Velocity is the rate at which the position changes.\n",
+            "student_answer": "Velocity can be defined as the displacement of the object in unit time.\n"
+        }
+    ]
+}

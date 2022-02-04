@@ -1,0 +1,283 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+
+{% block title %}Set Questions{% endblock title %}
+
+{% block showuser %}
+<li class="nav-item">
+  <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+    <img class="rounded-circle mr-1" width="22px" src={{ user.profile_pic_url }}
+      style="border: 1px solid black; padding:2px;">
+    {{ user.user_name }}
+  </button>
+</li>
+{% endblock showuser %}
+
+{% block btnurl %}
+{% url 'profile' %}
+{% endblock %}
+
+{% block btnname %}My Profile{% endblock btnname %}
+
+{% block headcontent %}
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+</head>
+<style>
+  .exam_details {
+    margin-left: 5vw;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.slider {
+    background-color: #2196F3;
+  }
+
+  input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Open Sans, Ubuntu, Fira Sans, Helvetica Neue, sans-serif;
+    margin: 0;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    padding: 1rem;
+
+    display: grid;
+    grid-gap: 30px;
+  }
+
+  .linktr {
+    order: -1;
+    padding: 1.75rem;
+    text-align: center;
+  }
+
+  .linktr__goal {
+    background-color: rgb(209, 246, 255);
+    color: rgb(8, 49, 112);
+    box-shadow: rgb(8 49 112 / 24%) 0px 2px 8px 0px;
+    border-radius: 2rem;
+    padding: .5rem 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+
+    .linktr {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+    }
+  }
+
+  .r-link {
+    --uirLinkDisplay: var(--rLinkDisplay, inline-flex);
+    --uirLinkTextColor: var(--rLinkTextColor);
+    --uirLinkTextDecoration: var(--rLinkTextDecoration, none);
+
+    display: var(--uirLinkDisplay) !important;
+    color: var(--uirLinkTextColor) !important;
+    text-decoration: var(--uirLinkTextDecoration) !important;
+  }
+</style>
+{% endblock headcontent %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="exam_details">
+      <h2 class='display-4'>{{ data.exam_name }}</h2>
+      <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
+    </div>
+  </div>
+
+  <div class="row ml-2">
+    <div class="col-sm-2 mb-1 mt-1">
+      <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
+        {% for i in qno %}
+        <button class="btn btn-outline-success noBtn" id="btn_{{ i }}" style="margin: 4px ;padding: 2px;width: 25px;"
+          onclick="loadQuestion('{{ i }}')">{{ i }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-sm-10">
+      <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
+        <label>Question:</label>
+        <textarea class="form-control" aria-label="With textarea" id="question"
+          placeholder="Put your Question Here"></textarea>
+        <br>
+        <label>
+          Answer: <em>(Highlight the <strong>keywords</strong> in your answer)</em>
+        </label>
+        <div id='editor' style="height: 200px;"></div>
+        <div class="" style="padding-top: 10px;">
+          <button type="button" class="btn btn-outline-primary" onclick="saveQn()">Submit</button>
+          <button type="button" class="btn btn-outline-danger" onclick="deleteQn()">Delete</button>
+          <button type="button" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  var currentQnNo = Number('{{ max_qno }}');
+  var maxQnNo = Number('{{ max_qno }}');
+
+  var quill = new Quill('#editor', {
+    theme: 'snow'
+  });
+
+  function saveQn() {
+    var userId = "{{ user.user_name }}";
+    var question = document.getElementById("question").value;
+    var answer = quill.getText();
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var flag = this.responseText;
+      if (flag === '0') {
+        maxQnNo = maxQnNo + 1;
+        currentQnNo = maxQnNo;
+        $("#questionList").append('<button class="btn btn-outline-success noBtn" id="btn_' + maxQnNo + '" style="margin: 4px ;padding: 2px;width: 25px;" onclick=loadQuestion(' + maxQnNo + ')>' + maxQnNo + '</button>');
+        document.getElementById("question").value = '';
+        quill.setText('');
+      }
+    }
+    xhttp.open("POST", "{% url 'tempSaveQnA' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id=" + userId + "&question=" + question + "&answer=" + answer + "&qno=" + currentQnNo);
+  }
+
+  function loadQuestion(qno) {
+    currentQnNo = qno;
+    var userId = "{{ user.user_name }}";
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var obj = JSON.parse(this.response);
+      document.getElementById("question").value = obj["question"];
+      quill.setText(obj["answer"]);
+    }
+    xhttp.open("POST", "{% url 'fetchQnA' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id=" + userId + "&question_id=" + qno);
+  }
+
+  function deleteQn() {
+    var qno = currentQnNo;
+    var userId = "{{ user.user_name }}";
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var flag = this.responseText;
+      if (flag === '1') {
+        $("#btn_" + currentQnNo).remove();
+        $(".noBtn").each(function (i) {
+          if (i >= currentQnNo - 1) {
+            var j = Number(this.innerHTML);
+            this.innerHTML = j - 1;
+            this.setAttribute('id', 'btn_' + (j - 1));
+            this.setAttribute('onclick', 'loadQuestion(' + (j - 1) + ')');
+          }
+        })
+        maxQnNo = maxQnNo - 1;
+        currentQnNo = maxQnNo;
+        document.getElementById("question").value = '';
+        quill.setText('');
+      }
+      else {
+        alert("Unable to delete!");
+      }
+    }
+    xhttp.open("POST", "{% url 'deleteQnA' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id=" + userId + "&question_id=" + qno);
+  }
+
+  function finalSubmit() {
+    saveQn();
+    var user_id = "{{ user.user_name }}";
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+      var flag = this.responseText;
+      if (flag === '1') {
+        window.location.href = "{% url 'teacher_dashboard' %}";
+      }
+      else {
+        alert("Unable to Submit!");
+      }
+    }
+    xhttp.open("POST", "{% url 'finalSubmit' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("user_id=" + user_id);
+  }
+
+</script>
+
+{% endblock %}
