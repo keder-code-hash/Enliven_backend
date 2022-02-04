@@ -1,3 +1,5 @@
+from email.policy import HTTP
+from http.client import HTTPResponse
 import json 
 
 # importing Django modules
@@ -42,7 +44,10 @@ def load_assessment_result(request):
                 }
                 json_obj=json.dumps(assessment_set,indent=4)
                 json_data.write(json_obj)
-                return JsonResponse({"st":1})
+                if len(all_questions)>0:
+                    return JsonResponse({"st":1})
+                else:
+                    return JsonResponse({"st":0})
             except ObjectDoesNotExist:
                 return JsonResponse({"st":0})
         except FileNotFoundError: 
@@ -85,8 +90,6 @@ def fetch_stnd_QnA(request):
             pass
         return JsonResponse({})
 
-        
-
 # view results of all students (accessible by teacher only)
 def view_all_results(request):
     result = [
@@ -105,30 +108,37 @@ def view_all_results(request):
 
     return render(request, "TeacherResult.html", context)
 
+@csrf_exempt
+def save_assessment_answer(request):
+    if request.method=="POST":
+        exam_id=request.POST.get("exam_id") 
+        question_list = Question.objects.filter(exam_id=int(exam_id)).values() 
+        question_list = list(question_list)
+        try:
+            file_url = staticfiles_storage.path('data/all_questions.json')
+            json_data=open(file_url,mode='w',encoding='utf-8')
+            for exam in question_list: 
+                exam['student_answer']=""
+                exam.pop("created_at")
+                exam.pop("standard_ans")
+            exams={"questions":question_list}
+            json_obj=json.dumps(exams,indent=4)
+            json_data.write(json_obj)
+
+            return JsonResponse({"st":1})
+        except FileNotFoundError:
+            return JsonResponse({"st":0})
 
 # self assessment
 @csrf_exempt
-def assessment(request):
-    if request.method == "POST":
-        exam_id = request.body.decode("utf-8")
-
-    exam_id = 3
-    question_list = Question.objects.filter(exam_id=exam_id).values() 
-    question_list = list(question_list)
+def assessment(request): 
     try:
         file_url = staticfiles_storage.path('data/all_questions.json')
-        json_data=open(file_url,mode='w',encoding='utf-8')
-        for exam in question_list: 
-            exam['student_answer']=""
-            exam.pop("created_at")
-            exam.pop("standard_ans")
-
-        exams={"questions":question_list}
-        json_obj=json.dumps(exams,indent=4)
-        json_data.write(json_obj)
+        json_data=open(file_url,mode='r',encoding='utf-8')
+        question_list=json.loads(json_data.read()).get("questions") 
+        json_data.close()
     except FileNotFoundError:
-        pass
-    # print(question_list)
+        pass 
 
     context = {
         "is_authenticated": is_authenticated_user(request),
@@ -136,7 +146,6 @@ def assessment(request):
         "max_no": len(question_list)
     }
     return render(request, "AttemptExam.html", context)
-
 
 # set questions for examination (accessible by teacher only)
 def set_questions(request):
@@ -163,7 +172,6 @@ def set_questions(request):
     else:
         err_log = {"msg": "Are you logged in?"}
         return render(request, "Error.html", err_log)
-
 
 def view_results(request):
     return HttpResponse("View Results (accessible by Teacher)")

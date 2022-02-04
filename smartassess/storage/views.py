@@ -75,7 +75,6 @@ def save_questions(request):
                         if q.get('id') == qno:
                             q["student_answer"] = answer
 
-                    print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
