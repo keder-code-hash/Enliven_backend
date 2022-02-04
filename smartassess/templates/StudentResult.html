@@ -51,11 +51,20 @@
     </div>
   </div>
   <div class="row ml-2">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10" style="display:block;">
+      <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
+
+      <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
+    </div>
+  </div>
+  <br>
+  <div class="row ml-2">
     <div class="col-sm-2 mb-1 mt-1">
       <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
         {% for i in actual_ans %}
         <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
-          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }})">{{forloop.counter }}</button>
+          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }})" q_id="{{ i.id }}">{{forloop.counter }}</button>
         {% endfor %}
       </div>
     </div>
@@ -76,15 +85,6 @@
       </div>
     </div>
   </div>
-  <br>
-  <div class="row ml-2">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-10" style="display:block;">
-      <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
-
-      <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
-    </div>
-  </div>
   <div class="row">
     <!-- Histogram View -->
   </div>
@@ -100,8 +100,7 @@
     var currentQnNo=1;
     var maxQuestionNo="{{question_no}}";
 
-    function loadQuestion(id) {
-      currentQnNo = id;
+    function loadQuestion(id) { 
       var setId = id;
       const xhttp = new XMLHttpRequest();
 
@@ -123,14 +122,16 @@
 
     function loadPreviousQuestion(){
       currentQnNo-=1;
-      loadQuestion(currentQnNo);
+      var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
+      loadQuestion(Number(question_id));
       console.log("prev"+currentQnNo);
 
     }
     function loadNextQuestion(){
       currentQnNo+=1;
-      loadQuestion(currentQnNo);
       console.log("next"+currentQnNo);
+      var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
+      loadQuestion(question_id);
     }
     
     function buttonValidation(){

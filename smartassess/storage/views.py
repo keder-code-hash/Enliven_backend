@@ -14,7 +14,7 @@ from pip import main
 
 # Custom Library imports
 from users.views import get_user, get_user_type, is_authenticated_user
-from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna
+from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna, set_student_answer
 from assessment.models import Question
 
 
@@ -54,7 +54,7 @@ def save_examname(request):
             data = json.load(file)
             data.update(new_obj)
             file.seek(0)
-            json.dump(data, file)
+            json.dump(data, file, indent=4)
 
         return HttpResponse(1)
 
@@ -75,11 +75,10 @@ def save_questions(request):
                         if q.get('id') == qno:
                             q["student_answer"] = answer
 
-                    print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
-                    json.dump(main_data, file)
+                    json.dump(main_data, file, indent=4)
                 
                 return HttpResponse("success")
 
@@ -107,7 +106,7 @@ def save_questions(request):
 
                 main_data.update({user_id: data})
                 file.seek(0)
-                json.dump(main_data, file)
+                json.dump(main_data, file, indent=4)
 
             return HttpResponse(flag)
         else:
@@ -175,7 +174,7 @@ def delete_questions(request):
                 data.get("qna").pop(qno - 1)
                 main_data.update({user_id: data})
                 file.seek(0)
-                json.dump(main_data, file)
+                json.dump(main_data, file, indent=4)
                 file.truncate()
             except IndexError:
                 flag = 0
@@ -207,3 +206,24 @@ def final_submit(request):
     else:
         return HttpResponse("Invaild Request")
 
+@csrf_exempt
+def final_ans_submit(request):
+    # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
+    answered_by = get_user(request)
+    file_url = staticfiles_storage.path("data/all_questions.json")
+    answer_duration = datetime.time(0,0,0)
+    with open(file_url, "r") as file:
+        main_data = json.load(file)
+        question_data = main_data.get("questions")
+        for q in question_data:
+            flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
+            if(flag == False):
+                break
+    
+    file = open(file_url, "w")
+    file.write("{ }")
+    file.close()
+    if(flag == False):
+        return HttpResponse(0)
+
+    return HttpResponse(1)

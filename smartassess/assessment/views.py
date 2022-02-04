@@ -79,9 +79,13 @@ def fetch_stnd_QnA(request):
             file_url = staticfiles_storage.path('data/assessment_details.json')
             json_data=open(file_url,mode='r',encoding='utf-8')
             data=json.loads(json_data.read())  
-            actual_ans=data.get('ass_set')[int(id)-1]
+            actual_ans=data.get('ass_set')
+            for qna in actual_ans:
+                if(qna.get('id') == int(id)):
+                    actual_ans = qna
+                    break
             json_data.close()
-            print(actual_ans)
+            # print(actual_ans)
             context = { 
                 "actual_ans":actual_ans, 
             } 
