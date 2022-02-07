@@ -35,6 +35,15 @@
   a {
     text-decoration: none;
   }
+
+  .right{
+    color: #28a745;
+  }
+
+  .wrong{
+    color: #dc3545;
+  }
+
 </style>
 
 {% endblock headcontent %}
@@ -45,14 +54,14 @@
   <div class="row">
     <div class="exam_details">
       <h3 class='display-4'>{{ exam.exam_name }}</h3>
-      <h4 style="font-weight: 300;">Score: <b>{{ score }}</b></h4>
+      <h4 style="font-weight: 300;">Score: <b>{{ exam.score }}</b></h4>
       <h4 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h4>
       <br>
     </div>
   </div>
   <div class="row ml-2">
     <div class="col-sm-2"></div>
-    <div class="col-sm-10" style="display:block;">
+    <div class="col-sm-10" style="display:block; color:white !important;">
       <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
 
       <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
@@ -70,9 +79,15 @@
     </div>
     <div class="col-sm-10">
       <div class="shadow wrapper" style="height: 90vh; overflow-y: auto;">
-        <label>Question:</label>
-        <p id="question"></p>
-        <br>
+        <div class="row">
+          <div class="col-10">
+            <label>Question:</label>
+            <p id="question"></p>
+          </div>
+          <div class="col-sm-2 text-center">
+              <h5><span id="status">Right</span> (<span id="percentage">90%</span>) </h5>
+          </div>
+        </div>
         <label>
           Your Answer:
         </label>
@@ -105,7 +120,10 @@
       const xhttp = new XMLHttpRequest();
 
       xhttp.onload = function () {
-        var obj = JSON.parse(this.response)["actual_ans"]; 
+        var obj = JSON.parse(this.response)["actual_ans"];
+        document.getElementById("status").innerHTML = sentenceCase(obj["status"]);
+        document.getElementById("status").setAttribute("class", obj["status"]);
+        document.getElementById("percentage").innerHTML = obj["percentage"].toFixed(2) + "%";
         document.getElementById("question").innerHTML = obj["question"];
         standard_ans_quill.setText(obj["standard_ans"]);
         student_ans_quill.setText(obj["student_answer"]);
@@ -156,6 +174,17 @@
     $(window).on("load", function(){ 
         document.getElementById("btn_1").click(); 
     })
+
+    function sentenceCase (str) {
+      if ((str===null) || (str===''))
+           return false;
+      else
+       str = str.toString();
+      
+      return str.replace(/\w\S*/g, 
+      function(txt){return txt.charAt(0).toUpperCase() +
+            txt.substr(1).toLowerCase();});
+    }
   </script>
 </div>
 

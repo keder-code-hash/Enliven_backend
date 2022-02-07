@@ -1,4 +1,5 @@
-import json 
+import json
+from math import ceil 
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
@@ -24,11 +25,16 @@ def load_assessment_result(request):
             data=Question.objects.filter(exam_id=exam_id).values() 
             all_questions=list(data)
             try:
+                score = 0
                 file_url = staticfiles_storage.path('data/assessment_details.json')
                 json_data=open(file_url,mode='w',encoding='utf-8')
                 for question in all_questions:
                     student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
-                    question['student_answer']=student_answer.answer
+                    question['student_answer'] = student_answer.answer
+                    question['eval_details'] = student_answer.eval_details
+                    question['percentage'] = student_answer.match_percentage
+                    question['status'] = student_answer.remarks
+                    score += student_answer.marks
                     question.pop("created_at") 
                 exam_dets=list(exam_dets)[0] 
                 time={
@@ -36,8 +42,8 @@ def load_assessment_result(request):
                     "minute":exam_dets["duration"].minute
                 } 
                 exam_dets["duration"]=time
+                exam_dets["score"]=ceil(score)
                 exam_dets.pop("created_at")
-                print()
                 assessment_set={
                     "exam":exam_dets,
                     "ass_set":all_questions
@@ -55,18 +61,20 @@ def load_assessment_result(request):
 
 # test results
 def test_results(request):
+    user = get_user(request)
     try:
         file_url = staticfiles_storage.path('data/assessment_details.json')
         json_data=open(file_url,mode='r',encoding='utf-8')
         data=json.loads(json_data.read())
         exam_details=data.get('exam')
         actual_ans=data.get('ass_set')
-        # for loop calculate total result
     except:
         pass
 
     context = {
+        "user": user,
         "exam":exam_details,
+        "score":exam_details.get("score"),
         "actual_ans":actual_ans,
         "question_no":len(actual_ans),
         "is_authenticated": is_authenticated_user(request),
