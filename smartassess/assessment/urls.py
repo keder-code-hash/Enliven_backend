@@ -2,7 +2,7 @@ from django.urls import path
 from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import set_questions, test_results, view_all_results, assessment,load_assessment_result,fetch_stnd_QnA,save_assessment_answer,eval_exam
+from .views import set_questions, test_results, view_all_results, assessment,load_assessment_result,fetch_stnd_QnA,save_assessment_answer,eval_exam, load_assessment_result_teacher
 from .queries import test
 
 urlpatterns = (
@@ -13,6 +13,7 @@ urlpatterns = (
         path("assessment/", assessment, name="assessment"),
 
         path('load_assessment_res/',load_assessment_result,name="loadResult"),
+        path('load_assessment_res_teacher/',load_assessment_result_teacher,name="loadResultFromTeacher"),
         path('fetch_stnd_qna/',fetch_stnd_QnA,name="fetch_stnd_qna"),
         path('fetch_exam_qn/',save_assessment_answer,name="fetch_exam_qn"),
         path('evalexam/',eval_exam,name="eval_exam"),

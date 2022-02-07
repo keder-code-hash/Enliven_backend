@@ -4,6 +4,7 @@ from math import ceil
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from users.models import Register
 from users.views import is_authenticated_user, get_user, get_user_type 
 from django.contrib.staticfiles.storage import staticfiles_storage 
 from django.views.decorators.csrf import csrf_exempt
@@ -13,51 +14,87 @@ from assessment.models import Answer, Exam, Question
 from assessment.queries import fetch_exam_details_by_id
 from assessment.model_prediction import make_prediction
 
+def assessment_json_gen(exam_id, email_id):
+    try:
+        exam_dets=Exam.objects.filter(id=exam_id).values()
+        data=Question.objects.filter(exam_id=exam_id).values() 
+        all_questions=list(data)
+        try:
+            score = 0
+            file_url = staticfiles_storage.path('data/assessment_details.json')
+            json_data=open(file_url,mode='w',encoding='utf-8')
+            for question in all_questions:
+                student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
+                question['student_answer'] = student_answer.answer
+                question['eval_details'] = student_answer.eval_details
+                question['percentage'] = student_answer.match_percentage
+                question['status'] = student_answer.remarks
+                score += student_answer.marks
+                question.pop("created_at") 
+            exam_dets=list(exam_dets)[0] 
+            time={
+                "hour":exam_dets["duration"].hour,
+                "minute":exam_dets["duration"].minute
+            } 
+            exam_dets["duration"]=time
+            exam_dets["score"]=ceil(score)
+            exam_dets.pop("created_at")
+            assessment_set={
+                "exam":exam_dets,
+                "ass_set":all_questions
+            }
+            json_obj=json.dumps(assessment_set,indent=4)
+            json_data.write(json_obj)
+            if len(all_questions)>0:
+                return {"st":1}
+            else:
+                return {"st":0}
+        except ObjectDoesNotExist:
+            return {"st":0}
+    except FileNotFoundError: 
+        return {"st":0}
 
+
+# for student
 @csrf_exempt
 def load_assessment_result(request):
     if request.method=="POST":
         user=get_user(request=request)
         email_id=user.email
         exam_id=request.POST.get("exam_id")
+        res = assessment_json_gen(exam_id, email_id)
+        return JsonResponse(res)
+
+
+# for teacher
+def load_assessment_result_teacher(request):
+    if request.method=="GET":
+        exam_id = request.GET.get("exam_id")
+        email = request.GET.get("email")
+        assessment_json_gen(exam_id, email)
+        user = get_user(request)
         try:
-            exam_dets=Exam.objects.filter(id=exam_id).values()
-            data=Question.objects.filter(exam_id=exam_id).values() 
-            all_questions=list(data)
-            try:
-                score = 0
-                file_url = staticfiles_storage.path('data/assessment_details.json')
-                json_data=open(file_url,mode='w',encoding='utf-8')
-                for question in all_questions:
-                    student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
-                    question['student_answer'] = student_answer.answer
-                    question['eval_details'] = student_answer.eval_details
-                    question['percentage'] = student_answer.match_percentage
-                    question['status'] = student_answer.remarks
-                    score += student_answer.marks
-                    question.pop("created_at") 
-                exam_dets=list(exam_dets)[0] 
-                time={
-                    "hour":exam_dets["duration"].hour,
-                    "minute":exam_dets["duration"].minute
-                } 
-                exam_dets["duration"]=time
-                exam_dets["score"]=ceil(score)
-                exam_dets.pop("created_at")
-                assessment_set={
-                    "exam":exam_dets,
-                    "ass_set":all_questions
-                }
-                json_obj=json.dumps(assessment_set,indent=4)
-                json_data.write(json_obj)
-                if len(all_questions)>0:
-                    return JsonResponse({"st":1})
-                else:
-                    return JsonResponse({"st":0})
-            except ObjectDoesNotExist:
-                return JsonResponse({"st":0})
-        except FileNotFoundError: 
-            return JsonResponse({"st":0})
+            file_url = staticfiles_storage.path('data/assessment_details.json')
+            json_data=open(file_url,mode='r',encoding='utf-8')
+            data=json.loads(json_data.read())
+            exam_details=data.get('exam')
+            actual_ans=data.get('ass_set')
+        except:
+            pass
+        context = {
+            "user": user,
+            "exam":exam_details,
+            "score":exam_details.get("score"),
+            "actual_ans":actual_ans,
+            "question_no":len(actual_ans),
+            "is_authenticated": is_authenticated_user(request),
+        }
+
+        return render(request, "StudentResult.html", context)
+
+    else:
+        err_log = {"msg": "Invaild Request"}
+        return render(request, "Error.html", err_log)
 
 # test results
 def test_results(request):
@@ -108,15 +145,29 @@ def fetch_stnd_QnA(request):
 
 # view results of all students (accessible by teacher only)
 def view_all_results(request):
-    result = [
-        {"name": "Arghya", "roll": 3685128, "marks": 60},
-        {"name": "Purnadip", "roll": 6123465, "marks": 70},
-        {"name": "Keder", "roll": 8541236, "marks": 80},
-        {"name": "Random", "roll": 7845126, "marks": 90},
-    ]
-    subject = "OOP"
+    user = get_user(request)
+    exam_id = int(request.GET.get("exam_id"))
+    exam_obj = Exam.objects.get(id=exam_id)
+    obj = Answer.objects.values_list("answered_by").filter(exam_id=exam_id)
+    stn_set= set(obj)
+    result = []
+    for stn in stn_set:
+        email = stn[0]
+        user_name = Register.objects.values_list("first_name", "last_name").filter(email=email)
+        data = {
+            "name" : (user_name[0][0] + " " + user_name[0][1]),
+            "email": email
+        }
+        result.append(data)
+        
 
+    subject = "OOP"
     context = {
+        "user":user,
+        "exam_id": exam_id,
+        "exam_name": exam_obj.exam_name,
+        "course" : exam_obj.course,
+        "marks" : exam_obj.marks,
         "details": result,
         "subject": subject,
         "is_authenticated": is_authenticated_user(request),
