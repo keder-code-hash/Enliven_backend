@@ -163,11 +163,16 @@
               Full Marks: {{ i.marks }}<br>
               Duration: {{ i.duration }}<br>
               Description: {{ i.description }}
+              {{ i.is_evaluated }}
             </p>
             {% if i.editable is True %}
               <a href={% url 'setquestion' %} class="btn btn-info float-left" role="button">Edit</a>
             {% endif %}
-            <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
+            {% if i.is_evaluated is False %}
+              <button class="btn btn-info float-left" onclick="evaluate({{ i.id }})">Evaluate</button>
+            {% else %}
+              <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -178,6 +183,11 @@
     $('#duration').datetimepicker({
       format: 'hh:mm'
     });
+
+    function evaluate(exam_id){
+      
+    }
+
   </script>
 
 {% endblock %}
