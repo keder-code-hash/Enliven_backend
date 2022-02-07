@@ -39,6 +39,27 @@ def set_questions(question,exam_id,standard_answer,created_by):
         exam_obj=Exam.objects.get(id=exam_id)
         if exam_obj is not None:
 
+            # updation in question in question model
+            # update_data={
+            #     "question":question,
+            #     "standard_ans":standard_answer
+            # }
+            # try:
+            #     obj = Question.objects.get(
+            #         exam_id=exam_id,
+            #         question=question,
+            #         standard_ans=standard_answer
+            #     )
+            #     for key, value in update_data.items():
+            #         setattr(obj, key, value)
+            #     obj.save()
+            # except Question.DoesNotExist:
+            #     new_values = {'first_name': 'John', 'last_name': 'Lennon'}
+            #     new_values.update(defaults)
+            #     obj = Person(**new_values)
+            #     obj.save()
+
+            # creation of questions in model
             question_obj,question_created=Question.objects.get_or_create(
                 exam_id=exam_id,
                 question=question,
