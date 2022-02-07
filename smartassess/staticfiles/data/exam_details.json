@@ -10,7 +10,8 @@
                 "hour": 0,
                 "minute": 40
             },
-            "created_at": ""
+            "created_at": "",
+            "is_evaluated": true
         }
     ]
 }

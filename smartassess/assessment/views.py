@@ -1,16 +1,16 @@
-from email.policy import HTTP
-from http.client import HTTPResponse
 import json 
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render 
-from users.views import is_authenticated_user, get_user
+from django.shortcuts import render
+from users.views import is_authenticated_user, get_user, get_user_type 
 from django.contrib.staticfiles.storage import staticfiles_storage 
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 # Custom module imports
 from assessment.models import Answer, Exam, Question
+from assessment.queries import fetch_exam_details_by_id
+from assessment.model_prediction import make_prediction
 
 
 @csrf_exempt
@@ -52,6 +52,7 @@ def load_assessment_result(request):
                 return JsonResponse({"st":0})
         except FileNotFoundError: 
             return JsonResponse({"st":0})
+
 # test results
 def test_results(request):
     try:
@@ -60,6 +61,7 @@ def test_results(request):
         data=json.loads(json_data.read())
         exam_details=data.get('exam')
         actual_ans=data.get('ass_set')
+        # for loop calculate total result
     except:
         pass
 
@@ -71,6 +73,8 @@ def test_results(request):
     }
 
     return render(request, "StudentResult.html", context)
+
+
 @csrf_exempt
 def fetch_stnd_QnA(request):
     if request.method=="POST":
@@ -179,3 +183,37 @@ def set_questions(request):
 
 def view_results(request):
     return HttpResponse("View Results (accessible by Teacher)")
+
+
+@csrf_exempt
+def eval_exam(request):
+    if request.method=="GET":
+        if get_user_type(request) == 't':
+            exam_id = int(request.GET.get("exam_id"))
+            exam_obj=Exam.objects.get(id=exam_id)
+            exam_obj.is_evaluated = True
+            exam_obj.save()
+            qna_list = fetch_exam_details_by_id(exam_id)[1]
+            for qna in qna_list:
+                q_id = qna.get("id")
+                std_ans = qna.get("standard_ans")
+                ans_list = Answer.objects.filter(exam_id=exam_id, question_id=q_id).values()
+                for ans in ans_list:
+                    a_id = ans.get("id")
+                    stn_ans = ans.get("answer")
+                    sts, remarks, percentage, full_respond = make_prediction(stn_ans, std_ans, 0)
+                    if(sts):
+                        ans_obj = Answer.objects.get(id=a_id)
+                        ans_obj.remarks = remarks
+                        ans_obj.marks = percentage/100
+                        ans_obj.match_percentage = percentage
+                        ans_obj.eval_details = full_respond
+                        ans_obj.save()
+
+            return HttpResponse(1)
+
+        else:
+            return HttpResponse(0)
+
+    else:
+        return HttpResponse(0)
