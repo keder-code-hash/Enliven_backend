@@ -235,7 +235,7 @@
             {% if i.is_evaluated is False %}
               <button class="btn btn-info float-left" onclick="eval({{ i.id }})">Evaluate</button>
             {% else %}
-              <a href={% url 'view_all_results' %} class="btn btn-info float-right" role="button">View Results</a>
+              <a href="{% url 'view_all_results' %}?exam_id={{ i.id }}"class="btn btn-info float-right" role="button">View Results</a>
             {% endif %}
           </div>
         </div>
