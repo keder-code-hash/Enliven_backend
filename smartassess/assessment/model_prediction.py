@@ -6,7 +6,7 @@ def make_prediction(student_answer,standard_answer,depth):
         'content-type': 'application/json'
     }
     req=requests.post(
-        url="http://192.168.42.200:8080/analyze",
+        url="https://smartassessment-keder-code-hash.cloud.okteto.net/analyze",
         headers=headers,
         json=
             {
@@ -29,11 +29,11 @@ def make_prediction(student_answer,standard_answer,depth):
     if (entailment-neutral)>=dominant_index and (entailment-contradiction)>=dominant_index:
         # entailment 
         entail_perc=(2*entailment+neutral)/2
-        return True,"r",entail_perc*100
+        return True,"right",entail_perc*100, respond
 
     elif (contradiction-entailment)>=dominant_index and (contradiction-neutral)>=dominant_index:
         # contradiction
-        return True,"w",0
+        return True,"wrong",0, respond
 
     elif (neutral-entailment)>=dominant_index and (neutral-contradiction)>=dominant_index:
         # print("hii")
@@ -52,7 +52,7 @@ def make_prediction(student_answer,standard_answer,depth):
         d=depth+1
         return make_prediction(student_answer=stn_answer,standard_answer=std_answer,depth=d)
     else:
-        return False,"inconclusive",-1
+        return False,"inconclusive",-1, respond
 
 
 
@@ -61,11 +61,11 @@ def make_prediction(student_answer,standard_answer,depth):
 # standard_ans="My name is keder."
 # student_ans="My name is purnadip."
 
-standard_answer="A force is an influence that can change the motion of an object. "
-student_answer="friction of an object is considered a push."
+# standard_answer="A force is an influence that can change the motion of an object. "
+# student_answer="friction of an object is considered a push."
 
 
-print(make_prediction(student_answer=student_answer,standard_answer=standard_answer,depth=0))
+# print(make_prediction(student_answer=student_answer,standard_answer=standard_answer,depth=0))
 
  
 
