@@ -89,7 +89,6 @@ Monitor
     image
     taken_at
 
-
 evaluation_status
     id
     exam_id
