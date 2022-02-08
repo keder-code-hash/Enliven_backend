@@ -10,7 +10,7 @@
             "minute": 40
         },
         "is_evaluated": true,
-        "score": 5
+        "score": 4
     },
     "ass_set": [
         {
@@ -48,10 +48,10 @@
             "exam_id": 8,
             "question": "Newton's third law.",
             "standard_ans": "For every action (force) in nature there is an equal and opposite reaction.\n",
-            "student_answer": "Every action has an equal and opposite reaction.\n",
-            "eval_details": "{'contradiction': 0.16690029203891754, 'entailment': 0.7051401138305664, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.5, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.1279595047235489, 'standard_keyword': ['opposite', 'nature', 'action', 'reaction', 'force'], 'student_keyword': ['opposite', 'equal', 'reaction', 'action']}",
-            "percentage": 76.91198661923409,
-            "status": "right"
+            "student_answer": "Every action has an unequal and opposite reaction.",
+            "eval_details": "{'contradiction': 0.6913391351699829, 'entailment': 0.19173552095890045, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.4, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.11692532151937485, 'standard_keyword': ['opposite', 'nature', 'action', 'reaction', 'force'], 'student_keyword': ['unequal', 'opposite', 'reaction', 'action']}",
+            "percentage": 0.0,
+            "status": "wrong"
         },
         {
             "id": 22,

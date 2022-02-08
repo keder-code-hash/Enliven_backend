@@ -11,8 +11,7 @@ class Exam(models.Model):
     )
     duration = models.TimeField(blank=False)
     created_by = models.ManyToManyField(Register)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_evaluated = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
 
 
 class Question(models.Model):
@@ -90,4 +89,13 @@ Monitor
     image
     taken_at
 
+
+evaluation_status
+    id
+    exam_id
+    answer_id
+    evaluated_for
+    evaluation_status
+    evaluated_at
+    evaluated_by
 """
