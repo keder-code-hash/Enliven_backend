@@ -10,12 +10,11 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.staticfiles.storage import staticfiles_storage
-from pip import main
 
 # Custom Library imports
 from users.views import get_user, get_user_type, is_authenticated_user
 from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna, set_student_answer
-from assessment.models import Question
+from assessment.models import Question, Exam
 
 
 @csrf_exempt
@@ -50,6 +49,9 @@ def save_examname(request):
             return HttpResponse(0)
 
         file_url = staticfiles_storage.path("data/questions.json")
+        file = open(file_url, "w")
+        file.write("{ }")
+        file.close()
         with open(file_url, "r+") as file:
             data = json.load(file)
             data.update(new_obj)
@@ -227,3 +229,41 @@ def final_ans_submit(request):
         return HttpResponse(0)
 
     return HttpResponse(1)
+
+
+
+@csrf_exempt
+def load_view_questions(request):
+    user = get_user(request)
+    if user.user_role == 't':
+        exam_id = int(request.GET.get("exam_id"))
+        exam_obj = Exam.objects.get(id=exam_id)
+        qna = []
+        qna_list = Question.objects.filter(exam_id=exam_id).values_list()
+        for q in qna_list:
+            qna.append({q[2]:q[3]})
+
+        new_obj = {
+            user.user_name: {
+                "exam_name": exam_obj.exam_name,
+                "topic": exam_obj.course,
+                "exam_details": exam_obj.description,
+                "marks": exam_obj.marks,
+                "qna": qna,
+            }
+        }
+
+        file_url = staticfiles_storage.path("data/questions.json")
+        file = open(file_url, "w")
+        file.write("{ }")
+        file.close()
+        with open(file_url, "r+") as file:
+            data = json.load(file)
+            data.update(new_obj)
+            file.seek(0)
+            json.dump(data, file, indent=4)
+
+        return HttpResponse(1)
+
+    else:
+        return HttpResponse(0)

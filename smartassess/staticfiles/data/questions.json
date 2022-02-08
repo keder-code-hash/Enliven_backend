@@ -1,1 +1,25 @@
-{ }
+{
+    "teacher01": {
+        "exam_name": "Exam-01",
+        "topic": "Physics",
+        "exam_details": "Small unit test on physics.",
+        "marks": 5,
+        "qna": [
+            {
+                "What is energy?": "Energy is the ability to do work.\n"
+            },
+            {
+                "Define force.": "In physics, a force is an influence that can change the motion of an object.\n"
+            },
+            {
+                "What is Friction?": "Friction is the resistance to motion of one object moving relative to another\n"
+            },
+            {
+                "Newton's third law.": "For every action (force) in nature there is an equal and opposite reaction.\n"
+            },
+            {
+                "What is velocity?": "Velocity is the rate at which the position changes.\n"
+            }
+        ]
+    }
+}
