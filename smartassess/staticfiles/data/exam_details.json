@@ -10,10 +10,7 @@
                 "hour": 0,
                 "minute": 40
             },
-            "created_at": "",
-            "is_evaluated": true,
-            "evaluated_for": "teacher@gmail.com",
-            "eval_stat": false
+            "created_at": ""
         }
     ]
 }
