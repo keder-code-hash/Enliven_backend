@@ -24,7 +24,7 @@ def make_prediction(student_answer,standard_answer,depth):
 
     # setting dominant index
 
-    dominant_index=0.15
+    dominant_index=0.10
 
     if (entailment-neutral)>=dominant_index and (entailment-contradiction)>=dominant_index:
         # entailment 

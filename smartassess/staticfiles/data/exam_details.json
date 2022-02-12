@@ -25,6 +25,19 @@
             },
             "created_at": "",
             "is_evaluated": false
+        },
+        {
+            "id": 11,
+            "exam_name": "Test Exam",
+            "marks": 5,
+            "course": "General",
+            "description": "Test Exam...",
+            "duration": {
+                "hour": 0,
+                "minute": 10
+            },
+            "created_at": "",
+            "is_evaluated": false
         }
     ]
 }

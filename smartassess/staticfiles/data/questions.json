@@ -1,24 +1,24 @@
 {
     "teacher01": {
-        "exam_name": "Exam-01",
-        "topic": "Physics",
-        "exam_details": "Small unit test on physics.",
+        "exam_name": "Test Exam",
+        "topic": "General",
+        "exam_details": "Test Exam...",
         "marks": 5,
         "qna": [
             {
-                "What is energy?": "Energy is the ability to do work.\n"
+                "What do you mean by reversible change?": "Changes that can be reversed are called reversible change.\n"
             },
             {
-                "Define force.": "In physics, a force is an influence that can change the motion of an object.\n"
+                "How does light travel?": "Light travels as a wave in a straight line.\n"
             },
             {
-                "What is Friction?": "Friction is the resistance to motion of one object moving relative to another\n"
+                "What do you mean by algorithm?": "An algorithm is a finite sequence of well-defined instructions, typically used to solve a class of specific problems or to perform a computation.\n"
             },
             {
-                "Newton's third law.": "For every action (force) in nature there is an equal and opposite reaction.\n"
+                "State Newton's third law of motion.": "Every action (force) has equal and opposite reaction.\n"
             },
             {
-                "What is velocity?": "Velocity is the rate at which the position changes.\n"
+                "Why is the sky blue in colour?": "The blue colour is scattered more and reason for more scattering of blue colour is that the wavelength of the blue light is shorter than the other light.\n"
             }
         ]
     }
