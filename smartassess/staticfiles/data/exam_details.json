@@ -3,14 +3,15 @@
         {
             "id": 8,
             "exam_name": "Exam-01",
-            "marks": 20,
+            "marks": 5,
             "course": "Physics",
             "description": "Small unit test on physics.",
             "duration": {
                 "hour": 0,
                 "minute": 40
             },
-            "created_at": ""
+            "created_at": "",
+            "is_evaluated": true
         }
     ]
 }

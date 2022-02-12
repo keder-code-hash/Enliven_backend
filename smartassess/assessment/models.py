@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import Course, Register
+from users.models import Register
 
 
 class Exam(models.Model):
@@ -12,6 +12,7 @@ class Exam(models.Model):
     duration = models.TimeField(blank=False)
     created_by = models.ManyToManyField(Register)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_evaluated = models.BooleanField(default=False)
 
 
 class Question(models.Model):
@@ -31,17 +32,11 @@ class Answer(models.Model):
     answer_duration = models.TimeField(blank=False)
     answered_by = models.ManyToManyField(Register)
     answered_at = models.DateTimeField(auto_now_add=True)
-
-
-class Evaluation(models.Model):
-    exam_id = models.BigIntegerField(blank=False)
-    question_id = models.BigIntegerField(unique=True, blank=False)
-    answer_id = models.BigIntegerField(unique=True, blank=False)
-    remarks = models.CharField(
-        max_length=130,
-    )
-    score = models.IntegerField(blank=False)
-    match_percentage = models.FloatField(blank=False)
+    # w -> wrong ; r -> right ; m -> manual checking
+    remarks = models.CharField(max_length=1, default='', blank=True)
+    marks = models.FloatField(blank=False, default=0.0)
+    match_percentage = models.FloatField(blank=False, default=0.0)
+    eval_details = models.CharField(max_length=600, default='', blank=True)
 
 
 class Monitor(models.Model):

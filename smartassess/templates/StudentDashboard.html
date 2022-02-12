@@ -84,9 +84,11 @@
           <p class="card-text">Full Marks: {{exam.marks}}</p>
           <p class="card-text">{{exam.description}}</p>
           <p class="card-text">Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes</p>
-          <a id="attempt_{{exam.id}}" class="btn btn-success float-left" role="button" data-toggle="modal"
-            data-target="#exampleModal" onclick="loadImage({{ exam.id }})">Attempt</a>
-          <a class="btn btn-info float-right" role="button" onclick="loadResult({{ exam.id }})">View Results</a>
+          {% if exam.is_evaluated is False %}
+            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" style="color:white !important;" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ exam.id }})">Attempt</a>
+          {% else %}
+            <a class="btn btn-info float-right" style="color:white !important;" role="button" onclick="loadResult({{ exam.id }})">View Results</a>
+          {% endif %}
         </div>
       </div>
     </div>
