@@ -15,10 +15,13 @@
 {% endblock showuser %}
 
 {% block btnurl %}
-{% url 'profile' %}
+  {% if user.user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
 {% endblock %}
-
-{% block btnname %}My Profile{% endblock btnname %}
+{% block btnname %}Dashboard{% endblock btnname %}
 
 {% block headcontent %}
 <meta charset="UTF-8">
@@ -35,6 +38,15 @@
   a {
     text-decoration: none;
   }
+
+  .right{
+    color: #28a745;
+  }
+
+  .wrong{
+    color: #dc3545;
+  }
+
 </style>
 
 {% endblock headcontent %}
@@ -44,26 +56,41 @@
 <div class="container-fluid">
   <div class="row">
     <div class="exam_details">
-      <h1 class='display-4'>{{ exam.exam_name }}</h1>
-      <h2 style="font-weight: 300;">Score: <b>{{ score }}</b></h2>
-      <h2 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h2>
-      <br><br>
+      <h3 class='display-4'>{{ exam.exam_name }}</h3>
+      <h4 style="font-weight: 300;">Score: <b>{{ exam.score }}</b></h4>
+      <h4 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h4>
+      <br>
     </div>
   </div>
+  <div class="row ml-2">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10" style="display:block; color:white !important;">
+      <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
+
+      <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
+    </div>
+  </div>
+  <br>
   <div class="row ml-2">
     <div class="col-sm-2 mb-1 mt-1">
       <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
         {% for i in actual_ans %}
         <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
-          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }})">{{forloop.counter }}</button>
+          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }})" q_id="{{ i.id }}">{{forloop.counter }}</button>
         {% endfor %}
       </div>
     </div>
     <div class="col-sm-10">
       <div class="shadow wrapper" style="height: 90vh; overflow-y: auto;">
-        <label>Question:</label>
-        <p id="question"></p>
-        <br>
+        <div class="row">
+          <div class="col-10">
+            <label>Question:</label>
+            <p id="question"></p>
+          </div>
+          <div class="col-sm-2 text-center">
+              <h5><span id="status">Right</span> (<span id="percentage">90%</span>) </h5>
+          </div>
+        </div>
         <label>
           Your Answer:
         </label>
@@ -74,15 +101,6 @@
         </label>
         <div id='standard_ans_editor' style="height: 200px;"></div>
       </div>
-    </div>
-  </div>
-  <br>
-  <div class="row ml-2">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-10" style="display:block;">
-      <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
-
-      <a id="nextButton"  class="btn btn-primary float-right" role="button" onclick="loadNextQuestion()">Next</a>
     </div>
   </div>
   <div class="row">
@@ -100,13 +118,15 @@
     var currentQnNo=1;
     var maxQuestionNo="{{question_no}}";
 
-    function loadQuestion(id) {
-      currentQnNo = id;
+    function loadQuestion(id) { 
       var setId = id;
       const xhttp = new XMLHttpRequest();
 
       xhttp.onload = function () {
-        var obj = JSON.parse(this.response)["actual_ans"]; 
+        var obj = JSON.parse(this.response)["actual_ans"];
+        document.getElementById("status").innerHTML = sentenceCase(obj["status"]);
+        document.getElementById("status").setAttribute("class", obj["status"]);
+        document.getElementById("percentage").innerHTML = obj["percentage"].toFixed(2) + "%";
         document.getElementById("question").innerHTML = obj["question"];
         standard_ans_quill.setText(obj["standard_ans"]);
         student_ans_quill.setText(obj["student_answer"]);
@@ -123,14 +143,16 @@
 
     function loadPreviousQuestion(){
       currentQnNo-=1;
-      loadQuestion(currentQnNo);
+      var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
+      loadQuestion(Number(question_id));
       console.log("prev"+currentQnNo);
 
     }
     function loadNextQuestion(){
       currentQnNo+=1;
-      loadQuestion(currentQnNo);
       console.log("next"+currentQnNo);
+      var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
+      loadQuestion(question_id);
     }
     
     function buttonValidation(){
@@ -150,10 +172,22 @@
         document.getElementById("prevButton").disabled = false;
         document.getElementById("prevButton").style.display = "initial";
       }
+      
     }
     $(window).on("load", function(){ 
-        document.getElementById("btn_1").click();
+        document.getElementById("btn_1").click(); 
     })
+
+    function sentenceCase (str) {
+      if ((str===null) || (str===''))
+           return false;
+      else
+       str = str.toString();
+      
+      return str.replace(/\w\S*/g, 
+      function(txt){return txt.charAt(0).toUpperCase() +
+            txt.substr(1).toLowerCase();});
+    }
   </script>
 </div>
 

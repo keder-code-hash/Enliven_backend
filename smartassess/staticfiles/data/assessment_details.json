@@ -1,22 +1,91 @@
 {
     "exam": {
-        "id": 1,
-        "exam_name": "Test",
-        "marks": 100,
-        "course": "OOPS",
-        "description": "Test course",
+        "id": 11,
+        "exam_name": "Test Exam",
+        "marks": 5,
+        "course": "General",
+        "description": "Test Exam...",
         "duration": {
             "hour": 0,
-            "minute": 30
-        }
+            "minute": 10
+        },
+<<<<<<< HEAD
+=======
+        "is_evaluated": true,
+<<<<<<< HEAD
+        "score": 2
+=======
+>>>>>>> 2d5c56734bbe1db22927c413871127c18cad9054
+        "score": 4
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
     },
     "ass_set": [
         {
+<<<<<<< HEAD
             "id": 1,
             "exam_id": 1,
             "question": "What is OS?",
             "standard_ans": "An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",
             "student_answer": "OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks."
+=======
+            "id": 32,
+            "exam_id": 11,
+            "question": "What do you mean by reversible change?",
+            "standard_ans": "Changes that can be reversed are called reversible change.\n",
+            "student_answer": "Changes that can not be reversed are called reversible change.\n",
+            "eval_details": "{'contradiction': 0.7295387387275696, 'entailment': 0.21493887901306152, 'keyword_matching_result': {'cosine_similarity': 0.20000004768371582, 'euclid_distance': 0.0, 'jaccard_similarity': 0.9, 'manhattan_distance': 0.0}, 'neutral': 0.05552229657769203, 'standard_keyword': ['called', 'change', 'changes', 'reversed', 'reversible'], 'student_keyword': ['called', 'change', 'changes', 'reversed', 'reversible']}",
+            "percentage": 0.0,
+            "status": "wrong"
+        },
+        {
+            "id": 33,
+            "exam_id": 11,
+            "question": "How does light travel?",
+            "standard_ans": "Light travels as a wave in a straight line.\n",
+            "student_answer": "Light travels in a curve line.\n",
+            "eval_details": "{'contradiction': 0.5979638695716858, 'entailment': 0.1609695851802826, 'keyword_matching_result': {'cosine_similarity': 0.13978359699249268, 'euclid_distance': 2.7150787353515624, 'jaccard_similarity': 0.5555555555555556, 'manhattan_distance': 57.505082101697916}, 'neutral': 0.2410665601491928, 'standard_keyword': ['travels', 'line', 'straight', 'light', 'wave'], 'student_keyword': ['travels', 'line', 'light', 'curve']}",
+            "percentage": 0.0,
+            "status": "wrong"
+        },
+        {
+            "id": 34,
+            "exam_id": 11,
+            "question": "What do you mean by algorithm?",
+            "standard_ans": "An algorithm is a finite sequence of well-defined instructions, typically used to solve a class of specific problems or to perform a computation.\n",
+            "student_answer": "A process or set of rules to be followed in calculations or other problem-solving operation is called algorithm.\n",
+            "eval_details": "{'contradiction': 0.07826104015111923, 'entailment': 0.5850080847740173, 'keyword_matching_result': {'cosine_similarity': 0.19999998807907104, 'euclid_distance': 0.0, 'jaccard_similarity': 0.16129032258064516, 'manhattan_distance': 0.0}, 'neutral': 0.33673083782196045, 'standard_keyword': ['finite', 'instructions', 'defined', 'computation', 'algorithm'], 'student_keyword': ['calculations', 'solving', 'operation', 'process', 'algorithm']}",
+            "percentage": 75.33735036849976,
+            "status": "right"
+        },
+        {
+<<<<<<< HEAD
+            "id": 35,
+            "exam_id": 11,
+            "question": "State Newton's third law of motion.",
+            "standard_ans": "Every action (force) has equal and opposite reaction.\n",
+            "student_answer": "Every action has an unequal and opposite reaction.\n",
+            "eval_details": "{'contradiction': 0.7304165959358215, 'entailment': 0.1755191683769226, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.6, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.09406430274248123, 'standard_keyword': ['reaction', 'equal', 'opposite', 'action', 'force'], 'student_keyword': ['unequal', 'opposite', 'reaction', 'action']}",
+=======
+            "id": 21,
+            "exam_id": 8,
+            "question": "Newton's third law.",
+            "standard_ans": "For every action (force) in nature there is an equal and opposite reaction.\n",
+            "student_answer": "Every action has an unequal and opposite reaction.",
+            "eval_details": "{'contradiction': 0.6913391351699829, 'entailment': 0.19173552095890045, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.4, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.11692532151937485, 'standard_keyword': ['opposite', 'nature', 'action', 'reaction', 'force'], 'student_keyword': ['unequal', 'opposite', 'reaction', 'action']}",
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
+            "percentage": 0.0,
+            "status": "wrong"
+        },
+        {
+            "id": 36,
+            "exam_id": 11,
+            "question": "Why is the sky blue in colour?",
+            "standard_ans": "The blue colour is scattered more and reason for more scattering of blue colour is that the wavelength of the blue light is shorter than the other light.\n",
+            "student_answer": "Blue light is scattered more than other colours because it has smaller wavelength than other",
+            "eval_details": "{'contradiction': 0.08812224119901657, 'entailment': 0.6031404137611389, 'keyword_matching_result': {'cosine_similarity': 0.20000002384185792, 'euclid_distance': 0.0, 'jaccard_similarity': 0.34782608695652173, 'manhattan_distance': 0.0}, 'neutral': 0.3087373673915863, 'standard_keyword': ['scattered', 'wavelength', 'colour', 'scattering', 'blue'], 'student_keyword': ['light', 'scattered', 'colours', 'wavelength', 'blue']}",
+            "percentage": 75.7509097456932,
+            "status": "right"
+>>>>>>> c1545e84985ba774d4bd0f4e7cf7a4c2b90db4d1
         }
     ]
 }

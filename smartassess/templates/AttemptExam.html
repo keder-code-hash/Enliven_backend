@@ -142,10 +142,13 @@
 {% endblock showuser %}
 
 {% block btnurl %}
-{% url 'profile' %}
+  {% if user.user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
 {% endblock %}
-
-{% block btnname %}My Profile{% endblock btnname %}
+{% block btnname %}Dashboard{% endblock btnname %}
 
 {% block content %}
 <div class="container-fluid">
@@ -176,7 +179,7 @@
                 <div id='editor' style="height: 200px;"></div>
                 <div style="padding-top: 10px;">
                     <button type="button" id="saveAnsBtn" class="btn btn-outline-primary" onclick="saveAns()">Save Ans</button>
-                    <button type="button" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
+                    <button type="button" id="finalSubmitBtn" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
                 </div>
             </div>
         </div>
@@ -192,17 +195,20 @@
         theme: 'snow'
     });
 
-    function saveAns() { 
+    function saveAns(no="") {
         var question = document.getElementById("question").value;
         var answer = quill.getText();
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
            if (this.responseText === "success"){
-               currentQnNo+=1;
+                currentQnNo+=1;
+                if(no !== "")
+                    currentQnNo = Number(no);
+
                 if(currentQnNo == maxQnNo+1){
-                    document.getElementById("saveAnsBtn").disabled = true;
                     document.getElementById("saveAnsBtn").style.display = "none";
-                    
+                    document.getElementById("finalSubmitBtn").style.display = "initial";
+                    document.getElementById("finalSubmitBtn").disabled = false;
                 }
                 else
                     document.getElementById("btn_"+currentQnNo).click();
@@ -217,8 +223,9 @@
     function loadQuestion(qno, no) {
         currentQnNo = no;
         if(currentQnNo < maxQnNo){
-            document.getElementById("saveAnsBtn").disabled = false;
             document.getElementById("saveAnsBtn").style.display = "initial";
+            document.getElementById("finalSubmitBtn").style.display = "none";
+            document.getElementById("finalSubmitBtn").disabled = true;
         }
         questionId = qno;
         var userId = "{{ user.user_name }}";
@@ -235,21 +242,21 @@
     }
 
     function finalSubmit() {
-        saveQn();
-        var user_id = "{{ user.user_name }}";
+        saveAns(maxQnNo);
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () {
             var flag = this.responseText;
             if (flag === '1') {
-                window.location.href = "{% url 'teacher_dashboard' %}";
+                alert("Answer Saved!");
+                window.location.href = "{% url 'student_dashboard' %}";
             }
             else {
                 alert("Unable to Submit!");
             }
         }
-        xhttp.open("POST", "{% url 'finalSubmit' %}");
+        xhttp.open("POST", "{% url 'finalAnsSubmit' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("user_id=" + user_id);
+        xhttp.send();
     }
 
     $(window).on("load", function(){

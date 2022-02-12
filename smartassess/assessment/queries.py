@@ -1,47 +1,18 @@
-from multiprocessing.connection import answer_challenge
-from click import FileError
-from django.forms import model_to_dict
+from click import FileError 
 from django.http import JsonResponse
 from itsdangerous import json
 from .models import *
 from users.models import *
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
-import os
-from django.core import serializers
+import os 
 
 
 question="What is OS?"
 standard_answer="An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs."
 student_answer="An Operating System (OS) is an interface between a computer user and computer hardware."
  
-    
-details = [
-        {
-            "q_no": 1,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 2,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 3,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        },
-        {
-            "q_no": 4,
-            "qsn": "What is Inheritance",
-            "stn_ans": "Inheritance in Java is a mechanism in which one object acquires all the properties and behaviors of a parent object. It is an important part of OOPs (Object Oriented programming system).",
-            "std_ans": "Inheritance can be defined as the process where one class acquires the properties (methods and fields) of another.",
-        }
-    ]
+ 
 
 # create an exam
 def create_exam(exam_name,marks,duration,created_by,course_name='default',description=None):
@@ -68,6 +39,27 @@ def set_questions(question,exam_id,standard_answer,created_by):
         exam_obj=Exam.objects.get(id=exam_id)
         if exam_obj is not None:
 
+            # updation in question in question model
+            # update_data={
+            #     "question":question,
+            #     "standard_ans":standard_answer
+            # }
+            # try:
+            #     obj = Question.objects.get(
+            #         exam_id=exam_id,
+            #         question=question,
+            #         standard_ans=standard_answer
+            #     )
+            #     for key, value in update_data.items():
+            #         setattr(obj, key, value)
+            #     obj.save()
+            # except Question.DoesNotExist:
+            #     new_values = {'first_name': 'John', 'last_name': 'Lennon'}
+            #     new_values.update(defaults)
+            #     obj = Person(**new_values)
+            #     obj.save()
+
+            # creation of questions in model
             question_obj,question_created=Question.objects.get_or_create(
                 exam_id=exam_id,
                 question=question,
@@ -87,7 +79,18 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
         exam_obj=Exam.objects.get(id=exam_id)
         question_obj=Question.objects.get(id=question_id)
 
-        if exam_obj is not None and question_obj is not None:
+        # for updation 
+        affected_rows=Answer.objects.filter(
+            exam_id=exam_id,
+            question_id=question_id,
+            answered_by__email=answered_by.email
+        ).update(
+        answer=answer,
+        answered_at=datetime.datetime.now()
+        )
+
+        # for fresh creation
+        if exam_obj is not None and question_obj is not None and affected_rows!=1:
             answer_object,answer_created=Answer.objects.get_or_create(
                 exam_id=exam_id,
                 question_id=question_id,
@@ -106,6 +109,8 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
                 answer_created=True
             
             return answer_object.id,answer_created
+        else:
+            return affected_rows,False
     except ObjectDoesNotExist:
         return None,False
 
@@ -200,8 +205,8 @@ def test(request):
         # q_id,q_status=set_questions(question="What is OS?",exam_id=12,standard_answer="An operating system is system software that manages computer hardware, software resources, and provides common services for computer programs.",created_by=Register.objects.get(email__iexact="root@gmail.com"))
 
 
-        # answer_duration=datetime.time(00,3,00)
-        # a_id,a_status=set_student_answer(exam_id=2,question_id=1,answer="OS is a system which manages all peripheral devices,and software resources and provides a common GUI for all computer tasks.",answer_duration=answer_duration,answered_by=Register.objects.get(email__iexact="admin@gmail.com"))
+        answer_duration=datetime.time(00,3,00)
+        set_student_answer(exam_id=2,question_id=2,answer="CD is not",answer_duration=answer_duration,answered_by=Register.objects.get(email__iexact="admin@gmail.com"))
 
         # res,resp=save_exam_qna("./staticfiles/data/questions.json",3)
 

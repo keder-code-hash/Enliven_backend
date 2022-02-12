@@ -22,6 +22,7 @@ class CustomAccountManager(BaseUserManager):
     ##creating a super user or a admin for managing the whole things.
     def create_superuser(self, email, user_name, interests, first_name, password, **other_fields):
         other_fields.setdefault('is_admin', True)
+        other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, user_name, interests, first_name, password, **other_fields)
@@ -47,7 +48,7 @@ class Register(AbstractBaseUser, PermissionsMixin):
     created_user = models.DateTimeField(auto_now_add=True)
 
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 

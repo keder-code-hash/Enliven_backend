@@ -1,1 +1,34 @@
-{"questions": [{"id": 2, "exam_id": 3, "question": "q1", "student_answer": ""}, {"id": 3, "exam_id": 3, "question": "q3", "student_answer": ""}, {"id": 4, "exam_id": 3, "question": "q4", "student_answer": "\n"}, {"id": 5, "exam_id": 3, "question": "What is Inheritance?", "student_answer": "\n"}]}
+{
+    "questions": [
+        {
+            "id": 18,
+            "exam_id": 8,
+            "question": "What is energy?",
+            "student_answer": ""
+        },
+        {
+            "id": 19,
+            "exam_id": 8,
+            "question": "Define force.",
+            "student_answer": ""
+        },
+        {
+            "id": 20,
+            "exam_id": 8,
+            "question": "What is Friction?",
+            "student_answer": ""
+        },
+        {
+            "id": 21,
+            "exam_id": 8,
+            "question": "Newton's third law.",
+            "student_answer": ""
+        },
+        {
+            "id": 22,
+            "exam_id": 8,
+            "question": "What is velocity?",
+            "student_answer": ""
+        }
+    ]
+}

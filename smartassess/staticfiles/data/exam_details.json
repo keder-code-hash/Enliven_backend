@@ -1,76 +1,53 @@
 {
     "exam": [
         {
-            "id": 1,
-            "exam_name": "Test",
-            "marks": 100,
-            "course": "OOPS",
-            "description": "Test course",
+            "id": 8,
+            "exam_name": "Exam-01",
+            "marks": 5,
+            "course": "Physics",
+            "description": "Small unit test on physics.",
             "duration": {
                 "hour": 0,
-                "minute": 30
+                "minute": 40
             },
+<<<<<<< HEAD
             "created_at": ""
+=======
+            "created_at": "",
+<<<<<<< HEAD
+            "is_evaluated": true
         },
         {
-            "id": 2,
-            "exam_name": "Test1",
-            "marks": 100,
-            "course": "OOPS",
-            "description": "Test course",
+            "id": 10,
+            "exam_name": "Computer Science",
+            "marks": 7,
+            "course": "CS",
+            "description": "Knowledge testing...",
             "duration": {
                 "hour": 0,
-                "minute": 30
+                "minute": 20
             },
-            "created_at": ""
+            "created_at": "",
+            "is_evaluated": false
         },
         {
-            "id": 3,
-            "exam_name": "Exam",
-            "marks": 100,
-            "course": "OS",
-            "description": "test",
+            "id": 11,
+            "exam_name": "Test Exam",
+            "marks": 5,
+            "course": "General",
+            "description": "Test Exam...",
             "duration": {
                 "hour": 0,
-                "minute": 30
+                "minute": 10
             },
-            "created_at": ""
-        },
-        {
-            "id": 5,
-            "exam_name": "Exam-1",
-            "marks": 40,
-            "course": "OS",
-            "description": "testing",
-            "duration": {
-                "hour": 1,
-                "minute": 15
-            },
-            "created_at": ""
-        },
-        {
-            "id": 6,
-            "exam_name": "edit testing",
-            "marks": 12,
-            "course": "OOPS",
-            "description": "edit function testing\n",
-            "duration": {
-                "hour": 1,
-                "minute": 22
-            },
-            "created_at": ""
-        },
-        {
-            "id": 7,
-            "exam_name": "test",
-            "marks": 12,
-            "course": "test",
-            "description": "hii",
-            "duration": {
-                "hour": 1,
-                "minute": 11
-            },
-            "created_at": ""
+            "created_at": "",
+            "is_evaluated": false
+=======
+            "is_evaluated": true,
+            "evaluated_for": "teacher@gmail.com",
+            "eval_stat": false
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
+>>>>>>> 2d5c56734bbe1db22927c413871127c18cad9054
         }
     ]
 }

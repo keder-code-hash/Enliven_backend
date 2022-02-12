@@ -6,5 +6,7 @@ urlpatterns = [
     path("saveexamname/", save_examname, name="saveExamName"),
     path("fetchqna/", fetch_questions, name="fetchQnA"),
     path("deleteqna/", delete_questions, name="deleteQnA"),
-    path("finalsubmit/", final_submit, name="finalSubmit"),    
+    path("finalsubmit/", final_submit, name="finalSubmit"), 
+    path("finalanssubmit/", final_ans_submit, name="finalAnsSubmit"), 
+    path("load_view_questions/", load_view_questions, name="load_view_questions"), 
 ]
