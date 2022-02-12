@@ -10,31 +10,8 @@
                 "hour": 0,
                 "minute": 40
             },
-            "created_at": ""
-        },
-        {
-            "id": 10,
-            "exam_name": "Computer Science",
-            "marks": 7,
-            "course": "CS",
-            "description": "Knowledge testing...",
-            "duration": {
-                "hour": 0,
-                "minute": 20
-            },
-            "created_at": ""
-        },
-        {
-            "id": 11,
-            "exam_name": "Test Exam",
-            "marks": 5,
-            "course": "General",
-            "description": "Test Exam...",
-            "duration": {
-                "hour": 0,
-                "minute": 10
-            },
-            "created_at": ""
+            "created_at": "",
+            "is_evaluated": true
         }
     ]
 }

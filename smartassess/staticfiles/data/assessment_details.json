@@ -9,6 +9,7 @@
             "hour": 0,
             "minute": 40
         },
+        "is_evaluated": true,
         "score": 5
     },
     "ass_set": [

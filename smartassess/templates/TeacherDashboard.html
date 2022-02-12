@@ -233,11 +233,10 @@
               <a href={% url 'setquestion' %} class="btn btn-info float-left" role="button">Edit</a>
             {% endif %}
             {% if i.is_evaluated is False %}
-              <button class="btn btn-info float-right" onclick="eval({{ i.id }})">Evaluate</button>
+              <button class="btn btn-info float-left" onclick="eval({{ i.id }})">Evaluate</button>
             {% else %}
               <a href="{% url 'view_all_results' %}?exam_id={{ i.id }}"class="btn btn-info float-right" role="button">View Results</a>
             {% endif %}
-            <button class="btn btn-warning float-left" onclick="viewQuestions({{ i.id }})">View</button>
           </div>
         </div>
       </div>
@@ -260,22 +259,6 @@
       xhttp.open("GET", "{% url 'eval_exam' %}?exam_id="+exam_id);
       xhttp.send();
     }
-
-    function viewQuestions(exam_id){
-      const xhttp = new XMLHttpRequest();
-      xhttp.onload = function() {
-        let flag = this.responseText;
-        if(flag === '1'){
-          window.location.href = "{% url 'setquestion' %}"
-        }
-        else
-          alert("View Error!");
-      }
-      xhttp.open("GET", "{% url 'load_view_questions' %}?exam_id="+exam_id);
-      xhttp.send();
-    }
-
-
   </script>
 
 {% endblock %}

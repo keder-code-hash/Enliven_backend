@@ -23,4 +23,3 @@ python-decouple
 django-mptt
 django-adminlte3
 cloudinary==1.26.0 
-requests==2.26.0

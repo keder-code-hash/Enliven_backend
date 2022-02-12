@@ -64,6 +64,9 @@
   </div>
   <div class="row ml-2">
     <div class="col-sm-2"></div>
+    <p>
+      <label id="minute_counter"></label>:<label id="second_counter"></label>
+    </p>
     <div class="col-sm-10" style="display:block; color:white !important;">
       <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
 
@@ -118,6 +121,9 @@
     var currentQnNo=0;
     var maxQuestionNo="{{question_no}}";
 
+    
+    var totalSeconds=0;
+
     function loadQuestion(id,buttonCounter,st) { 
       var setId = id;
       const xhttp = new XMLHttpRequest();
@@ -139,6 +145,9 @@
           currentQnNo=buttonCounter;
         }
         buttonValidation();
+
+        // load timer for each question 
+        totalSeconds=0;
       }
       xhttp.open("POST", "{% url 'fetch_stnd_qna' %}");
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -149,7 +158,7 @@
       if(currentQnNo>0){
         currentQnNo-=1;
       }
-      console.log("prev"+currentQnNo);
+      // console.log("prev"+currentQnNo);
       var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
       loadQuestion(Number(question_id));
 
@@ -158,7 +167,7 @@
       if(currentQnNo<maxQuestionNo){
         currentQnNo+=1;
       }
-      console.log("next"+currentQnNo);
+      // console.log("next"+currentQnNo);
       var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
       loadQuestion(question_id);
     }
@@ -196,6 +205,27 @@
       function(txt){return txt.charAt(0).toUpperCase() +
             txt.substr(1).toLowerCase();});
     }
+
+    setInterval(loadTimeForEachQuestion,1000);
+    function loadTimeForEachQuestion(){ 
+      totalSeconds++;
+      var second=formatting(parseInt(totalSeconds%60));
+      var minute=formatting(parseInt(totalSeconds/60));
+      document.getElementById("minute_counter").innerHTML=minute;
+      document.getElementById("second_counter").innerHTML=second;
+      return totalSeconds;
+    }
+
+    function formatting(val){
+      var str=val+"";
+      if(str.length<2){
+        return "0"+val;
+      }
+      else{
+        return val;
+      }
+    }
+
   </script>
 </div>
 
