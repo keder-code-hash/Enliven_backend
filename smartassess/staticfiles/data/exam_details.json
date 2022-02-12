@@ -10,12 +10,7 @@
                 "hour": 0,
                 "minute": 40
             },
-<<<<<<< HEAD
             "created_at": ""
-=======
-            "created_at": "",
-<<<<<<< HEAD
-            "is_evaluated": true
         },
         {
             "id": 10,
@@ -27,8 +22,7 @@
                 "hour": 0,
                 "minute": 20
             },
-            "created_at": "",
-            "is_evaluated": false
+            "created_at": ""
         },
         {
             "id": 11,
@@ -40,14 +34,7 @@
                 "hour": 0,
                 "minute": 10
             },
-            "created_at": "",
-            "is_evaluated": false
-=======
-            "is_evaluated": true,
-            "evaluated_for": "teacher@gmail.com",
-            "eval_stat": false
->>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
->>>>>>> 2d5c56734bbe1db22927c413871127c18cad9054
+            "created_at": ""
         }
     ]
 }
