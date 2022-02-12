@@ -11,6 +11,7 @@
                 "minute": 40
             },
             "created_at": "",
+<<<<<<< HEAD
             "is_evaluated": true
         },
         {
@@ -38,6 +39,11 @@
             },
             "created_at": "",
             "is_evaluated": false
+=======
+            "is_evaluated": true,
+            "evaluated_for": "teacher@gmail.com",
+            "eval_stat": false
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
         }
     ]
 }

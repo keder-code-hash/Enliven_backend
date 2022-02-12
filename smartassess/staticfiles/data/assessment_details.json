@@ -10,7 +10,11 @@
             "minute": 10
         },
         "is_evaluated": true,
+<<<<<<< HEAD
         "score": 2
+=======
+        "score": 4
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
     },
     "ass_set": [
         {
@@ -44,12 +48,21 @@
             "status": "right"
         },
         {
+<<<<<<< HEAD
             "id": 35,
             "exam_id": 11,
             "question": "State Newton's third law of motion.",
             "standard_ans": "Every action (force) has equal and opposite reaction.\n",
             "student_answer": "Every action has an unequal and opposite reaction.\n",
             "eval_details": "{'contradiction': 0.7304165959358215, 'entailment': 0.1755191683769226, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.6, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.09406430274248123, 'standard_keyword': ['reaction', 'equal', 'opposite', 'action', 'force'], 'student_keyword': ['unequal', 'opposite', 'reaction', 'action']}",
+=======
+            "id": 21,
+            "exam_id": 8,
+            "question": "Newton's third law.",
+            "standard_ans": "For every action (force) in nature there is an equal and opposite reaction.\n",
+            "student_answer": "Every action has an unequal and opposite reaction.",
+            "eval_details": "{'contradiction': 0.6913391351699829, 'entailment': 0.19173552095890045, 'keyword_matching_result': {'cosine_similarity': 0.17490894794464112, 'euclid_distance': 1.7543218612670899, 'jaccard_similarity': 0.4, 'manhattan_distance': 38.28307708344655}, 'neutral': 0.11692532151937485, 'standard_keyword': ['opposite', 'nature', 'action', 'reaction', 'force'], 'student_keyword': ['unequal', 'opposite', 'reaction', 'action']}",
+>>>>>>> 4bd89597377f09cb73045d16dc8369ee8747664e
             "percentage": 0.0,
             "status": "wrong"
         },
