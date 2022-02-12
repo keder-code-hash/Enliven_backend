@@ -1,1 +1,25 @@
-{ }
+{
+    "teacher01": {
+        "exam_name": "Test Exam",
+        "topic": "General",
+        "exam_details": "Test Exam...",
+        "marks": 5,
+        "qna": [
+            {
+                "What do you mean by reversible change?": "Changes that can be reversed are called reversible change.\n"
+            },
+            {
+                "How does light travel?": "Light travels as a wave in a straight line.\n"
+            },
+            {
+                "What do you mean by algorithm?": "An algorithm is a finite sequence of well-defined instructions, typically used to solve a class of specific problems or to perform a computation.\n"
+            },
+            {
+                "State Newton's third law of motion.": "Every action (force) has equal and opposite reaction.\n"
+            },
+            {
+                "Why is the sky blue in colour?": "The blue colour is scattered more and reason for more scattering of blue colour is that the wavelength of the blue light is shorter than the other light.\n"
+            }
+        ]
+    }
+}
