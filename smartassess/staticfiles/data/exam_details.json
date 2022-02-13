@@ -11,7 +11,7 @@
                 "minute": 40
             },
             "created_at": "",
-            "is_evaluated": true
+            "is_evaluated": false
         }
     ]
 }

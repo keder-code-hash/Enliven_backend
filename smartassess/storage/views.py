@@ -66,20 +66,27 @@ def save_questions(request):
         if user_type=='s': 
             qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
+            # minute=request.POST.get("minute")
+            # second=request.POST.get("second")
+            
             file_url = staticfiles_storage.path("data/all_questions.json")
             try:
                 with open(file_url, "r+") as file:
                     main_data = json.load(file)
                     data = main_data.get("questions")
+                    print("succ")
                     for q in data:
                         if q.get('id') == qno:
-                            q["student_answer"] = answer
+                            q["student_answer"] = answer    
+                            # t=q["time_taken"]
+                            # t["minute"]=minute
+                            # t["second"]=second
+                            # time=t
 
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
                     json.dump(main_data, file, indent=4)
-                
                 return HttpResponse("success")
 
             except:

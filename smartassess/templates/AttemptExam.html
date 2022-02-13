@@ -154,8 +154,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="exam_details">
-            <h2 class='display-4'>{{ data.exam_name }}</h2>
-            <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
+            <h2 class='display-4'>{{ exam.exam_name }}</h2>
+            <h4 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h4> 
+            <h4 style="font-weight: 300;">Total Time: <b>0{{ exam.duration.hour }}:{{ exam.duration.minute }}</b></h4>
+            <p>
+                Time:
+                <label id="minute_counter"></label>:<label id="second_counter"></label> 
+                <br>
+                Remaining Time:
+                <label id="remaining_hour_counter"></label>:<label id="remaining_minute_counter"></label>:<label id="remaining_second_counter"></label>
+            </p>
         </div>
     </div>
 
@@ -194,12 +202,51 @@
     var quill = new Quill('#editor', {
         theme: 'snow'
     });
+    localStorage.setItem("time",formatSave());
+    var totalSeconds=0;
+    function formatSave(){
+        var timeDetails=new Array();
+        for(var i=0;i<maxQnNo;i++){
+            var obj={
+                "q_id":null,
+                "time_each":{
+                    "minute":0,
+                    "second":0
+                }
+            }
+            timeDetails.push(obj);
+        }
+        return JSON.stringify(timeDetails);
+    }
+
+    function saveTimeStamp(q_index,q_id,minute,second){
+        var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
+        var t=timeDetailsObj[Number(q_index)-1]; 
+        t['q_id']=Number(q_id)
+        t['time_each']['minute']=Number(minute)
+        t['time_each']['second']=Number(second)
+        // alert(JSON.stringify(t))
+        localStorage.setItem("time",JSON.stringify(timeDetailsObj))
+    }
+    function fetchTime(q_index){
+        var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
+        var t=timeDetailsObj[q_id]; 
+        var min=t['time_each']['minute'] 
+        var sec=t['time_each']['second']
+        return [min,sec]
+    }
 
     function saveAns(no="") {
         var question = document.getElementById("question").value;
         var answer = quill.getText();
+
+        // total taken time for each question 
+        var minute=Number(totalSeconds/60);
+        var second=Number(totalSeconds%60); 
+        console.log(minute+second);
+
         const xhttp = new XMLHttpRequest();
-        xhttp.onload = function () {
+        xhttp.onload = function () { 
            if (this.responseText === "success"){
                 currentQnNo+=1;
                 if(no !== "")
@@ -234,10 +281,15 @@
         xhttp.onload = function () { 
             var obj = JSON.parse(this.response);
             document.getElementById("question").innerHTML = obj["question"];
-            quill.setText(obj["answer"]);
+            quill.setText(obj["answer"]); 
+
+            // load timer for each question 
+            totalSeconds=Number(fetchTime(currentQnNo)[0])*60+Number(fetchTime(currentQnNo)[1]);
+
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        saveTimeStamp(currentQnNo,qno,formatting(totalSeconds/60),formatting(totalSeconds%60));
         xhttp.send("user_id=" + userId + "&question_id=" + qno);
     }
 
@@ -263,5 +315,41 @@
         document.getElementById("btn_1").click();
     })
 
+
+    setInterval(loadTimeForEachQuestion,1000);
+    function loadTimeForEachQuestion(){ 
+      totalSeconds++;
+      var second=formatting(parseInt(totalSeconds%60));
+      var minute=formatting(parseInt(totalSeconds/60));
+      document.getElementById("minute_counter").innerHTML=minute;
+      document.getElementById("second_counter").innerHTML=second; 
+      return totalSeconds;
+    }
+
+    var remainingHour=Number("{{ exam.duration.hour }}");
+    var remainingMinutes=Number("{{ exam.duration.minute }}");
+    var remainingSeconds=remainingHour*3600+remainingMinutes*60;
+    console.log(remainingSeconds);
+    setInterval(remainingTimeCounter,1000);
+    function remainingTimeCounter(){
+        remainingSeconds--;
+        var second=formatting(parseInt(remainingSeconds%60));
+        var minute=formatting(parseInt(remainingSeconds/60));
+        var hour=formatting(parseInt(minute/60));
+        document.getElementById("remaining_hour_counter").innerHTML=hour;
+        document.getElementById("remaining_minute_counter").innerHTML=minute;
+        document.getElementById("remaining_second_counter").innerHTML=second;
+        return remainingSeconds;
+    }
+
+    function formatting(val){
+      var str=val+"";
+      if(str.length<2){
+        return "0"+val;
+      }
+      else{
+        return val;
+      }
+    }
 </script>
 {% endblock %}
