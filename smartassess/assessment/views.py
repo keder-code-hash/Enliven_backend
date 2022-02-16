@@ -188,6 +188,11 @@ def save_assessment_answer(request):
             json_data=open(file_url,mode='w',encoding='utf-8')
             for exam in question_list: 
                 exam['student_answer']=""
+                time={
+                    "minute":00,
+                    "second":00
+                }
+                exam['time_taken']=time
                 exam.pop("created_at")
                 exam.pop("standard_ans")
             exams={"questions":question_list}
@@ -202,17 +207,21 @@ def save_assessment_answer(request):
 @csrf_exempt
 def assessment(request): 
     email_id = get_user(request).email
-    try:
+    try: 
+        file1_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
         json_data=open(file_url,mode='r',encoding='utf-8')
+        json1_data=open(file1_url,mode='r',encoding='utf-8')
         question_list=json.loads(json_data.read()).get("questions") 
-        json_data.close()
+        exam_dets=json.loads(json1_data.read()).get("exam")[0]
+        json_data.close() 
     except FileNotFoundError:
         pass 
 
     context = {
         "is_authenticated": is_authenticated_user(request),
         "qno": question_list,
+        "exam":exam_dets,
         "max_no": len(question_list)
     }
     return render(request, "AttemptExam.html", context)
