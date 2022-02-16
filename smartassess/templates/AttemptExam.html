@@ -142,10 +142,13 @@
 {% endblock showuser %}
 
 {% block btnurl %}
-{% url 'profile' %}
+  {% if user.user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
 {% endblock %}
-
-{% block btnname %}My Profile{% endblock btnname %}
+{% block btnname %}Dashboard{% endblock btnname %}
 
 {% block content %}
 <div class="container-fluid">

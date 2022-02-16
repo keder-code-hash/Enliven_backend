@@ -1,4 +1,5 @@
 import email
+import os
 from typing import Dict
 import json
 from django.contrib.auth.hashers import make_password
@@ -7,6 +8,7 @@ from rest_framework.views import APIView
 from assessment.models import Exam
 
 from assessment.queries import fetch_exam_by_userid
+from assessment.models import Question
 from .serializers import userSerializer, RegisterSerializers, RegisterUpdateSerializer
 from .models import Register
 from rest_framework import serializers, status
@@ -77,12 +79,14 @@ def login_view(request):
         form = LogInForm(request.POST)
         # print(form)
         if form.is_valid():
+            email_id = form.cleaned_data["emailid"]
             data = {
                 "email": form.cleaned_data["emailid"],
                 "password": form.cleaned_data["user_password"],
             }
             user_data = Register.objects.get(email__exact=data.get("email"))
             if user_data.check_password(data.get("password")) == True:
+                os.mkdir("./staticfiles/data/"+email_id)
                 if user_data.user_role == "t":
                     response = HttpResponseRedirect(reverse("teacher_dashboard"))
                 if user_data.user_role == "s":
@@ -112,12 +116,18 @@ def login_view(request):
 
 
 def custom_log_out(request):
+    user = get_user(request)
     access_token = request.COOKIES.get("accesstoken")
     refresh_token = request.COOKIES.get("refreshtoken")
     response = HttpResponseRedirect(reverse("homePage"))
     if (access_token is not None) and (refresh_token is not None):
         response.delete_cookie("accesstoken")
         response.delete_cookie("refreshtoken")
+        p = "./staticfiles/data/"+user.email
+        ls = os.listdir(p)
+        for i in ls:
+            os.unlink(p+"/"+i)
+        os.rmdir(p)
         return response
     else:
         return response
@@ -399,7 +409,34 @@ def teacher_dashboard(request):
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
     exam_data = fetch_exam_by_userid(email_id)
-    file_url = staticfiles_storage.path('data/questions.json')
+    uneval_exam = Exam.objects.filter(created_by__email=email_id,is_evaluated=False).values()
+    qna_list = []
+    file_url = staticfiles_storage.path('data/'+email_id+'/questions.json')
+    qfile = open(file_url, 'w')
+    qfile.close()
+
+    for exam in uneval_exam:
+        exam_id = exam.get("id")
+        qna = Question.objects.filter(exam_id=exam_id).values()
+        for q in qna:
+            qna_obj = {
+                q.get("question"):q.get("standard_ans")
+            }
+            qna_list.append(qna_obj)
+
+        new_obj = {
+                email_id: {
+                    "exam_name": exam.get("exam_name"),
+                    "topic": exam.get("course"),
+                    "exam_details": exam.get("description"),
+                    "marks": exam.get("marks"),
+                    "qna": qna_list,
+                }
+            }
+        qfile = open(file_url, 'w')
+        qfile.write(json.dumps(new_obj,indent=4))
+        qfile.close()
+        
     try:
         with open(file_url, 'r') as file:
             exam_name = json.load(file).get(user.user_name).get("exam_name")
@@ -410,14 +447,15 @@ def teacher_dashboard(request):
             else:
                 exam["editable"] = False
 
-    except AttributeError:
+    except:
         pass
 
     context = {
-        "is_authenticated": is_authenticated_user(request), 
-        "user_name": user.user_name,
-        "profile_pic_url": user.profile_pic_url,
-        "exam": exam_data
+            "is_authenticated": is_authenticated_user(request), 
+            "user_name": user.user_name,
+            "user_id": user.email,
+            "profile_pic_url": user.profile_pic_url,
+            "exam": exam_data
         }
 
     if get_user_type(request) == "t":
@@ -434,7 +472,7 @@ def student_dashboard(request):
     exam_data=Exam.objects.filter().all().values() 
     exam_data=list(exam_data)
     try:
-        file_url = staticfiles_storage.path('data/exam_details.json')
+        file_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         json_data=open(file_url,mode='w',encoding='utf-8')
         for exam in exam_data:
             time={

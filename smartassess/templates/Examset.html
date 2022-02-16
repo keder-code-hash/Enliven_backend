@@ -15,10 +15,13 @@
 {% endblock showuser %}
 
 {% block btnurl %}
-{% url 'profile' %}
+  {% if user.user_role == 't' %}
+    {% url 'teacher_dashboard' %}
+  {% else %}
+    {% url 'student_dashboard' %}
+  {% endif %}
 {% endblock %}
-
-{% block btnname %}My Profile{% endblock btnname %}
+{% block btnname %}Dashboard{% endblock btnname %}
 
 {% block headcontent %}
 <meta charset="UTF-8">
@@ -197,7 +200,7 @@
   });
 
   function saveQn() {
-    var userId = "{{ user.user_name }}";
+    var userId = "{{ user.email }}";
     var question = document.getElementById("question").value;
     var answer = quill.getText();
     const xhttp = new XMLHttpRequest();
@@ -218,7 +221,7 @@
 
   function loadQuestion(qno) {
     currentQnNo = qno;
-    var userId = "{{ user.user_name }}";
+    var userId = "{{ user.email }}";
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
       var obj = JSON.parse(this.response);
@@ -232,7 +235,7 @@
 
   function deleteQn() {
     var qno = currentQnNo;
-    var userId = "{{ user.user_name }}";
+    var userId = "{{ user.email }}";
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
       var flag = this.responseText;
@@ -262,7 +265,7 @@
 
   function finalSubmit() {
     saveQn();
-    var user_id = "{{ user.user_name }}";
+    var user_id = "{{ user.email }}";
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
       var flag = this.responseText;
