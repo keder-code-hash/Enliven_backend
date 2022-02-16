@@ -4,10 +4,10 @@
             "id": 18,
             "exam_id": 8,
             "question": "What is energy?",
-            "student_answer": "Energy is the ability to do work.\n",
+            "student_answer": "",
             "time_taken": {
                 "minute": 0,
-                "second": 21
+                "second": 0
             }
         },
         {
@@ -44,7 +44,7 @@
             "id": 22,
             "exam_id": 8,
             "question": "What is velocity?",
-            "student_answer": "\n",
+            "student_answer": "",
             "time_taken": {
                 "minute": 0,
                 "second": 0

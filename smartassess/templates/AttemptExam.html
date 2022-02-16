@@ -230,7 +230,9 @@
     }
     function fetchTime(q_index){
         var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
-        var t=timeDetailsObj[q_id]; 
+        var t=timeDetailsObj[q_index]; 
+        // console.log("index: "+q_index)
+        // console.log(t)
         var min=t['time_each']['minute'] 
         var sec=t['time_each']['second']
         return [min,sec]
@@ -243,7 +245,7 @@
         // total taken time for each question 
         var minute=Number(totalSeconds/60);
         var second=Number(totalSeconds%60); 
-        console.log(minute+second);
+        // console.log(minute+second);
 
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () { 
@@ -268,6 +270,12 @@
     }
 
     function loadQuestion(qno, no) {
+
+        saveTimeStamp(currentQnNo,qno,formatting(totalSeconds/60),formatting(totalSeconds%60));
+        // load timer for each question 
+        totalSeconds=Number(Math.floor(fetchTime(no-1)[0]))*60+Number(fetchTime(no-1)[1]);
+        // console.log(no);
+
         currentQnNo = no;
         if(currentQnNo < maxQnNo){
             document.getElementById("saveAnsBtn").style.display = "initial";
@@ -283,13 +291,11 @@
             document.getElementById("question").innerHTML = obj["question"];
             quill.setText(obj["answer"]); 
 
-            // load timer for each question 
-            totalSeconds=Number(fetchTime(currentQnNo)[0])*60+Number(fetchTime(currentQnNo)[1]);
+            
 
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        saveTimeStamp(currentQnNo,qno,formatting(totalSeconds/60),formatting(totalSeconds%60));
         xhttp.send("user_id=" + userId + "&question_id=" + qno);
     }
 
@@ -330,6 +336,7 @@
     var remainingMinutes=Number("{{ exam.duration.minute }}");
     var remainingSeconds=remainingHour*3600+remainingMinutes*60;
     console.log(remainingSeconds);
+
     setInterval(remainingTimeCounter,1000);
     function remainingTimeCounter(){
         remainingSeconds--;
