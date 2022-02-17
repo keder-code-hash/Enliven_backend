@@ -14,14 +14,14 @@ from assessment.models import Answer, Exam, Question
 from assessment.queries import fetch_exam_details_by_id
 from assessment.model_prediction import make_prediction
 
-def assessment_json_gen(exam_id, email_id):
+def assessment_json_gen(exam_id, email_id, user_id):
     try:
         exam_dets=Exam.objects.filter(id=exam_id).values()
         data=Question.objects.filter(exam_id=exam_id).values() 
         all_questions=list(data)
         try:
             score = 0
-            file_url = staticfiles_storage.path('data/assessment_details.json')
+            file_url = staticfiles_storage.path('data/'+user_id+'/assessment_details.json')
             json_data=open(file_url,mode='w',encoding='utf-8')
             for question in all_questions:
                 student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
@@ -62,7 +62,7 @@ def load_assessment_result(request):
         user=get_user(request=request)
         email_id=user.email
         exam_id=request.POST.get("exam_id")
-        res = assessment_json_gen(exam_id, email_id)
+        res = assessment_json_gen(exam_id, email_id, email_id)
         return JsonResponse(res)
 
 
@@ -71,10 +71,10 @@ def load_assessment_result_teacher(request):
     if request.method=="GET":
         exam_id = request.GET.get("exam_id")
         email = request.GET.get("email")
-        assessment_json_gen(exam_id, email)
         user = get_user(request)
+        assessment_json_gen(exam_id, email, user.email)
         try:
-            file_url = staticfiles_storage.path('data/assessment_details.json')
+            file_url = staticfiles_storage.path('data/'+user.email+'/assessment_details.json')
             json_data=open(file_url,mode='r',encoding='utf-8')
             data=json.loads(json_data.read())
             exam_details=data.get('exam')
@@ -100,7 +100,7 @@ def load_assessment_result_teacher(request):
 def test_results(request):
     user = get_user(request)
     try:
-        file_url = staticfiles_storage.path('data/assessment_details.json')
+        file_url = staticfiles_storage.path('data/'+user.email+'/assessment_details.json')
         json_data=open(file_url,mode='r',encoding='utf-8')
         data=json.loads(json_data.read())
         exam_details=data.get('exam')
@@ -124,8 +124,9 @@ def test_results(request):
 def fetch_stnd_QnA(request):
     if request.method=="POST":
         id=request.POST.get('set_id')
+        user = get_user(request)
         try:
-            file_url = staticfiles_storage.path('data/assessment_details.json')
+            file_url = staticfiles_storage.path('data/'+user.email+'/assessment_details.json')
             json_data=open(file_url,mode='r',encoding='utf-8')
             data=json.loads(json_data.read())  
             actual_ans=data.get('ass_set')
@@ -179,10 +180,11 @@ def view_all_results(request):
 def save_assessment_answer(request):
     if request.method=="POST":
         exam_id=request.POST.get("exam_id") 
+        email_id = get_user(request).email
         question_list = Question.objects.filter(exam_id=int(exam_id)).values() 
         question_list = list(question_list)
         try:
-            file_url = staticfiles_storage.path('data/all_questions.json')
+            file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
             json_data=open(file_url,mode='w',encoding='utf-8')
             for exam in question_list: 
                 exam['student_answer']=""
@@ -204,9 +206,10 @@ def save_assessment_answer(request):
 # self assessment
 @csrf_exempt
 def assessment(request): 
-    try:
-        file_url = staticfiles_storage.path('data/all_questions.json')
-        file1_url = staticfiles_storage.path('data/exam_details.json')
+    email_id = get_user(request).email
+    try: 
+        file1_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
+        file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
         json_data=open(file_url,mode='r',encoding='utf-8')
         json1_data=open(file1_url,mode='r',encoding='utf-8')
         question_list=json.loads(json_data.read()).get("questions") 
@@ -226,10 +229,10 @@ def assessment(request):
 # set questions for examination (accessible by teacher only)
 def set_questions(request):
     user = get_user(request)
-    file_url = staticfiles_storage.path("data/questions.json")
+    file_url = staticfiles_storage.path("data/"+user.email+"/questions.json")
     data = ""
     with open(file_url, "r+") as file:
-        data = json.load(file).get(user.user_name)
+        data = json.load(file).get(user.email)
 
     qno = list(range(1, len(data.get("qna")) + 2))
     max_qno = len(qno)

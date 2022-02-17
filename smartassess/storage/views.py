@@ -49,8 +49,9 @@ def save_examname(request):
         ):
             return HttpResponse(0)
 
-        file_url = staticfiles_storage.path("data/questions.json")
-        with open(file_url, "r+") as file:
+        
+        file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
+        with open(file_url, "w") as file:
             data = json.load(file)
             data.update(new_obj)
             file.seek(0)
@@ -66,10 +67,7 @@ def save_questions(request):
         if user_type=='s': 
             qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
-            # minute=request.POST.get("minute")
-            # second=request.POST.get("second")
-            
-            file_url = staticfiles_storage.path("data/all_questions.json")
+            file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
             try:
                 with open(file_url, "r+") as file:
                     main_data = json.load(file)
@@ -99,7 +97,7 @@ def save_questions(request):
             qno = int(request.POST.get("qno"))
             new_question = {question: answer}
             flag = 0
-            file_url = staticfiles_storage.path("data/questions.json")
+            file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
             with open(file_url, "r+") as file:
                 main_data = json.load(file)
                 data = main_data.get(user_id)
@@ -130,7 +128,7 @@ def fetch_questions(request):
         user_type=get_user_type(request=request)
         if user_type=="s":
             qno = int(request.POST.get("question_id"))
-            file_url = staticfiles_storage.path("data/all_questions.json")
+            file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
             with open(file_url, "r") as file:
                 main_data = json.load(file)
                 question_data = main_data.get("questions")
@@ -149,7 +147,7 @@ def fetch_questions(request):
 
         elif user_type=="t":
             qno = int(request.POST.get("question_id"))
-            file_url = staticfiles_storage.path("data/questions.json")
+            file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
             with open(file_url, "r") as file:
                 main_data = json.load(file)
                 data = main_data.get(user_id)
@@ -173,7 +171,7 @@ def delete_questions(request):
         user_id = request.POST.get("user_id")
         qno = int(request.POST.get("question_id"))
         flag = 1
-        file_url = staticfiles_storage.path("data/questions.json")
+        file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
         with open(file_url, "r+") as file:
             main_data = json.load(file)
             data = main_data.get(user_id)
