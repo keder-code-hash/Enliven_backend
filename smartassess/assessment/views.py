@@ -201,6 +201,7 @@ def save_assessment_answer(request):
 # self assessment
 @csrf_exempt
 def assessment(request): 
+    user = get_user(request)
     email_id = get_user(request).email
     try:
         file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
@@ -211,6 +212,7 @@ def assessment(request):
         pass 
 
     context = {
+        "user":user,
         "is_authenticated": is_authenticated_user(request),
         "qno": question_list,
         "max_no": len(question_list)
