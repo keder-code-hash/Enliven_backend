@@ -65,22 +65,28 @@ def save_questions(request):
     if request.method == "POST":
         user_type=get_user_type(request)
         if user_type=='s': 
+            user_id = request.POST.get("user_id")
             qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
+            timeStamp=json.dumps(request.POST.get("finalTime"))
+            print(timeStamp)
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
+            count=0
             try:
                 with open(file_url, "r+") as file:
                     main_data = json.load(file)
                     data = main_data.get("questions")
-                    print("succ")
                     for q in data:
+                        count+=1
                         if q.get('id') == qno:
                             q["student_answer"] = answer    
-                            # t=q["time_taken"]
-                            # t["minute"]=minute
-                            # t["second"]=second
+                            # print("succ")
+                            t=q["time_taken"]
+                            t["minute"]=timeStamp[count].get("minute")
+                            t["second"]=timeStamp[count].get("second")
                             # time=t
 
+                    print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
@@ -124,13 +130,15 @@ def save_questions(request):
 @csrf_exempt
 def fetch_questions(request):
     if request.method == "POST":
-        user_id = request.POST.get("user_id")
+        user_id = get_user(request).email
         user_type=get_user_type(request=request)
         if user_type=="s":
+            print(user_id)
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
+            print(file_url)
             with open(file_url, "r") as file:
-                main_data = json.load(file)
+                main_data = json.loads(file.read())
                 question_data = main_data.get("questions")
                 qstn={}
                 try:
