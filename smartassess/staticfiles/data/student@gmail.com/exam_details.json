@@ -11,7 +11,7 @@
                 "minute": 40
             },
             "created_at": "",
-            "is_evaluated": true
+            "is_evaluated": false
         },
         {
             "id": 13,
@@ -24,7 +24,7 @@
                 "minute": 10
             },
             "created_at": "",
-            "is_evaluated": false
+            "is_evaluated": true
         }
     ]
 }

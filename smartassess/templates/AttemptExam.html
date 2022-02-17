@@ -220,6 +220,7 @@
     }
 
     function saveTimeStamp(q_index,q_id,minute,second){
+        console.log(q_index,q_id);
         var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
         var t=timeDetailsObj[Number(q_index)-1]; 
         t['q_id']=Number(q_id)
@@ -238,12 +239,12 @@
 
     function saveAns(no="") {
         var question = document.getElementById("question").value;
-        var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time"));
-        var tobj={
-            "result":timeDetailsJsonObj
-        }
+        var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time")); 
+        // console.log(timeDetailsJsonObj)
         var answer = quill.getText();
-        console.log(questionId);
+        // console.log(currentQnNo,questionId);
+
+        
 
         // total taken time for each question 
         var minute=Number(totalSeconds/60);
@@ -252,7 +253,7 @@
 
         const xhttp = new XMLHttpRequest();
         xhttp.onload = function () { 
-           if (this.responseText === "success"){
+           if (this.responseText === "success"){ 
                 currentQnNo+=1;
                 if(no !== "")
                     currentQnNo = Number(no);
@@ -263,21 +264,20 @@
                     document.getElementById("finalSubmitBtn").disabled = false;
                 }
                 else
-                    document.getElementById("btn_"+currentQnNo).click();
+                    document.getElementById("btn_"+currentQnNo).click(); 
            }
             
         }
         xhttp.open("POST", "{% url 'tempSaveQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         var userId = "{{ user.email }}";
-        xhttp.send("user_id=" + userId +"&question_id=" + questionId + "&answer=" + answer + "&finalTime=" + JSON.stringify(tobj));
+        xhttp.send("user_id=" + userId +"&question_id=" + questionId + "&answer=" + answer + "&finalTime=" + JSON.stringify(timeDetailsJsonObj));
     }
 
-    function loadQuestion(qno, no) {
-
+    function loadQuestion(qno, no) { 
         saveTimeStamp(currentQnNo,qno,formatting(totalSeconds/60),formatting(totalSeconds%60));
         // load timer for each question 
-        totalSeconds=Number(Math.floor(fetchTime(no-1)[0]))*60+Number(fetchTime(no-1)[1]);
+        totalSeconds=Number(Math.floor(fetchTime(no)[0]))*60+Number(fetchTime(no)[1]);
         // console.log(no);
 
         currentQnNo = no;
@@ -293,10 +293,7 @@
         xhttp.onload = function () { 
             var obj = JSON.parse(this.response);
             document.getElementById("question").innerHTML = obj["question"];
-            quill.setText(obj["answer"]); 
-
-            
-
+            quill.setText(obj["answer"]);  
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

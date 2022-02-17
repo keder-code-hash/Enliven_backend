@@ -1,16 +1,16 @@
 # Standard Library imports
 import json
 import datetime
-from textwrap import indent
+from os import times
+import re
+from time import time 
 
 # Django Library imports
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import MultipleObjectsReturned
-from django.contrib.staticfiles.storage import staticfiles_storage
-from pip import main
+from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.staticfiles.storage import staticfiles_storage 
 
 # Custom Library imports
 from users.views import get_user, get_user_type, is_authenticated_user
@@ -67,8 +67,7 @@ def save_questions(request):
             user_id = request.POST.get("user_id")
             qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
-            timeStamp=json.dumps(request.POST.get("finalTime"))
-            print(timeStamp) 
+            timeStamp=request.POST.get("finalTime") 
             count=0
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
             try:
@@ -76,15 +75,15 @@ def save_questions(request):
                     main_data = json.load(file)
                     data = main_data.get("questions")
                     for q in data:
-                        count+=1
                         if q.get('id') == qno:
-                            q["student_answer"] = answer    
-                            # print("succ")
-                            t=q["time_taken"]
-                            t["minute"]=timeStamp[count].get("minute")
-                            t["second"]=timeStamp[count].get("second")
-                            # time=t
-
+                            print(count)
+                            print(len(json.loads(str(timeStamp)))) 
+                            q["student_answer"] = answer  
+                            timeObj=json.loads(timeStamp)[count].get("time_each")
+                            q["time_taken"]["minute"]=timeObj.get("minute")
+                            q["time_taken"]["second"]=timeObj.get("second") 
+                            print(q)
+                        count+=1
                     print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
