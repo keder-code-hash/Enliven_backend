@@ -287,7 +287,7 @@
             document.getElementById("finalSubmitBtn").disabled = true;
         }
         questionId = qno;
-        var userId = "{{ user.user_name }}";
+        var userId = "{{ user.email }}";
         const xhttp = new XMLHttpRequest();
 
         xhttp.onload = function () { 

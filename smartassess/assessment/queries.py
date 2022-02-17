@@ -149,7 +149,8 @@ def save_exam_qna(filepath,exam_id):
             
             # exam setter obj
             exam_setter_user_name=list(exam_set.keys())[0]
-            exam_stter_obj=Register.objects.get(user_name__iexact=exam_setter_user_name)
+            print(exam_setter_user_name)
+            exam_stter_obj=Register.objects.get(email__iexact=exam_setter_user_name)
             exam_dets_json=list(exam_set.values())[0] 
  
             question_ids=[]
