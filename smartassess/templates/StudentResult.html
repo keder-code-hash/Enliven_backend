@@ -64,6 +64,7 @@
   </div>
   <div class="row ml-2">
     <div class="col-sm-2"></div>
+  
     <div class="col-sm-10" style="display:block; color:white !important;">
       <a id="prevButton" class="btn btn-primary float-left" role="button" onclick="loadPreviousQuestion()">Previous</a>
 
@@ -76,7 +77,7 @@
       <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
         {% for i in actual_ans %}
         <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}"
-          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }})" q_id="{{ i.id }}">{{forloop.counter }}</button>
+          style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }},{{ forloop.counter }},true)" q_id="{{ i.id }}">{{forloop.counter }}</button>
         {% endfor %}
       </div>
     </div>
@@ -115,10 +116,11 @@
       theme: 'snow'
     });
 
-    var currentQnNo=1;
+    var currentQnNo=0;
     var maxQuestionNo="{{question_no}}";
 
-    function loadQuestion(id) { 
+
+    function loadQuestion(id,buttonCounter,st) { 
       var setId = id;
       const xhttp = new XMLHttpRequest();
 
@@ -134,7 +136,13 @@
         for (let i = 0; i < quillCollection.length; i++) { 
             quillCollection[i].setAttribute("contenteditable", "false");
         }
+        // console.log("current Qn NO "+currentQnNo);
+        if(st===true){
+          currentQnNo=buttonCounter;
+        }
         buttonValidation();
+
+       
       }
       xhttp.open("POST", "{% url 'fetch_stnd_qna' %}");
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -142,15 +150,19 @@
     }
 
     function loadPreviousQuestion(){
-      currentQnNo-=1;
+      if(currentQnNo>0){
+        currentQnNo-=1;
+      }
+      // console.log("prev"+currentQnNo);
       var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
       loadQuestion(Number(question_id));
-      console.log("prev"+currentQnNo);
 
     }
     function loadNextQuestion(){
-      currentQnNo+=1;
-      console.log("next"+currentQnNo);
+      if(currentQnNo<maxQuestionNo){
+        currentQnNo+=1;
+      }
+      // console.log("next"+currentQnNo);
       var question_id=document.getElementById("btn_"+currentQnNo).getAttribute("q_id")
       loadQuestion(question_id);
     }
@@ -188,6 +200,9 @@
       function(txt){return txt.charAt(0).toUpperCase() +
             txt.substr(1).toLowerCase();});
     }
+
+    
+
   </script>
 </div>
 

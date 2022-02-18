@@ -1,16 +1,16 @@
 # Standard Library imports
 import json
 import datetime
-from textwrap import indent
+from os import times
+import re
+from time import time 
 
 # Django Library imports
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import MultipleObjectsReturned
-from django.contrib.staticfiles.storage import staticfiles_storage
-from pip import main
+from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.staticfiles.storage import staticfiles_storage 
 
 # Custom Library imports
 from users.views import get_user, get_user_type, is_authenticated_user
@@ -64,22 +64,31 @@ def save_questions(request):
         user = get_user(request)
         user_type=user.user_role
         if user_type=='s': 
-            qno = int(request.POST.get("question_id"))
+            user_id = request.POST.get("user_id") 
+            qno = int(request.POST.get("question_id")) 
             answer = request.POST.get("answer")
-            file_url = staticfiles_storage.path("data/"+user.email+"/all_questions.json")
+            timeStamp=request.POST.get("finalTime") 
+            count=0
+            file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
             try:
                 with open(file_url, "r+") as file:
                     main_data = json.load(file)
                     data = main_data.get("questions")
                     for q in data:
                         if q.get('id') == qno:
-                            q["student_answer"] = answer
-
+                            print(count)
+                            print(len(json.loads(str(timeStamp)))) 
+                            q["student_answer"] = answer  
+                            timeObj=json.loads(timeStamp)[count].get("time_each")
+                            q["time_taken"]["minute"]=timeObj.get("minute")
+                            q["time_taken"]["second"]=timeObj.get("second") 
+                            print(q)
+                        count+=1
+                    print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
                     json.dump(main_data, file, indent=4)
-                
                 return HttpResponse("success")
 
             except:
@@ -119,13 +128,15 @@ def save_questions(request):
 @csrf_exempt
 def fetch_questions(request):
     if request.method == "POST":
-        user_id = request.POST.get("user_id")
+        user_id = get_user(request).email
         user_type=get_user_type(request=request)
         if user_type=="s":
+            print(user_id)
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
+            print(file_url)
             with open(file_url, "r") as file:
-                main_data = json.load(file)
+                main_data = json.loads(file.read())
                 question_data = main_data.get("questions")
                 qstn={}
                 try:
@@ -211,11 +222,12 @@ def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
     answered_by = get_user(request)
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
-    print(file_url)
+    # print(file_url)
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
-        question_data = main_data.get("questions")
+        print(main_data)
+        question_data = main_data.get("questions") 
         for q in question_data:
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
             if(flag == False):
