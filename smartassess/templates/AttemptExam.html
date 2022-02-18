@@ -171,7 +171,7 @@
         <div class="col-sm-2 mb-1 mt-1">
             <div id="questionList" class="shadow wrapper" style="max-height: 75vh; overflow-y: auto;">
                 {% for i in qno %}
-                <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}" style="margin: 4px ;padding: 2px;width: 25px;" onclick="loadQuestion({{ i.id }}, {{ forloop.counter }})">{{ forloop.counter }}
+                <button class="btn btn-outline-success noBtn" id="btn_{{ forloop.counter }}" style="margin: 4px ;padding: 2px;width: 25px;" q_id="{{ i.id }}" onclick="loadQuestion({{ i.id }}, {{ forloop.counter }}, true)">{{ forloop.counter }}
                 </button>
                 {% endfor %}
             </div>
@@ -195,14 +195,26 @@
 </div>
 
 <script>
-
+    var qarray=[];
     var questionId;
     var currentQnNo = 1;
     var maxQnNo = Number('{{ max_no }}');
     var quill = new Quill('#editor', {
         theme: 'snow'
     });
+
+    for(var i=0;i<maxQnNo;i++){
+        var btn=document.getElementById("btn_"+(i+1));
+        qarray.push(btn.getAttribute("q_id"));
+    }
+    // qarray.push(-1);
+
+
+    var prevClickedqNo=0;
+    var currentClickedqNo=0; 
+
     localStorage.setItem("time",formatSave());
+
     var totalSeconds=0;
     function formatSave(){
         var timeDetails=new Array();
@@ -220,15 +232,16 @@
     }
 
     function saveTimeStamp(q_index,q_id,minute,second){
-        console.log(q_index,q_id);
+        // console.log("answer save for "+Number(q_index ));
         var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
-        var t=timeDetailsObj[Number(q_index)-1]; 
+        var t=timeDetailsObj[Number(q_index)]; 
         t['q_id']=Number(q_id)
         t['time_each']['minute']=Number(minute)
         t['time_each']['second']=Number(second)
         // alert(JSON.stringify(t))
         localStorage.setItem("time",JSON.stringify(timeDetailsObj))
     }
+
     function fetchTime(q_index){
         var timeDetailsObj=JSON.parse(localStorage.getItem("time"));
         var t=timeDetailsObj[q_index];  
@@ -236,8 +249,9 @@
         var sec=t['time_each']['second']
         return [min,sec]
     }
+    
+    function saveAns(no="", flag=true) {
 
-    function saveAns(no="") {
         var question = document.getElementById("question").value;
         var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time")); 
         // console.log(timeDetailsJsonObj)
@@ -259,12 +273,16 @@
                     currentQnNo = Number(no);
 
                 if(currentQnNo == maxQnNo+1){
+                    if(qarray[currentQnNo-1]===undefined){
+                        currentQnNo=maxQnNo;
+                    }
+                    loadQuestion(qarray[currentQnNo-1], currentQnNo-1, flag);
                     document.getElementById("saveAnsBtn").style.display = "none";
                     document.getElementById("finalSubmitBtn").style.display = "initial";
                     document.getElementById("finalSubmitBtn").disabled = false;
                 }
                 else
-                    document.getElementById("btn_"+currentQnNo).click(); 
+                    document.getElementById("btn_"+currentQnNo).click();
            }
             
         }
@@ -273,19 +291,25 @@
         var userId = "{{ user.email }}";
         xhttp.send("user_id=" + userId +"&question_id=" + questionId + "&answer=" + answer + "&finalTime=" + JSON.stringify(timeDetailsJsonObj));
     }
+    
+    function loadQuestion(qno, no, flag) {
 
-    function loadQuestion(qno, no) { 
-        saveTimeStamp(currentQnNo,qno,formatting(totalSeconds/60),formatting(totalSeconds%60));
-        // load timer for each question 
-        totalSeconds=Number(Math.floor(fetchTime(no)[0]))*60+Number(fetchTime(no)[1]);
-        // console.log(no);
+        currentClickedqNo = no-1;
+        if(flag === true){
+            saveTimeStamp(prevClickedqNo,qarray[prevClickedqNo],formatting(totalSeconds/60),formatting(totalSeconds%60));
+            totalSeconds=Number(Math.floor(fetchTime(currentClickedqNo)[0]))*60+Number(fetchTime(currentClickedqNo)[1]);
+            prevClickedqNo = currentClickedqNo;
+        }
+        else
+            prevClickedqNo = currentClickedqNo;
 
         currentQnNo = no;
-        if(currentQnNo < maxQnNo){
+        if(currentQnNo < maxQnNo){ 
             document.getElementById("saveAnsBtn").style.display = "initial";
             document.getElementById("finalSubmitBtn").style.display = "none";
             document.getElementById("finalSubmitBtn").disabled = true;
         }
+
         questionId = qno;
         var userId = "{{ user.email }}";
         const xhttp = new XMLHttpRequest();
@@ -301,7 +325,7 @@
     }
 
     function finalSubmit() {
-        saveAns(maxQnNo);
+        saveAns(maxQnNo, false);
         const xhttp = new XMLHttpRequest();
         var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time"));
         xhttp.onload = function () {
@@ -320,7 +344,7 @@
     }
 
     $(window).on("load", function(){
-        document.getElementById("btn_1").click();
+        loadQuestion(qarray[0], 1, false);
     })
 
 

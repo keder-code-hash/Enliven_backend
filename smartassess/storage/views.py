@@ -64,8 +64,8 @@ def save_questions(request):
         user = get_user(request)
         user_type=user.user_role
         if user_type=='s': 
-            user_id = request.POST.get("user_id")
-            qno = int(request.POST.get("question_id"))
+            user_id = request.POST.get("user_id") 
+            qno = int(request.POST.get("question_id")) 
             answer = request.POST.get("answer")
             timeStamp=request.POST.get("finalTime") 
             count=0
@@ -226,7 +226,7 @@ def final_ans_submit(request):
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
-        question_data = main_data.get("questions")
+        question_data = main_data.get("questions") 
         for q in question_data:
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
             if(flag == False):
