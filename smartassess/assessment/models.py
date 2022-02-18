@@ -1,4 +1,6 @@
+from pyexpat import model
 from django.db import models
+from flask import Flask
 from users.models import Register
 
 
@@ -19,6 +21,8 @@ class Question(models.Model):
     exam_id = models.BigIntegerField(blank=False)
     question = models.CharField(max_length=130, blank=False)
     standard_ans = models.CharField(max_length=130, blank=False)
+    qstn_marks=models.IntegerField(blank=True,default=1)
+
     created_by = models.ManyToManyField(Register)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
@@ -45,6 +49,12 @@ class Monitor(models.Model):
     image = models.ImageField(blank=False)
     taken_at = models.DateTimeField(auto_now_add=True)
     is_original = models.BooleanField(default=False)
+
+class ExamSubmissionDetail(models.Model):
+    exam_id=models.BigIntegerField(blank=False)
+    student_id=models.EmailField(blank=False)
+    is_submitted=models.BooleanField(blank=False,default=False)
+    submitted_at=models.DateTimeField(auto_now_add=True)
 
 
 """

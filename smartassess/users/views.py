@@ -77,7 +77,6 @@ def register_view(request):
 def login_view(request):
     if request.method == "POST":
         form = LogInForm(request.POST)
-        # print(form)
         if form.is_valid():
             email_id = form.cleaned_data["emailid"]
             data = {
@@ -86,7 +85,11 @@ def login_view(request):
             }
             user_data = Register.objects.get(email__exact=data.get("email"))
             if user_data.check_password(data.get("password")) == True:
-                os.mkdir("./staticfiles/data/"+email_id)
+                dir_path = "./staticfiles/data/"+email_id
+                try:
+                    os.mkdir(dir_path)
+                except:
+                    pass
                 if user_data.user_role == "t":
                     response = HttpResponseRedirect(reverse("teacher_dashboard"))
                 if user_data.user_role == "s":
