@@ -49,25 +49,24 @@ def save_examname(request):
         ):
             return HttpResponse(0)
 
-        
+        print("Email:", user_id)
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
-        with open(file_url, "w") as file:
-            data = json.load(file)
-            data.update(new_obj)
-            file.seek(0)
-            json.dump(data, file, indent=4)
-
+        print(file_url)
+        file = open(file_url, "w")
+        file.write(json.dumps(new_obj, indent=4))
+        file.close()
         return HttpResponse(1)
 
 
 @csrf_exempt
 def save_questions(request):
     if request.method == "POST":
-        user_type=get_user_type(request)
+        user = get_user(request)
+        user_type=user.user_role
         if user_type=='s': 
             qno = int(request.POST.get("question_id"))
             answer = request.POST.get("answer")
-            file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
+            file_url = staticfiles_storage.path("data/"+user.email+"/all_questions.json")
             try:
                 with open(file_url, "r+") as file:
                     main_data = json.load(file)
@@ -189,7 +188,7 @@ def delete_questions(request):
 def final_submit(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
-        file_url = staticfiles_storage.path("data/questions.json")
+        file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
         with open(file_url, "r") as file:
             main_data = json.load(file)
             exam_name = main_data.get(user_id).get("exam_name")
@@ -211,7 +210,8 @@ def final_submit(request):
 def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
     answered_by = get_user(request)
-    file_url = staticfiles_storage.path("data/all_questions.json")
+    file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
+    print(file_url)
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
