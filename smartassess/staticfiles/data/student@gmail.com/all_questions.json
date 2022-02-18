@@ -1,0 +1,39 @@
+{
+    "questions": [
+        {
+            "id": 18,
+            "exam_id": 8,
+            "question": "What is energy?",
+            "qstn_marks": 1,
+            "student_answer": ""
+        },
+        {
+            "id": 19,
+            "exam_id": 8,
+            "question": "Define force.",
+            "qstn_marks": 1,
+            "student_answer": ""
+        },
+        {
+            "id": 20,
+            "exam_id": 8,
+            "question": "What is Friction?",
+            "qstn_marks": 1,
+            "student_answer": ""
+        },
+        {
+            "id": 21,
+            "exam_id": 8,
+            "question": "Newton's third law.",
+            "qstn_marks": 1,
+            "student_answer": ""
+        },
+        {
+            "id": 22,
+            "exam_id": 8,
+            "question": "What is velocity?",
+            "qstn_marks": 1,
+            "student_answer": ""
+        }
+    ]
+}
