@@ -66,9 +66,7 @@ def save_questions(request):
         if user_type=='s': 
             user_id = request.POST.get("user_id") 
             qno = int(request.POST.get("question_id")) 
-            answer = request.POST.get("answer")
-            timeStamp=request.POST.get("finalTime") 
-            count=0
+            answer = request.POST.get("answer") 
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
             try:
                 with open(file_url, "r+") as file:
@@ -76,19 +74,12 @@ def save_questions(request):
                     data = main_data.get("questions")
                     for q in data:
                         if q.get('id') == qno:
-                            print(count)
-                            print(len(json.loads(str(timeStamp)))) 
-                            q["student_answer"] = answer  
-                            timeObj=json.loads(timeStamp)[count].get("time_each")
-                            q["time_taken"]["minute"]=timeObj.get("minute")
-                            q["time_taken"]["second"]=timeObj.get("second") 
-                            print(q)
-                        count+=1
-                    print(data)
+                            q["student_answer"] = answer    
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
                     json.dump(main_data, file, indent=4)
+                    file.close()
                 return HttpResponse("success")
 
             except:
@@ -222,13 +213,37 @@ def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
     answered_by = get_user(request)
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
-    # print(file_url)
-    answer_duration = datetime.time(0,0,0)
+    
+    timeStamp=request.POST.get("finalTime") 
+    timeArray=json.loads(timeStamp)
+    print(timeArray)
+    print(json.loads(json.dumps(timeArray[0])))  
+    try:
+        with open(file_url, "r+") as file:
+            main_data = json.load(file)
+            data = main_data.get("questions")
+            for q in data:
+                id=int(q.get('id') )  
+                for timeObj in timeArray:
+                    obj=json.loads(json.dumps(timeObj))
+                    print(obj["q_id"])
+                    if(int(obj["q_id"])==id):
+                        each_time_obj=json.loads(json.dumps(obj.get('time_each')))
+                        print("each_time_obj")  
+                        q["time_taken"]["minute"]=each_time_obj.get("minute")
+                        q["time_taken"]["second"]=each_time_obj.get("second")   
+            main_data.update({"questions": data})
+            file.seek(0)
+            file.truncate()
+            json.dump(main_data, file, indent=4)
+    except:
+        pass 
     with open(file_url, "r") as file:
         main_data = json.load(file)
         print(main_data)
         question_data = main_data.get("questions") 
         for q in question_data:
+            answer_duration = datetime.time(0,int(q['time_taken']['minute']),int(q['time_taken']['second']))
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
             if(flag == False):
                 break

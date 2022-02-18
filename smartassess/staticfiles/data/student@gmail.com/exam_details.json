@@ -1,0 +1,17 @@
+{
+    "exam": [
+        {
+            "id": 15,
+            "exam_name": "Test Exam",
+            "marks": 12,
+            "course": "OOPS",
+            "description": "new testing exam.",
+            "duration": {
+                "hour": 0,
+                "minute": 25
+            },
+            "created_at": "",
+            "is_evaluated": false
+        }
+    ]
+}

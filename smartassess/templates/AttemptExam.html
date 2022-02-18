@@ -253,12 +253,10 @@
     function saveAns(no="", flag=true) {
 
         var question = document.getElementById("question").value;
-        var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time")); 
+        // var timeDetailsJsonObj=JSON.parse(localStorage.getItem("time")); 
         // console.log(timeDetailsJsonObj)
         var answer = quill.getText();
         // console.log(currentQnNo,questionId);
-
-        
 
         // total taken time for each question 
         var minute=Number(totalSeconds/60);
@@ -284,12 +282,15 @@
                 else
                     document.getElementById("btn_"+currentQnNo).click();
            }
+           else if(this.responseText==="unsuccess"){
+               alert("Unable to save question.")
+           }
             
         }
         xhttp.open("POST", "{% url 'tempSaveQnA' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         var userId = "{{ user.email }}";
-        xhttp.send("user_id=" + userId +"&question_id=" + questionId + "&answer=" + answer + "&finalTime=" + JSON.stringify(timeDetailsJsonObj));
+        xhttp.send("user_id=" + userId +"&question_id=" + questionId + "&answer=" + answer  );
     }
     
     function loadQuestion(qno, no, flag) {
@@ -340,7 +341,7 @@
         }
         xhttp.open("POST", "{% url 'finalAnsSubmit' %}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("finalTime=" + timeDetailsJsonObj);
+        xhttp.send("finalTime=" + JSON.stringify(timeDetailsJsonObj));
     }
 
     $(window).on("load", function(){

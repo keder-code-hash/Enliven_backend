@@ -85,12 +85,12 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             question_id=question_id,
             answered_by__email=answered_by.email
         ).update(
-        answer=answer,
-        answered_at=datetime.datetime.now()
+            answer=answer,
+            answer_duration=answer_duration 
         )
 
         # for fresh creation
-        if exam_obj is not None and question_obj is not None and affected_rows!=1:
+        if exam_obj is not None and question_obj is not None and affected_rows!=1: 
             answer_object,answer_created=Answer.objects.get_or_create(
                 exam_id=exam_id,
                 question_id=question_id,
@@ -110,7 +110,7 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             
             return answer_object.id,answer_created
         else:
-            return affected_rows,False
+            return affected_rows,True
     except ObjectDoesNotExist:
         return None,False
 
