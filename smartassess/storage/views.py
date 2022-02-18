@@ -222,10 +222,11 @@ def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
     answered_by = get_user(request)
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
-    print(file_url)
+    # print(file_url)
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
+        print(main_data)
         question_data = main_data.get("questions") 
         for q in question_data:
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
