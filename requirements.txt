@@ -23,3 +23,5 @@ python-decouple
 django-mptt
 django-adminlte3
 cloudinary==1.26.0 
+click==8.0.3
+Pillow==8.4.0
