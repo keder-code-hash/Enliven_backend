@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="6000" height="6000" viewBox="615 615 6000 6000" xml:space="preserve">
+<desc>Created with Fabric.js 4.2.0</desc>
+<defs>
+</defs>
+<g transform="matrix(1 0 0 1 3000 3000)" id="923da129-5c94-4f6a-9e06-efd273a69bf7"  >
+<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  x="-3000" y="-3000" rx="0" ry="0" width="6000" height="6000" />
+</g>
+<g transform="matrix(Infinity NaN NaN Infinity 0 0)" id="f1c1234d-90f2-427c-b71c-45aee4b51f70"  >
+</g>
+<g transform="matrix(5.56 0 0 5.56 3000 2952.87)" style="filter: url(#SVGID_391);" id="6cf26b4e-72d0-416a-a5a3-4c63ea7760cf"  >
+<filter id="SVGID_391" y="-36%" height="172%" x="-25%" width="150%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="17"></feGaussianBlur>
+	<feOffset dx="3" dy="3" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="0.48"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+		<rect opacity="0.04" fill="rgb(73,74,48)" x="-399.04" y="-113" width="798.08" height="226"></rect>
+		<text xml:space="preserve" font-family="Poppins" font-size="200" font-style="normal" font-weight="900" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(167,67,33); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-338" y="62.83" >B</tspan><tspan x="-189.2" y="62.83" >l</tspan><tspan x="-112.8" y="62.83" >o</tspan><tspan x="26.4" y="62.83" >g</tspan><tspan x="174.4" y="62.83" >I</tspan><tspan x="250.8" y="62.83" >t</tspan></text>
+</g>
+<g transform="matrix(34.96 0 0 15.65 2531.12 3000)" id="99210e6c-5cf1-4ead-a6bc-346770c7265a"  >
+<path style="stroke: rgb(0,0,0); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(101,101,101); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-50, -50)" d="M 90.375 90.375 L 9.625 90.375 L 9.625 9.625 L 90.375 9.625 L 90.375 90.375 z M 11.625 88.375 L 88.375 88.375 L 88.375 11.625 L 11.625 11.625 L 11.625 88.375 z" stroke-linecap="round" />
+</g>
+</svg>
