@@ -49,9 +49,9 @@ def save_examname(request):
         ):
             return HttpResponse(0)
 
-        print("Email:", user_id)
+        # print("Email:", user_id)
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
-        print(file_url)
+        # print(file_url)
         file = open(file_url, "w")
         file.write(json.dumps(new_obj, indent=4))
         file.close()
@@ -122,10 +122,10 @@ def fetch_questions(request):
         user_id = get_user(request).email
         user_type=get_user_type(request=request)
         if user_type=="s":
-            print(user_id)
+            # print(user_id)
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
-            print(file_url)
+            # print(file_url)
             with open(file_url, "r") as file:
                 main_data = json.loads(file.read())
                 question_data = main_data.get("questions")
@@ -216,8 +216,8 @@ def final_ans_submit(request):
     
     timeStamp=request.POST.get("finalTime") 
     timeArray=json.loads(timeStamp)
-    print(timeArray)
-    print(json.loads(json.dumps(timeArray[0])))  
+    # print(timeArray)
+    # print(json.loads(json.dumps(timeArray[0])))  
     try:
         with open(file_url, "r+") as file:
             main_data = json.load(file)
@@ -226,10 +226,10 @@ def final_ans_submit(request):
                 id=int(q.get('id') )  
                 for timeObj in timeArray:
                     obj=json.loads(json.dumps(timeObj))
-                    print(obj["q_id"])
+                    # print(obj["q_id"])
                     if(int(obj["q_id"])==id):
                         each_time_obj=json.loads(json.dumps(obj.get('time_each')))
-                        print("each_time_obj")  
+                        # print("each_time_obj")  
                         q["time_taken"]["minute"]=each_time_obj.get("minute")
                         q["time_taken"]["second"]=each_time_obj.get("second")   
             main_data.update({"questions": data})
@@ -240,7 +240,7 @@ def final_ans_submit(request):
         pass 
     with open(file_url, "r") as file:
         main_data = json.load(file)
-        print(main_data)
+        # print(main_data)
         question_data = main_data.get("questions") 
         for q in question_data:
             answer_duration = datetime.time(0,int(q['time_taken']['minute']),int(q['time_taken']['second']))
