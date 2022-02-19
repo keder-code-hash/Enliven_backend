@@ -1,21 +1,15 @@
 # Standard Library imports
 import json
 import datetime
-from os import times
-import re
-from time import time 
-
 # Django Library imports
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.staticfiles.storage import staticfiles_storage 
 
 # Custom Library imports
-from users.views import get_user, get_user_type, is_authenticated_user
+from users.views import get_user, get_user_type
 from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna, set_student_answer
-from assessment.models import Question
 
 
 @csrf_exempt

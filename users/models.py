@@ -1,11 +1,6 @@
-from pyexpat import model
-from tkinter.tix import Tree
-from django import views
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-import jwt, datetime
 
 
 # creating a custom user manager for managing the model.
