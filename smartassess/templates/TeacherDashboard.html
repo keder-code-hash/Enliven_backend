@@ -76,7 +76,6 @@
     var examName = document.getElementById("examName").value;
     var topicName = document.getElementById("topicName").value;
     var examDetails = document.getElementById("examDetails").value;
-    var marks =  document.getElementById("marks").value;
     var hr =  document.getElementById("hr").value;
     var min =  document.getElementById("min").value;
     
@@ -94,7 +93,7 @@
       }
       xhttp.open("POST", "{% url 'saveExamName' %}");
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("user_id="+userId+"&exam_name="+examName+"&topic="+topicName+"&exam_details="+examDetails+"&marks="+marks+"&hr="+hr+"&min="+min);
+      xhttp.send("user_id="+userId+"&exam_name="+examName+"&topic="+topicName+"&exam_details="+examDetails+"&hr="+hr+"&min="+min);
     }
 
   }
@@ -183,10 +182,6 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <label for="marks">Total Marks: </label>
-                  <input type="text" class="form-control" id="marks" required>
-                </div>
-                <div class="col">
                   <label for="duration">Hours: </label>
                   <input type="text" class="form-control" id="hr" placeholder="HH" required>
                 </div>
@@ -230,10 +225,10 @@
               Description: {{ i.description }}
             </p>
             {% if i.editable is True %}
-              <a href={% url 'setquestion' %} class="btn btn-info float-left" role="button">Edit</a>
+              <a href={% url 'setquestion' %} class="btn btn-warning float-left" role="button">Edit</a>
             {% endif %}
             {% if i.is_evaluated is False %}
-              <button class="btn btn-info float-left" onclick="eval({{ i.id }})">Evaluate</button>
+              <button class="btn btn-info float-right" onclick="eval({{ i.id }})">Evaluate</button>
             {% else %}
               <a href="{% url 'view_all_results' %}?exam_id={{ i.id }}"class="btn btn-info float-right" role="button">View Results</a>
             {% endif %}
@@ -244,6 +239,7 @@
     </div>
   </div>
   <script>
+    localStorage.clear();
     function eval(exam_id){
       document.getElementById("loadingImg").style.display = "block";
       const xhttp = new XMLHttpRequest();

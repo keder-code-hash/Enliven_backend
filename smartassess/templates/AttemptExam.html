@@ -178,12 +178,9 @@
         </div>
         <div class="col-sm-10">
             <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
-                <label>Question:</label>
-                <p id="question">{{ question }}</p>
-                <br>
-                <label>
-                    Answer:
-                </label>
+                <label>Question: <b>(Marks: <span id="marks"></span>)</b></label>
+                <p id="question"></p>
+                <label>Answer:</label>
                 <div id='editor' style="height: 200px;"></div>
                 <div style="padding-top: 10px;">
                     <button type="button" id="saveAnsBtn" class="btn btn-outline-primary" onclick="saveAns()">Save Ans</button>
@@ -318,6 +315,7 @@
         xhttp.onload = function () { 
             var obj = JSON.parse(this.response);
             document.getElementById("question").innerHTML = obj["question"];
+            document.getElementById("marks").innerHTML = obj["marks"];
             quill.setText(obj["answer"]);  
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");

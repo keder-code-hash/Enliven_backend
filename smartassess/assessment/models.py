@@ -5,7 +5,7 @@ from users.models import Register
 
 
 class Exam(models.Model):
-    exam_name = models.CharField(max_length=130, blank=False)
+    exam_name = models.CharField(max_length=130, blank=False, unique=True)
     marks = models.IntegerField(blank=False)
     course = models.CharField(max_length=130, blank=False)
     description = models.CharField(

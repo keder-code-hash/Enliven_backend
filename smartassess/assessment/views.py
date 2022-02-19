@@ -207,7 +207,7 @@ def save_assessment_answer(request):
 @csrf_exempt
 def assessment(request): 
     user = get_user(request)
-    email_id = get_user(request).email
+    email_id = user.email
     try: 
         file1_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')

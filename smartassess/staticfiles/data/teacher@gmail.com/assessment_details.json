@@ -1,0 +1,50 @@
+{
+    "exam": {
+        "id": 16,
+        "exam_name": "DBMS CA1",
+        "marks": 5,
+        "course": "DBMS",
+        "description": "CA1 of DBMS",
+        "duration": {
+            "hour": 0,
+            "minute": 30
+        },
+        "is_evaluated": true,
+        "score": 0
+    },
+    "ass_set": [
+        {
+            "id": 30,
+            "exam_id": 16,
+            "question": "qna1",
+            "standard_ans": "ans1\n",
+            "qstn_marks": 1,
+            "student_answer": "answer1\n",
+            "eval_details": "",
+            "percentage": 0.0,
+            "status": ""
+        },
+        {
+            "id": 31,
+            "exam_id": 16,
+            "question": "qna2",
+            "standard_ans": "ans2\n",
+            "qstn_marks": 2,
+            "student_answer": "answer2\n",
+            "eval_details": "",
+            "percentage": 0.0,
+            "status": ""
+        },
+        {
+            "id": 32,
+            "exam_id": 16,
+            "question": "qn3",
+            "standard_ans": "an3\n",
+            "qstn_marks": 2,
+            "student_answer": "answer3\n",
+            "eval_details": "",
+            "percentage": 0.0,
+            "status": ""
+        }
+    ]
+}

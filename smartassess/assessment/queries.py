@@ -34,7 +34,7 @@ def create_exam(exam_name,marks,duration,created_by,course_name='default',descri
 
 # create question answer set and link to exam accordingly
 # if exam does not exist raise an exception
-def set_questions(question,exam_id,standard_answer,created_by):
+def set_questions(question,exam_id,standard_answer,marks,created_by):
     try:
         exam_obj=Exam.objects.get(id=exam_id)
         if exam_obj is not None:
@@ -63,7 +63,8 @@ def set_questions(question,exam_id,standard_answer,created_by):
             question_obj,question_created=Question.objects.get_or_create(
                 exam_id=exam_id,
                 question=question,
-                standard_ans=standard_answer
+                standard_ans=standard_answer,
+                qstn_marks=marks
             )
             if question_created is True:
                 question_obj.save()
@@ -141,32 +142,33 @@ def save_exam_from_json(filepath):
             return None,False
 
 # save final question answer dataset
-def save_exam_qna(filepath,exam_id):
+def save_exam_qna(user_id, filepath, exam_id):
     if os.path.exists(filepath):
         try:
             json_data=open(filepath,mode='r',encoding='utf-8')
             exam_set=json.loads(json_data.read())
             
             # exam setter obj
-            exam_setter_user_name=list(exam_set.keys())[0]
-            print(exam_setter_user_name)
-            exam_stter_obj=Register.objects.get(email__iexact=exam_setter_user_name)
-            exam_dets_json=list(exam_set.values())[0] 
- 
-            question_ids=[]
-            question_answer_pairs=exam_dets_json.get("qna")
-            for items in question_answer_pairs:
-                quest=list(items.keys())[0]
-                ans=list(items.values())[0]
-                q_id,q_status=set_questions(question=quest,exam_id=exam_id,standard_answer=ans,created_by=exam_stter_obj)
-                question_ids.append(q_id)
+            exam_stter_obj=Register.objects.get(email__iexact=user_id)
+            exam_dets_json=exam_set.get(user_id)
+            exam_obj=Exam.objects.get(id=exam_id)
+            try:
+                marks = exam_dets_json.get("marks")
+                exam_obj.marks = marks
+                exam_obj.save()
+                question_answer_pairs = exam_dets_json.get("qna")
+                for items in question_answer_pairs:
+                    qn = items.get("question")
+                    ans = items.get("answer")
+                    q_marks = items.get("marks")
+                    set_questions(question=qn,exam_id=exam_id,standard_answer=ans,marks =q_marks,created_by=exam_stter_obj)
 
-            json_data.close()
-            # return question_ids
-            return True
+                json_data.close()
+                return True
+            except:
+                return False
 
-        except FileError:
-            print("File does not exist")
+        except:
             return False
 
 # fetch all details against any exam from db
@@ -182,15 +184,8 @@ def fetch_exam_details_by_id(exam_id=None):
 
 # fetch all details against any exam from db
 def fetch_exam_details_by_name(exam_name=None):
-    exam_obj=Exam.objects.filter(exam_name=exam_name).values() 
-    question_answer_pairs=[]
-    exam_id=list(exam_obj)[0].get('id')
-    
-    question_all_pairs_obj=Question.objects.filter(exam_id=exam_id).values() 
-    for item in list(question_all_pairs_obj): 
-        question_answer_pairs.append(item)
-
-    return list(exam_obj)[0],question_answer_pairs
+    exam_obj=Exam.objects.filter(exam_name=exam_name).values()
+    return list(exam_obj)[0]
 
 def fetch_exam_by_userid(user_id):
     exam_obj=Exam.objects.filter(created_by__email=user_id).values()

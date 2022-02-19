@@ -1,12 +1,14 @@
 import requests 
  
+url1 = "https://smartassessment-keder-code-hash.cloud.okteto.net/saq1/analyze"
+url2 = "https://smartassessment-keder-code-hash.cloud.okteto.net/saq2/analyze"
 
 def make_prediction(student_answer,standard_answer,depth): 
     headers = {
         'content-type': 'application/json'
     }
     req=requests.post(
-        url="https://smartassessment-keder-code-hash.cloud.okteto.net/analyze",
+        url= url2,
         headers=headers,
         json=
             {
