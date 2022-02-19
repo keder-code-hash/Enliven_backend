@@ -25,7 +25,6 @@ def save_examname(request):
         exam_name = request.POST.get("exam_name")
         topic = request.POST.get("topic")
         exam_details = request.POST.get("exam_details")
-        marks = request.POST.get("marks")
         hr = int(request.POST.get("hr"))
         min = int(request.POST.get("min"))
         duration = datetime.time(hr, min, 00)
@@ -36,22 +35,20 @@ def save_examname(request):
                 "exam_name": exam_name,
                 "topic": topic,
                 "exam_details": exam_details,
-                "marks": marks,
+                "marks": 0,
                 "qna": [],
             }
         }
 
         if (
             create_exam(
-                exam_name, marks, duration, get_user(request), topic, exam_details
+                exam_name, 0, duration, get_user(request), topic, exam_details
             )[1]
             is False
         ):
             return HttpResponse(0)
 
-        print("Email:", user_id)
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
-        print(file_url)
         file = open(file_url, "w")
         file.write(json.dumps(new_obj, indent=4))
         file.close()
@@ -76,15 +73,15 @@ def save_questions(request):
                     data = main_data.get("questions")
                     for q in data:
                         if q.get('id') == qno:
-                            print(count)
-                            print(len(json.loads(str(timeStamp)))) 
+                            # print(count)
+                            # print(len(json.loads(str(timeStamp)))) 
                             q["student_answer"] = answer  
                             timeObj=json.loads(timeStamp)[count].get("time_each")
                             q["time_taken"]["minute"]=timeObj.get("minute")
                             q["time_taken"]["second"]=timeObj.get("second") 
-                            print(q)
+                            # print(q)
                         count+=1
-                    print(data)
+                    # print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
@@ -99,12 +96,24 @@ def save_questions(request):
             question = request.POST.get("question")
             answer = request.POST.get("answer")
             qno = int(request.POST.get("qno"))
-            new_question = {question: answer}
+            full_marks = int(request.POST.get("fullMarks"))
+
+            try:
+                marks = int(request.POST.get("marks"))
+            except:
+                marks = 1
+
+            new_question = {
+                "question":question,
+                "answer": answer,
+                "marks":marks
+                }
             flag = 0
             file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
             with open(file_url, "r+") as file:
                 main_data = json.load(file)
                 data = main_data.get(user_id)
+                data["marks"] = full_marks
                 length = len(data.get("qna"))
                 if qno <= length:
                     data.get("qna")[qno - 1] = new_question
@@ -131,10 +140,10 @@ def fetch_questions(request):
         user_id = get_user(request).email
         user_type=get_user_type(request=request)
         if user_type=="s":
-            print(user_id)
+            # print(user_id)
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
-            print(file_url)
+            # print(file_url)
             with open(file_url, "r") as file:
                 main_data = json.loads(file.read())
                 question_data = main_data.get("questions")
@@ -144,7 +153,8 @@ def fetch_questions(request):
                         if question.get("id")==qno:
                             qstn={
                                 "question" : question.get("question"),
-                                "answer" : question.get("student_answer")
+                                "answer" : question.get("student_answer"),
+                                "marks" : question.get("qstn_marks")
                             }
                 except:
                     pass
@@ -159,10 +169,13 @@ def fetch_questions(request):
                 data = main_data.get(user_id)
                 try:
                     qna_dict = data.get("qna")[qno - 1]
-                    for q, a in qna_dict.items():
-                        qna = {"question": q, "answer": a}
+                    qna = {
+                        "question": qna_dict.get("question"), 
+                        "answer": qna_dict.get("answer"),
+                        "marks": qna_dict.get("marks")
+                    }
                 except IndexError:
-                    qna = {"question": "", "answer": ""}
+                    qna = {"question": "", "answer": "", "marks":0}
 
             return JsonResponse(qna)
         else:
@@ -201,12 +214,12 @@ def final_submit(request):
         user_id = request.POST.get("user_id")
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
         with open(file_url, "r") as file:
-            main_data = json.load(file)
-            exam_name = main_data.get(user_id).get("exam_name")
+            main_data = json.load(file).get(user_id)
+            exam_name = main_data.get("exam_name")
 
-        exam = fetch_exam_details_by_name(exam_name)[0]
+        exam = fetch_exam_details_by_name(exam_name)
         exam_id = exam.get("id")
-        if save_exam_qna(file_url, exam_id):
+        if save_exam_qna(user_id, file_url, exam_id):
             file = open(file_url, "w")
             file.write("{ }")
             file.close()
@@ -226,8 +239,8 @@ def final_ans_submit(request):
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
-        print(main_data)
         question_data = main_data.get("questions") 
+        print(question_data)
         for q in question_data:
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
             if(flag == False):

@@ -88,6 +88,31 @@ def login_view(request):
                 dir_path = "./staticfiles/data/"+email_id
                 try:
                     os.mkdir(dir_path)
+                    file_url = dir_path+"/questions.json"
+                    uneval_exam = Exam.objects.filter(created_by__email=email_id,is_evaluated=False).values()
+                    qna_list = []
+                    for exam in uneval_exam:
+                        exam_id = exam.get("id")
+                        qna = Question.objects.filter(exam_id=exam_id).values()
+                        for q in qna:
+                            qna_obj = {
+                                q.get("question"):q.get("standard_ans")
+                            }
+                            qna_list.append(qna_obj)
+
+                        new_obj = {
+                                email_id: {
+                                    "exam_name": exam.get("exam_name"),
+                                    "topic": exam.get("course"),
+                                    "exam_details": exam.get("description"),
+                                    "marks": exam.get("marks"),
+                                    "qna": qna_list,
+                                }
+                            }
+                    qfile = open(file_url, 'w')
+                    qfile.write(json.dumps(new_obj,indent=4))
+                    qfile.close()
+                    
                 except:
                     pass
                 if user_data.user_role == "t":
@@ -412,37 +437,11 @@ def teacher_dashboard(request):
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
     exam_data = fetch_exam_by_userid(email_id)
-    uneval_exam = Exam.objects.filter(created_by__email=email_id,is_evaluated=False).values()
-    qna_list = []
     file_url = staticfiles_storage.path('data/'+email_id+'/questions.json')
-    qfile = open(file_url, 'w')
-    qfile.close()
-
-    for exam in uneval_exam:
-        exam_id = exam.get("id")
-        qna = Question.objects.filter(exam_id=exam_id).values()
-        for q in qna:
-            qna_obj = {
-                q.get("question"):q.get("standard_ans")
-            }
-            qna_list.append(qna_obj)
-
-        new_obj = {
-                email_id: {
-                    "exam_name": exam.get("exam_name"),
-                    "topic": exam.get("course"),
-                    "exam_details": exam.get("description"),
-                    "marks": exam.get("marks"),
-                    "qna": qna_list,
-                }
-            }
-        qfile = open(file_url, 'w')
-        qfile.write(json.dumps(new_obj,indent=4))
-        qfile.close()
         
     try:
         with open(file_url, 'r') as file:
-            exam_name = json.load(file).get(user.user_name).get("exam_name")
+            exam_name = json.load(file).get(email_id).get("exam_name")
 
         for exam in exam_data:
             if exam["exam_name"] == exam_name:
