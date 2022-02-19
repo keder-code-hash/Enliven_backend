@@ -156,7 +156,7 @@
   <div class="row">
     <div class="exam_details">
       <h2 class='display-4'>{{ data.exam_name }}</h2>
-      <h4 style="font-weight: 300;">Full Marks: <b>{{ data.marks }}</b></h4>
+      <h4 style="font-weight: 300;">Full Marks: <b><span id="fullMarksField">{{ data.marks }}</span></b></h4>
     </div>
   </div>
 
@@ -172,16 +172,24 @@
 
     <div class="col-sm-10">
       <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
-        <label>Question:</label>
-        <textarea class="form-control" aria-label="With textarea" id="question"
-          placeholder="Put your Question Here"></textarea>
-        <br>
-        <label>
+        <div class="row">
+          <div class="col-sm-10">
+            <label>Question:</label>
+            <textarea class="form-control" aria-label="With textarea" id="question"
+              placeholder="Put your Question Here"></textarea>
+            <label>
+          </div>
+          <div class="col-sm-2">
+            <label>Marks:</label>
+            <input type="number" class="form-control" id="marks" required>
+          </div>
+        </div>
+        
           Answer: <em>(Highlight the <strong>keywords</strong> in your answer)</em>
         </label>
         <div id='editor' style="height: 200px;"></div>
         <div class="" style="padding-top: 10px;">
-          <button type="button" class="btn btn-outline-primary" onclick="saveQn()">Submit</button>
+          <button type="button" class="btn btn-outline-primary" onclick="saveQn()">Add</button>
           <button type="button" class="btn btn-outline-danger" onclick="deleteQn()">Delete</button>
           <button type="button" class="btn btn-outline-success" onclick="finalSubmit()">Final Submit</button>
         </div>
@@ -191,7 +199,7 @@
 </div>
 
 <script>
-
+  localStorage.setItem("fullMarks", {{data.marks}});
   var currentQnNo = Number('{{ max_qno }}');
   var maxQnNo = Number('{{ max_qno }}');
 
@@ -202,6 +210,10 @@
   function saveQn() {
     var userId = "{{ user.email }}";
     var question = document.getElementById("question").value;
+    var marks = document.getElementById("marks").value;
+    var fullMarks = Number(localStorage.getItem("fullMarks")) + Number(marks);
+    localStorage.setItem("fullMarks", fullMarks);
+    document.getElementById("fullMarksField").innerHTML = fullMarks;
     var answer = quill.getText();
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
@@ -216,7 +228,7 @@
     }
     xhttp.open("POST", "{% url 'tempSaveQnA' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("user_id=" + userId + "&question=" + question + "&answer=" + answer + "&qno=" + currentQnNo);
+    xhttp.send("user_id=" + userId + "&question=" + question + "&answer=" + answer + "&qno=" + currentQnNo+"&marks="+marks+"&fullMarks="+fullMarks);
   }
 
   function loadQuestion(qno) {
@@ -226,6 +238,7 @@
     xhttp.onload = function () {
       var obj = JSON.parse(this.response);
       document.getElementById("question").value = obj["question"];
+      document.getElementById("marks").value = obj["marks"];
       quill.setText(obj["answer"]);
     }
     xhttp.open("POST", "{% url 'fetchQnA' %}");
