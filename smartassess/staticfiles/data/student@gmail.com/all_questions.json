@@ -1,0 +1,59 @@
+{
+    "questions": [
+        {
+            "id": 23,
+            "exam_id": 13,
+            "question": "q1",
+            "qstn_marks": 1,
+            "student_answer": "\n",
+            "time_taken": {
+                "minute": 0,
+                "second": 0
+            }
+        },
+        {
+            "id": 24,
+            "exam_id": 13,
+            "question": "q2",
+            "qstn_marks": 1,
+            "student_answer": "\n",
+            "time_taken": {
+                "minute": 0,
+                "second": 0
+            }
+        },
+        {
+            "id": 25,
+            "exam_id": 13,
+            "question": "q4",
+            "qstn_marks": 1,
+            "student_answer": "\n",
+            "time_taken": {
+                "minute": 0,
+                "second": 0
+            }
+        },
+        {
+            "id": 26,
+            "exam_id": 13,
+            "question": "q5",
+            "qstn_marks": 1,
+            "student_answer": "\n",
+            "time_taken": {
+                "minute": 0,
+                "second": 0
+            }
+        },
+        {
+            "id": 27,
+            "exam_id": 13,
+            "question": "",
+            "qstn_marks": 1,
+            "student_answer": "\n",
+            "time_taken": {
+                "minute": 0,
+                "second": 0
+            }
+        }
+    ]
+}

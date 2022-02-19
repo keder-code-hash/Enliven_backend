@@ -49,9 +49,9 @@ def save_examname(request):
         ):
             return HttpResponse(0)
 
-        print("Email:", user_id)
+        # print("Email:", user_id)
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
-        print(file_url)
+        # print(file_url)
         file = open(file_url, "w")
         file.write(json.dumps(new_obj, indent=4))
         file.close()
@@ -76,13 +76,13 @@ def save_questions(request):
                     data = main_data.get("questions")
                     for q in data:
                         if q.get('id') == qno:
-                            print(count)
-                            print(len(json.loads(str(timeStamp)))) 
+                            # print(count)
+                            # print(len(json.loads(str(timeStamp)))) 
                             q["student_answer"] = answer  
                             timeObj=json.loads(timeStamp)[count].get("time_each")
                             q["time_taken"]["minute"]=timeObj.get("minute")
                             q["time_taken"]["second"]=timeObj.get("second") 
-                            print(q)
+                            # print(q)
                         count+=1
                     print(data)
                     main_data.update({"questions": data})
@@ -131,10 +131,10 @@ def fetch_questions(request):
         user_id = get_user(request).email
         user_type=get_user_type(request=request)
         if user_type=="s":
-            print(user_id)
+            # print(user_id)
             qno = int(request.POST.get("question_id"))
             file_url = staticfiles_storage.path("data/"+user_id+"/all_questions.json")
-            print(file_url)
+            # print(file_url)
             with open(file_url, "r") as file:
                 main_data = json.loads(file.read())
                 question_data = main_data.get("questions")
@@ -220,13 +220,13 @@ def final_submit(request):
 @csrf_exempt
 def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
+    # print("file_url")
     answered_by = get_user(request)
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
-    # print(file_url)
     answer_duration = datetime.time(0,0,0)
     with open(file_url, "r") as file:
         main_data = json.load(file)
-        print(main_data)
+        # print(main_data)
         question_data = main_data.get("questions") 
         for q in question_data:
             flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
