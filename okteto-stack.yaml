@@ -1,0 +1,7 @@
+services:
+  smart_assessment_backend:
+    public: true
+    image: purnadip2702/smart_assessment_backend:latest
+    build:  .
+    ports:
+      - "8080:8080" 
