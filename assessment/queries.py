@@ -1,6 +1,6 @@
 from click import FileError 
 from django.http import JsonResponse
-from itsdangerous import json
+import json
 from .models import *
 from users.models import *
 import datetime

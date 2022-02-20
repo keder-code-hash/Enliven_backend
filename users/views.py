@@ -1,52 +1,38 @@
-import email
 import os
+<<<<<<< HEAD:users/views.py
+=======
 import profile
 from typing import Dict
+>>>>>>> 97cc22d69a9a9da4268c8f13cc4ea4f5384c054f:smartassess/users/views.py
 import json
-from django.contrib.auth.hashers import make_password
-from django.http.response import HttpResponse, JsonResponse
-from rest_framework.views import APIView
+from django.http.response import HttpResponse
 from assessment.models import Exam
-
 from assessment.queries import fetch_exam_by_userid
 from assessment.models import Question
-from .serializers import userSerializer, RegisterSerializers, RegisterUpdateSerializer
+from .serializers import RegisterSerializers
 from .models import Register
-from rest_framework import serializers, status
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from users.jwtAuth import JWTAuthentication
 from users.token_generator import get_access_token, get_refresh_token
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 # user view or delete.
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LogInForm, profileForm, resetPassInit
+from .forms import RegisterForm, LogInForm, profileForm
 from rest_framework import exceptions
 from django.urls import reverse
 import jwt
 from rest_framework import exceptions
 from django.conf import settings
 import datetime
-from django.http import Http404
-from django.core.files.storage import default_storage
-from django.core.files.storage import FileSystemStorage
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.decorators.csrf import (
-    csrf_protect,
-    requires_csrf_token,
-    ensure_csrf_cookie,
-    csrf_exempt,
-)
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
-from django.core.mail import EmailMessage
-from django.template import Context, context
 from django.contrib.staticfiles.storage import staticfiles_storage
 # from
+<<<<<<< HEAD:users/views.py
+=======
 from .cloudinary import upload_image
 
+>>>>>>> 97cc22d69a9a9da4268c8f13cc4ea4f5384c054f:smartassess/users/views.py
 ############################################################
 
 
