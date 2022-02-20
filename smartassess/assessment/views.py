@@ -187,6 +187,7 @@ def save_assessment_answer(request):
             file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
             json_data=open(file_url,mode='w',encoding='utf-8')
             for exam in question_list: 
+<<<<<<< HEAD
                 exam['student_answer']=""
                 time={
                     "minute":00,
@@ -194,6 +195,14 @@ def save_assessment_answer(request):
                 }
                 exam['time_taken']=time
                
+=======
+                exam['student_answer']="" 
+                t={
+                    "minute":"",
+                    "second":""
+                }
+                exam['time_taken']=t
+>>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
                 exam.pop("created_at")
                 exam.pop("standard_ans")
             exams={"questions":question_list}
@@ -208,7 +217,7 @@ def save_assessment_answer(request):
 @csrf_exempt
 def assessment(request): 
     user = get_user(request)
-    email_id = get_user(request).email
+    email_id = user.email
     try: 
         file1_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
@@ -224,8 +233,13 @@ def assessment(request):
         "user":user,
         "is_authenticated": is_authenticated_user(request),
         "qno": question_list,
+<<<<<<< HEAD
         "exam":exam_dets,
         "max_no": len(question_list) 
+=======
+        "max_no": len(question_list),
+        "exam":exam_dets
+>>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
         # "data":
     }
     return render(request, "AttemptExam.html", context)

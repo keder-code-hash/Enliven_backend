@@ -1,5 +1,6 @@
 import email
 import os
+import profile
 from typing import Dict
 import json
 from django.contrib.auth.hashers import make_password
@@ -44,7 +45,7 @@ from django.core.mail import EmailMessage
 from django.template import Context, context
 from django.contrib.staticfiles.storage import staticfiles_storage
 # from
-
+from .cloudinary import upload_image
 
 ############################################################
 
@@ -88,6 +89,31 @@ def login_view(request):
                 dir_path = "./staticfiles/data/"+email_id
                 try:
                     os.mkdir(dir_path)
+                    file_url = dir_path+"/questions.json"
+                    uneval_exam = Exam.objects.filter(created_by__email=email_id,is_evaluated=False).values()
+                    qna_list = []
+                    for exam in uneval_exam:
+                        exam_id = exam.get("id")
+                        qna = Question.objects.filter(exam_id=exam_id).values()
+                        for q in qna:
+                            qna_obj = {
+                                q.get("question"):q.get("standard_ans")
+                            }
+                            qna_list.append(qna_obj)
+
+                        new_obj = {
+                                email_id: {
+                                    "exam_name": exam.get("exam_name"),
+                                    "topic": exam.get("course"),
+                                    "exam_details": exam.get("description"),
+                                    "marks": exam.get("marks"),
+                                    "qna": qna_list,
+                                }
+                            }
+                    qfile = open(file_url, 'w')
+                    qfile.write(json.dumps(new_obj,indent=4))
+                    qfile.close()
+                    
                 except:
                     pass
                 if user_data.user_role == "t":
@@ -234,11 +260,11 @@ def upDateProfile(request):
                 user_data = Register(**data)
                 user_data.save()
 
-            # if request.FILES:
-            #     profile_pic=request.FILES['profile_pic']
-            #     profile_pic_name=request.FILES['profile_pic'].name
-            #     # profile_pic_url=upload_image(profile_pic,profile_pic_name,"Blog/Profile/").get("secure_url")
-            #     Register.objects.filter(email__iexact=user.email).update(profile_pic_url=profile_pic_url)
+            if request.FILES:
+                profile_pic=request.FILES['profile_pic'] 
+                print(profile_pic)
+                profile_pic_url=upload_image(profile_pic).get("secure_url")
+                Register.objects.filter(email__iexact=user.email).update(profile_pic_url=profile_pic_url)
             return redirect("profile")
 
     form = profileForm()
@@ -412,37 +438,11 @@ def teacher_dashboard(request):
     email_id = decoded_data.get("email")
     user = Register.objects.get(email__iexact=email_id)
     exam_data = fetch_exam_by_userid(email_id)
-    uneval_exam = Exam.objects.filter(created_by__email=email_id,is_evaluated=False).values()
-    qna_list = []
     file_url = staticfiles_storage.path('data/'+email_id+'/questions.json')
-    qfile = open(file_url, 'w')
-    qfile.close()
-
-    for exam in uneval_exam:
-        exam_id = exam.get("id")
-        qna = Question.objects.filter(exam_id=exam_id).values()
-        for q in qna:
-            qna_obj = {
-                q.get("question"):q.get("standard_ans")
-            }
-            qna_list.append(qna_obj)
-
-        new_obj = {
-                email_id: {
-                    "exam_name": exam.get("exam_name"),
-                    "topic": exam.get("course"),
-                    "exam_details": exam.get("description"),
-                    "marks": exam.get("marks"),
-                    "qna": qna_list,
-                }
-            }
-        qfile = open(file_url, 'w')
-        qfile.write(json.dumps(new_obj,indent=4))
-        qfile.close()
         
     try:
         with open(file_url, 'r') as file:
-            exam_name = json.load(file).get(user.user_name).get("exam_name")
+            exam_name = json.load(file).get(email_id).get("exam_name")
 
         for exam in exam_data:
             if exam["exam_name"] == exam_name:
