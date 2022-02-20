@@ -1,0 +1,267 @@
+{% extends 'Basepage.html' %}
+{% load static %}
+{% load rest_framework %}
+{% block title %}Dashboard{% endblock title %}
+
+{% block showuser %}
+<li class="nav-item">
+  <button class="btn btn-outline-dark px-3 m-1" style="text-decoration:none;" disabled>
+    <img class="rounded-circle mr-1" width="22px" src="{{ profile_pic_url }}" style="border: 1px solid black; padding:2px;">
+    {{ user_name }}
+  </button>
+</li>
+{% endblock showuser %}
+
+{% block btnurl %}
+{% url 'profile' %}
+{% endblock %}
+{% block btnname %}My Profile{% endblock btnname %}
+{% block headcontent %}
+<style>
+  a {
+    text-decoration: none;
+  }
+
+  /* CSS comes here */
+  #video {
+    border: 1px solid black;
+    width: 320px;
+    height: 240px;
+  }
+
+  #photo {
+    border: 1px solid black;
+    width: 320px;
+    height: 240px;
+  }
+
+  #canvas {
+    display: none;
+  }
+
+  .camera {
+    width: 340px;
+    display: inline-block;
+  }
+
+  .output {
+    width: 340px;
+    display: inline-block;
+  }
+
+  #startbutton {
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 36px;
+    padding: 5px;
+    background-color: #6a67ce;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1.0);
+    cursor: pointer;
+  }
+
+  .contentarea {
+    font-size: 16px;
+    font-family: Arial;
+    text-align: center;
+  }
+</style>
+{% endblock headcontent %}
+
+{% block content %}
+<div class="container">
+  <h2>Examinations</h2>
+  <div class="row">
+    {% for exam in exam_data %}
+    <div class="col-sm-4 wrapper">
+      <div class="card mb-4 shadow" style="width: 20rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{exam.exam_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{exam.course}}</h6>
+          <p class="card-text">
+            Full Marks: {{ exam.marks }}<br>
+            Description: {{ exam.description }} <br>
+            Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes
+          </p>
+          {% if exam.is_evaluated is True  %}
+            <a class="btn btn-info float-right" style="color:white !important;" role="button" onclick="loadResult({{ exam.id }})">View Results</a>
+          {% elif exam.is_attempted is False%}
+            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" style="color:white !important;" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ exam.id }})">Attempt</a>
+          {% else %}
+            <button class="btn btn-dark float-left" style="color:white !important;" disabled>Already Attempted</button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <div class="contentarea">
+                <h1>
+                  Using Javascript to capture Photo
+                </h1>
+                <div class="camera">
+                  <video id="video">Video stream not available.</video>
+                </div>
+                <div><button id="startbutton">Take photo</button></div>
+                <canvas id="canvas"></canvas>
+                <div class="output">
+                  <img id="photo" alt="The screen capture will appear in this box.">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p align="center">
+          <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
+          <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
+        </p>
+      </div>
+      <p align="center">
+        <a href={% url 'assessment' %} class="btn btn-info" role="button">Enter Assessment</a>
+      </p>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+  localStorage.clear();
+  // load the question according to an exam id on the time of modal loading called from loadImage function(line 254)
+  function fetchQuestions(exam_id){
+    var exam_id=exam_id;
+    console.log(exam_id)
+    const xhttp = new XMLHttpRequest(); 
+    xhttp.open("POST", "{% url 'fetch_exam_qn' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("exam_id=" + exam_id);
+  }
+  function loadResult(exam_id){
+    var exam_id=exam_id;
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onload = function () {
+      var obj = JSON.parse(this.response);
+      if(obj["st"]===1){
+        window.location.href = "{% url 'result'%}";
+      }
+      else{
+        alert("NO answer sheet found!!")
+      }
+    }
+    xhttp.open("POST", "{% url 'loadResult' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("exam_id=" + exam_id);
+  }
+  /* JS comes here */
+
+  var width = 320; // We will scale the photo width to this
+  var height = 0; // This will be computed based on the input stream
+
+  var streaming = false;
+
+  var video = null;
+  var canvas = null;
+  var photo = null;
+  var startbutton = null;
+
+  var streamObject;
+
+  function startup() {
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    photo = document.getElementById('photo');
+    startbutton = document.getElementById('startbutton');
+
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    })
+      .then(function (stream) {
+        video.srcObject = stream;
+        streamObject = stream;
+        video.play();
+
+        var killcam = document.getElementById("killCamera");
+        killcam.addEventListener('click', (ev) => {
+          var track = stream.getTracks()[0];
+          track.stop();
+        }, false)
+      })
+      .catch(function (err) {
+        console.log("An error occurred: " + err);
+      });
+
+
+
+    video.addEventListener('canplay', function (ev) {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
+
+        if (isNaN(height)) {
+          height = width / (4 / 3);
+        }
+
+        video.setAttribute('width', width);
+        video.setAttribute('height', height);
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        streaming = true;
+      }
+    }, false);
+
+    startbutton.addEventListener('click', function (ev) {
+      takepicture();
+      ev.preventDefault();
+    }, false);
+
+    clearphoto();
+  }
+
+
+  function clearphoto() {
+    var context = canvas.getContext('2d');
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    var data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+  }
+
+  function takepicture() {
+    var context = canvas.getContext('2d');
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      var data = canvas.toDataURL('image/png');
+      photo.setAttribute('src', data);
+    } else {
+      clearphoto();
+    }
+  }
+
+  function loadImage(examid) {
+    startup();
+    // console.log(examid)
+    fetchQuestions(examid);
+  } 
+</script>
+{% endblock %}
