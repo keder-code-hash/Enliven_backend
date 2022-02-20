@@ -48,13 +48,7 @@ def save_examname(request):
         ):
             return HttpResponse(0)
 
-<<<<<<< HEAD
-        # print("Email:", user_id)
         file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
-        # print(file_url)
-=======
-        file_url = staticfiles_storage.path("data/"+user_id+"/questions.json")
->>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
         file = open(file_url, "w")
         file.write(json.dumps(new_obj, indent=4))
         file.close()
@@ -77,19 +71,7 @@ def save_questions(request):
                     data = main_data.get("questions")
                     for q in data:
                         if q.get('id') == qno:
-<<<<<<< HEAD
-                            # print(count)
-                            # print(len(json.loads(str(timeStamp)))) 
-                            q["student_answer"] = answer  
-                            timeObj=json.loads(timeStamp)[count].get("time_each")
-                            q["time_taken"]["minute"]=timeObj.get("minute")
-                            q["time_taken"]["second"]=timeObj.get("second") 
-                            # print(q)
-                        count+=1
-                    # print(data)
-=======
                             q["student_answer"] = answer    
->>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()
@@ -245,9 +227,6 @@ def final_ans_submit(request):
     # print("file_url")
     answered_by = get_user(request)
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
-<<<<<<< HEAD
-    answer_duration = datetime.time(0,0,0)
-=======
     
     timeStamp=request.POST.get("finalTime") 
     timeArray=json.loads(timeStamp)
@@ -273,7 +252,6 @@ def final_ans_submit(request):
             json.dump(main_data, file, indent=4)
     except:
         pass 
->>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
     with open(file_url, "r") as file:
         main_data = json.load(file)
         # print(main_data)

@@ -86,15 +86,6 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             question_id=question_id,
             answered_by__email=answered_by.email
         ).update(
-<<<<<<< HEAD
-            answer=answer
-        )
-        print("entering for updation",end="\n")
-
-        # for fresh creation
-        if exam_obj is not None and question_obj is not None and affected_rows!=1:
-            print("entering not for updateion",end="\n")
-=======
             answer=answer,
             answer_duration=answer_duration 
         )
@@ -102,7 +93,6 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             return affected_rows,True
         # for fresh creation
         if exam_obj is not None and question_obj is not None and affected_rows!=1: 
->>>>>>> a44544efa586a94eb8d549059cb12ff7a14c916b
             answer_object,answer_created=Answer.objects.get_or_create(
                 exam_id=exam_id,
                 question_id=question_id,
