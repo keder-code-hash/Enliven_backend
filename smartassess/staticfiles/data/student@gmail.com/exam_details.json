@@ -1,0 +1,30 @@
+{
+    "exam": [
+        {
+            "id": 16,
+            "exam_name": "DBMS CA1",
+            "marks": 5,
+            "course": "DBMS",
+            "description": "CA1 of DBMS",
+            "duration": {
+                "hour": 0,
+                "minute": 30
+            },
+            "created_at": "",
+            "is_evaluated": true
+        },
+        {
+            "id": 17,
+            "exam_name": "Testing New Exam(Time)",
+            "marks": 7,
+            "course": "Test",
+            "description": "Checking for time .",
+            "duration": {
+                "hour": 0,
+                "minute": 10
+            },
+            "created_at": "",
+            "is_evaluated": false
+        }
+    ]
+}
