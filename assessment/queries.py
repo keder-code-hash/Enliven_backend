@@ -193,6 +193,21 @@ def fetch_exam_by_userid(user_id):
     exam_obj=Exam.objects.filter(created_by__email=user_id).values()
     return list(exam_obj)
 
+def add_submition(exam_id, std_email_id):
+    submission = ExamSubmissionDetail(
+        exam_id=exam_id,
+        student_id=std_email_id,
+        is_submitted=True
+    )
+    submission.save()
+
+def is_exam_submitted(exam_id, std_email_id):
+    try:
+        ExamSubmissionDetail.objects.get(exam_id=exam_id, student_id=std_email_id, is_submitted=True)
+        return True
+    except:
+        return False
+
 def test(request):
     if request.method=="GET":
         # # exam of 30 minutes

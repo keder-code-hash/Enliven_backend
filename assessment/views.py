@@ -20,7 +20,7 @@ def assessment_json_gen(exam_id, email_id, user_id):
         data=Question.objects.filter(exam_id=exam_id).values() 
         all_questions=list(data)
         try:
-            score = 0
+            score = 0.0
             file_url = staticfiles_storage.path('data/'+user_id+'/assessment_details.json')
             json_data=open(file_url,mode='w',encoding='utf-8')
             for question in all_questions:
@@ -29,6 +29,7 @@ def assessment_json_gen(exam_id, email_id, user_id):
                 question['eval_details'] = student_answer.eval_details
                 question['percentage'] = student_answer.match_percentage
                 question['status'] = student_answer.remarks
+                question['marks'] = student_answer.marks
                 score += student_answer.marks
                 question.pop("created_at") 
             exam_dets=list(exam_dets)[0] 
@@ -181,22 +182,35 @@ def save_assessment_answer(request):
     if request.method=="POST":
         exam_id=request.POST.get("exam_id") 
         email_id = get_user(request).email
-        question_list = Question.objects.filter(exam_id=int(exam_id)).values() 
+        exam, question_list = fetch_exam_details_by_id(exam_id)
         question_list = list(question_list)
         try:
             file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
             json_data=open(file_url,mode='w',encoding='utf-8')
-            for exam in question_list: 
-                exam['student_answer']="" 
+            for q in question_list: 
+                q['student_answer']="" 
                 t={
                     "minute":"",
                     "second":""
                 }
-                exam['time_taken']=t
-                exam.pop("created_at")
-                exam.pop("standard_ans")
-            exams={"questions":question_list}
-            json_obj=json.dumps(exams,indent=4)
+                q['time_taken']=t
+                q.pop("created_at")
+                q.pop("standard_ans")
+
+            new_obj = {
+                "exam_id": exam.get("id"),
+                "exam_name": exam.get("exam_name"),
+                "topic": exam.get("course"),
+                "exam_details": exam.get("description"),
+                "marks": exam.get("marks"),
+                "duration": {
+                    "hour": exam.get("duration").hour,
+                    "minute": exam.get("duration").minute
+                },
+                "questions": question_list
+            }
+
+            json_obj=json.dumps(new_obj, indent=4)
             json_data.write(json_obj)
 
             return JsonResponse({"st":1})
@@ -209,12 +223,22 @@ def assessment(request):
     user = get_user(request)
     email_id = user.email
     try: 
-        file1_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         file_url = staticfiles_storage.path('data/'+email_id+'/all_questions.json')
         json_data=open(file_url,mode='r',encoding='utf-8')
-        json1_data=open(file1_url,mode='r',encoding='utf-8')
-        question_list=json.loads(json_data.read()).get("questions") 
-        exam_dets=json.loads(json1_data.read()).get("exam")[0]
+        main_data = json.loads(json_data.read())
+        question_list=main_data.get("questions")
+        
+        exam_dets={
+            "exam_name": main_data.get("exam_name"),
+            "topic": main_data.get("topic"),
+            "exam_details": main_data.get("exam_details"),
+            "marks": main_data.get("marks"),
+            "duration": {
+                "hour": main_data.get("duration").get("hour"),
+                "minute": main_data.get("duration").get("minute")
+            },
+        }
+
         json_data.close() 
     except FileNotFoundError:
         pass 
@@ -271,6 +295,7 @@ def eval_exam(request):
             for qna in qna_list:
                 q_id = qna.get("id")
                 std_ans = qna.get("standard_ans")
+                qn_marks = qna.get("qstn_marks")
                 ans_list = Answer.objects.filter(exam_id=exam_id, question_id=q_id).values()
                 for ans in ans_list:
                     a_id = ans.get("id")
@@ -279,7 +304,7 @@ def eval_exam(request):
                     if(sts):
                         ans_obj = Answer.objects.get(id=a_id)
                         ans_obj.remarks = remarks
-                        ans_obj.marks = percentage/100
+                        ans_obj.marks = (percentage/100)*qn_marks
                         ans_obj.match_percentage = percentage
                         ans_obj.eval_details = full_respond
                         ans_obj.save()
