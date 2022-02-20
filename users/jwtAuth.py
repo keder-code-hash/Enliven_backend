@@ -1,5 +1,4 @@
 # from jwt.exceptions import ExpiredSignatureError
-from rest_framework.views import APIView
 from .models import Register
 from rest_framework import authentication, status
 # from django.middleware.csrf import CsrfViewMiddleware

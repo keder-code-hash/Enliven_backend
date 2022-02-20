@@ -1,5 +1,6 @@
 FROM python:3.9.2
 ADD requirements.txt /requirements.txt
+COPY ./assessment assessment
 COPY ./smartassess smartassess
 COPY ./static static
 COPY ./staticfiles staticfiles

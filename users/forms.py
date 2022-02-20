@@ -1,7 +1,5 @@
-from django.forms import ModelForm
 from django.core.validators import validate_email
 from django import forms
-from django.forms import ModelForm
 from .models import Register
 
 class RegisterForm(forms.Form):
