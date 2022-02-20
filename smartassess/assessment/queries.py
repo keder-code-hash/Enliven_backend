@@ -85,12 +85,13 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             question_id=question_id,
             answered_by__email=answered_by.email
         ).update(
-        answer=answer,
-        answered_at=datetime.datetime.now()
+            answer=answer
         )
+        print("entering for updation",end="\n")
 
         # for fresh creation
         if exam_obj is not None and question_obj is not None and affected_rows!=1:
+            print("entering not for updateion",end="\n")
             answer_object,answer_created=Answer.objects.get_or_create(
                 exam_id=exam_id,
                 question_id=question_id,

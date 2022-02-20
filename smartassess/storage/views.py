@@ -84,7 +84,7 @@ def save_questions(request):
                             q["time_taken"]["second"]=timeObj.get("second") 
                             # print(q)
                         count+=1
-                    print(data)
+                    # print(data)
                     main_data.update({"questions": data})
                     file.seek(0)
                     file.truncate()

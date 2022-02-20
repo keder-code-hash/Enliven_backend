@@ -5,10 +5,10 @@
             "exam_id": 13,
             "question": "q1",
             "qstn_marks": 1,
-            "student_answer": "\n",
+            "student_answer": "changed q1\n",
             "time_taken": {
-                "minute": 0,
-                "second": 0
+                "minute": 0.13333333333333333,
+                "second": 8
             }
         },
         {
@@ -16,10 +16,10 @@
             "exam_id": 13,
             "question": "q2",
             "qstn_marks": 1,
-            "student_answer": "\n",
+            "student_answer": "changed q2\n",
             "time_taken": {
-                "minute": 0,
-                "second": 0
+                "minute": 0.1,
+                "second": 6
             }
         },
         {
@@ -27,10 +27,10 @@
             "exam_id": 13,
             "question": "q4",
             "qstn_marks": 1,
-            "student_answer": "\n",
+            "student_answer": "updated q4\n",
             "time_taken": {
-                "minute": 0,
-                "second": 0
+                "minute": 0.11666666666666667,
+                "second": 7
             }
         },
         {
@@ -38,10 +38,10 @@
             "exam_id": 13,
             "question": "q5",
             "qstn_marks": 1,
-            "student_answer": "\n",
+            "student_answer": "updated q5\n",
             "time_taken": {
-                "minute": 0,
-                "second": 0
+                "minute": 0.11666666666666667,
+                "second": 7
             }
         },
         {
@@ -51,8 +51,8 @@
             "qstn_marks": 1,
             "student_answer": "\n",
             "time_taken": {
-                "minute": 0,
-                "second": 0
+                "minute": 8.4,
+                "second": 24
             }
         }
     ]
