@@ -89,7 +89,8 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             answer=answer,
             answer_duration=answer_duration 
         )
-
+        if affected_rows>=1:
+            return affected_rows,True
         # for fresh creation
         if exam_obj is not None and question_obj is not None and affected_rows!=1: 
             answer_object,answer_created=Answer.objects.get_or_create(
@@ -112,6 +113,7 @@ def set_student_answer(exam_id,question_id,answer,answer_duration,answered_by):
             return answer_object.id,answer_created
         else:
             return affected_rows,True
+        
     except ObjectDoesNotExist:
         return None,False
 

@@ -255,7 +255,7 @@ def final_ans_submit(request):
         main_data = json.load(file)
         # print(main_data)
         question_data = main_data.get("questions") 
-        print(question_data)
+        # print(question_data)
         for q in question_data:
             try:
                 answer_duration = datetime.time(0,int(q['time_taken']['minute']),int(q['time_taken']['second']))
@@ -270,5 +270,5 @@ def final_ans_submit(request):
     file.close()
     if(flag == False):
         return HttpResponse(0)
-
-    return HttpResponse(1)
+    else:
+        return HttpResponse(1)
