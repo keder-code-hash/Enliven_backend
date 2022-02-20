@@ -314,8 +314,9 @@
 
         xhttp.onload = function () { 
             var obj = JSON.parse(this.response);
+            console.log(obj);
             document.getElementById("question").innerHTML = obj["question"];
-            document.getElementById("marks").innerHTML = obj["marks"];
+            document.getElementById("marks").innerHTML = obj["qstn_marks"];
             quill.setText(obj["answer"]);  
         }
         xhttp.open("POST", "{% url 'fetchQnA' %}");

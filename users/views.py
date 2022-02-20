@@ -1,13 +1,8 @@
 import os
-<<<<<<< HEAD:users/views.py
-=======
-import profile
-from typing import Dict
->>>>>>> 97cc22d69a9a9da4268c8f13cc4ea4f5384c054f:smartassess/users/views.py
 import json
 from django.http.response import HttpResponse
 from assessment.models import Exam
-from assessment.queries import fetch_exam_by_userid
+from assessment.queries import fetch_exam_by_userid, is_exam_submitted
 from assessment.models import Question
 from .serializers import RegisterSerializers
 from .models import Register
@@ -28,11 +23,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.staticfiles.storage import staticfiles_storage
 # from
-<<<<<<< HEAD:users/views.py
-=======
 from .cloudinary import upload_image
 
->>>>>>> 97cc22d69a9a9da4268c8f13cc4ea4f5384c054f:smartassess/users/views.py
 ############################################################
 
 
@@ -464,6 +456,8 @@ def student_dashboard(request):
         file_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         json_data=open(file_url,mode='w',encoding='utf-8')
         for exam in exam_data:
+            is_attempted = is_exam_submitted(exam.get('id'), email_id)
+            exam["is_attempted"]=is_attempted
             time={
                 "hour":exam["duration"].hour,
                 "minute":exam["duration"].minute
