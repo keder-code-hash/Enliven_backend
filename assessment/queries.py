@@ -194,12 +194,17 @@ def fetch_exam_by_userid(user_id):
     return list(exam_obj)
 
 def add_submition(exam_id, std_email_id):
-    submission = ExamSubmissionDetail(
-        exam_id=exam_id,
-        student_id=std_email_id,
-        is_submitted=True
-    )
-    submission.save()
+    try:
+        obj = ExamSubmissionDetail.objects.get(exam_id=exam_id, student_id=std_email_id)
+        obj.is_submitted=True
+        obj.save()
+    except:
+        submission = ExamSubmissionDetail(
+            exam_id=exam_id,
+            student_id=std_email_id,
+            is_submitted=True
+        )
+        submission.save()
 
 def is_exam_submitted(exam_id, std_email_id):
     try:
