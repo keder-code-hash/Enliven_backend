@@ -85,7 +85,7 @@
       <div class="shadow wrapper" style="height: 90vh; overflow-y: auto;">
         <div class="row">
           <div class="col-10">
-            <label>Question:</label>
+            <label>Question: <b>(Marks: <span id="marksGot"></span> / <span id="marks"></span>)</b></label>
             <p id="question"></p>
           </div>
           <div class="col-sm-2 text-center">
@@ -130,6 +130,8 @@
         document.getElementById("status").setAttribute("class", obj["status"]);
         document.getElementById("percentage").innerHTML = obj["percentage"].toFixed(2) + "%";
         document.getElementById("question").innerHTML = obj["question"];
+        document.getElementById("marks").innerHTML = obj["qstn_marks"];
+        document.getElementById("marksGot").innerHTML = obj["marks"].toFixed(2);
         standard_ans_quill.setText(obj["standard_ans"]);
         student_ans_quill.setText(obj["student_answer"]);
         var quillCollection=document.getElementsByClassName('ql-editor')

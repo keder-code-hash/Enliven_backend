@@ -1,21 +1,15 @@
 # Standard Library imports
 import json
 import datetime
-from os import times
-import re
-from time import time 
-
 # Django Library imports
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt 
 from django.contrib.staticfiles.storage import staticfiles_storage 
 
 # Custom Library imports
-from users.views import get_user, get_user_type, is_authenticated_user
-from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna, set_student_answer
-from assessment.models import Question
+from users.views import get_user, get_user_type
+from assessment.queries import create_exam, fetch_exam_details_by_name, save_exam_qna, set_student_answer, add_submition
 
 
 @csrf_exempt
@@ -211,9 +205,6 @@ def final_submit(request):
         exam = fetch_exam_details_by_name(exam_name)
         exam_id = exam.get("id")
         if save_exam_qna(user_id, file_url, exam_id):
-            file = open(file_url, "w")
-            file.write("{ }")
-            file.close()
             return HttpResponse(1)
         else:
             return HttpResponse(0)
@@ -225,6 +216,7 @@ def final_submit(request):
 def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
     answered_by = get_user(request)
+    exam_id = 0
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")
     
     timeStamp=request.POST.get("finalTime") 
@@ -234,6 +226,7 @@ def final_ans_submit(request):
     try:
         with open(file_url, "r+") as file:
             main_data = json.load(file)
+            exam_id = main_data.get("exam_id")
             data = main_data.get("questions")
             for q in data:
                 id=int(q.get('id') )  
@@ -271,4 +264,5 @@ def final_ans_submit(request):
     if(flag == False):
         return HttpResponse(0)
     else:
+        add_submition(exam_id, answered_by.email)
         return HttpResponse(1)

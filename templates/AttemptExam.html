@@ -195,6 +195,7 @@
     var qarray=[];
     var questionId;
     var currentQnNo = 1;
+    var isFinallySubmitted = false;
     var maxQnNo = Number('{{ max_no }}');
     var quill = new Quill('#editor', {
         theme: 'snow'
@@ -331,6 +332,7 @@
             var flag = this.responseText;
             if (flag === '1') {
                 alert("Answer Saved!");
+                isFinallySubmitted = true;
                 window.location.href = "{% url 'student_dashboard' %}";
             }
             else {
@@ -383,5 +385,13 @@
         return val;
       }
     }
+
+    function focusLost(){
+        if(!isFinallySubmitted)
+            alert("Don't move from exam window!");
+    }
+
+    window.addEventListener('blur', focusLost);
+
 </script>
 {% endblock %}

@@ -86,10 +86,12 @@
             Description: {{ exam.description }} <br>
             Duration : {{exam.duration.hour}}Hours&nbsp;{{exam.duration.minute}}Minutes
           </p>
-          {% if exam.is_evaluated is False %}
-            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" style="color:white !important;" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ exam.id }})">Attempt</a>
-          {% else %}
+          {% if exam.is_evaluated is True  %}
             <a class="btn btn-info float-right" style="color:white !important;" role="button" onclick="loadResult({{ exam.id }})">View Results</a>
+          {% elif exam.is_attempted is True%}
+            <button class="btn btn-dark float-left" style="color:white !important;" disabled>Already Attempted</button>
+          {% else %}
+            <a id="attempt_{{exam.id}}" class="btn btn-success float-left" style="color:white !important;" role="button" data-toggle="modal" data-target="#exampleModal" onclick="loadImage({{ exam.id }})">Attempt</a>
           {% endif %}
         </div>
       </div>
@@ -259,7 +261,7 @@
   function loadImage(examid) {
     startup();
     // console.log(examid)
-    fetchQuestions(examid)
+    fetchQuestions(examid);
   } 
 </script>
 {% endblock %}

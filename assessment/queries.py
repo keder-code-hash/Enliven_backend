@@ -1,6 +1,6 @@
 from click import FileError 
 from django.http import JsonResponse
-from itsdangerous import json
+import json
 from .models import *
 from users.models import *
 import datetime
@@ -192,6 +192,26 @@ def fetch_exam_details_by_name(exam_name=None):
 def fetch_exam_by_userid(user_id):
     exam_obj=Exam.objects.filter(created_by__email=user_id).values()
     return list(exam_obj)
+
+def add_submition(exam_id, std_email_id):
+    try:
+        obj = ExamSubmissionDetail.objects.get(exam_id=exam_id, student_id=std_email_id)
+        obj.is_submitted=True
+        obj.save()
+    except:
+        submission = ExamSubmissionDetail(
+            exam_id=exam_id,
+            student_id=std_email_id,
+            is_submitted=True
+        )
+        submission.save()
+
+def is_exam_submitted(exam_id, std_email_id):
+    try:
+        ExamSubmissionDetail.objects.get(exam_id=exam_id, student_id=std_email_id, is_submitted=True)
+        return True
+    except:
+        return False
 
 def test(request):
     if request.method=="GET":

@@ -40,7 +40,7 @@ def make_prediction(student_answer,standard_answer,depth):
     elif (neutral-entailment)>=dominant_index and (neutral-contradiction)>=dominant_index:
         # print("hii")
         if depth==2:
-            return True,"inconclusive",-1
+            return True,"inconclusive",-1, respond
         # again check 
         stn_answer=""
         std_answer=""

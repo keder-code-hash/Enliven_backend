@@ -1,48 +1,26 @@
-import email
 import os
-import profile
-from typing import Dict
 import json
-from django.contrib.auth.hashers import make_password
-from django.http.response import HttpResponse, JsonResponse
-from rest_framework.views import APIView
+from django.http.response import HttpResponse
 from assessment.models import Exam
-
-from assessment.queries import fetch_exam_by_userid
+from assessment.queries import fetch_exam_by_userid, is_exam_submitted
 from assessment.models import Question
-from .serializers import userSerializer, RegisterSerializers, RegisterUpdateSerializer
+from .serializers import RegisterSerializers
 from .models import Register
-from rest_framework import serializers, status
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from users.jwtAuth import JWTAuthentication
 from users.token_generator import get_access_token, get_refresh_token
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 # user view or delete.
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LogInForm, profileForm, resetPassInit
+from .forms import RegisterForm, LogInForm, profileForm
 from rest_framework import exceptions
 from django.urls import reverse
 import jwt
 from rest_framework import exceptions
 from django.conf import settings
 import datetime
-from django.http import Http404
-from django.core.files.storage import default_storage
-from django.core.files.storage import FileSystemStorage
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.decorators.csrf import (
-    csrf_protect,
-    requires_csrf_token,
-    ensure_csrf_cookie,
-    csrf_exempt,
-)
+from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
-from django.core.mail import EmailMessage
-from django.template import Context, context
 from django.contrib.staticfiles.storage import staticfiles_storage
 # from
 from .cloudinary import upload_image
@@ -97,7 +75,9 @@ def login_view(request):
                         qna = Question.objects.filter(exam_id=exam_id).values()
                         for q in qna:
                             qna_obj = {
-                                q.get("question"):q.get("standard_ans")
+                                "question":q.get("question"),
+                                "answer":q.get("standard_ans"),
+                                "marks":q.get("qstn_marks")
                             }
                             qna_list.append(qna_obj)
 
@@ -478,6 +458,8 @@ def student_dashboard(request):
         file_url = staticfiles_storage.path('data/'+email_id+'/exam_details.json')
         json_data=open(file_url,mode='w',encoding='utf-8')
         for exam in exam_data:
+            is_attempted = is_exam_submitted(exam.get('id'), email_id)
+            exam["is_attempted"]=is_attempted
             time={
                 "hour":exam["duration"].hour,
                 "minute":exam["duration"].minute
