@@ -75,7 +75,9 @@ def login_view(request):
                         qna = Question.objects.filter(exam_id=exam_id).values()
                         for q in qna:
                             qna_obj = {
-                                q.get("question"):q.get("standard_ans")
+                                "question":q.get("question"),
+                                "answer":q.get("standard_ans"),
+                                "marks":q.get("qstn_marks")
                             }
                             qna_list.append(qna_obj)
 

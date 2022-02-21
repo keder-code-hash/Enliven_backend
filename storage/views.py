@@ -205,9 +205,6 @@ def final_submit(request):
         exam = fetch_exam_details_by_name(exam_name)
         exam_id = exam.get("id")
         if save_exam_qna(user_id, file_url, exam_id):
-            file = open(file_url, "w")
-            file.write("{ }")
-            file.close()
             return HttpResponse(1)
         else:
             return HttpResponse(0)
