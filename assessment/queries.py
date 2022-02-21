@@ -208,6 +208,17 @@ def is_exam_submitted(exam_id, std_email_id):
     except:
         return False
 
+def submit_manual_check(student_id,exam_id,question_id,marks,status):
+    try:
+        answer_obj=Answer.objects.get(answered_by=student_id,exam_id=exam_id,question_id=question_id)
+        answer_obj.remarks=status
+        answer_obj.marks=marks
+        answer_obj.save()
+        return True
+    except :
+        return False
+
+
 def test(request):
     if request.method=="GET":
         # # exam of 30 minutes
