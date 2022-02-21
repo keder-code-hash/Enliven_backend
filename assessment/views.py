@@ -238,7 +238,7 @@ def assessment(request):
                 "minute": main_data.get("duration").get("minute")
             },
         }
-
+        
         json_data.close() 
     except FileNotFoundError:
         pass 
