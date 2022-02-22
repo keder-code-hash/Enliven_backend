@@ -1,0 +1,68 @@
+{
+    "exam_id": 13,
+    "exam_name": "New",
+    "topic": "test",
+    "exam_details": "testing",
+    "marks": 2,
+    "duration": {
+        "hour": 0,
+        "minute": 10
+    },
+    "questions": [
+        {
+            "id": 23,
+            "exam_id": 13,
+            "question": "q1",
+            "qstn_marks": 1,
+            "student_answer": "",
+            "time_taken": {
+                "minute": "",
+                "second": ""
+            }
+        },
+        {
+            "id": 24,
+            "exam_id": 13,
+            "question": "q2",
+            "qstn_marks": 1,
+            "student_answer": "",
+            "time_taken": {
+                "minute": "",
+                "second": ""
+            }
+        },
+        {
+            "id": 25,
+            "exam_id": 13,
+            "question": "q4",
+            "qstn_marks": 1,
+            "student_answer": "",
+            "time_taken": {
+                "minute": "",
+                "second": ""
+            }
+        },
+        {
+            "id": 26,
+            "exam_id": 13,
+            "question": "q5",
+            "qstn_marks": 1,
+            "student_answer": "",
+            "time_taken": {
+                "minute": "",
+                "second": ""
+            }
+        },
+        {
+            "id": 27,
+            "exam_id": 13,
+            "question": "",
+            "qstn_marks": 1,
+            "student_answer": "",
+            "time_taken": {
+                "minute": "",
+                "second": ""
+            }
+        }
+    ]
+}

@@ -153,12 +153,12 @@
 {% block content %}
 <div class="container-fluid">
     <!-- <div class="camera"> -->
-        <video id="video">Video stream not available.</video>
+        {% comment %} <video id="video">Video stream not available.</video> {% endcomment %}
       <!-- </div>  -->
-    <canvas id="canvas" hidden></canvas>
+    {% comment %} <canvas id="canvas" hidden></canvas> {% endcomment %}
 
     <div class="row">
-        <div class="exam_details">
+        <div class="exam_details col-md-8">
             <h2 class='display-4'>{{ exam.exam_name }}</h2>
             <h4 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h4> 
             <h4 style="font-weight: 300;">Total Time: <b>0{{ exam.duration.hour }}:{{ exam.duration.minute }}</b></h4>
@@ -169,6 +169,10 @@
                 Remaining Time:
                 <label id="remaining_hour_counter"></label>:<label id="remaining_minute_counter"></label>:<label id="remaining_second_counter"></label>
             </p>
+        </div>
+        <div class="observation col-md-2">
+            <video id="video">Video stream not available.</video>
+            <canvas id="canvas" hidden></canvas>
         </div>
     </div>
 
@@ -495,7 +499,7 @@
             console.log("Success");
         }
         else {
-            alert("Multiple Face detected.");
+            // alert("Multiple Face detected.");
         }
     }
     xhttp.open("POST", "{% url 'observeCam' %}");

@@ -1,11 +1,11 @@
-from http.client import HTTPResponse
 import json
 from math import ceil
 import requests
+import subprocess as sp
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render 
+from django.shortcuts import render
 from users.models import Register
 from users.views import is_authenticated_user, get_user, get_user_type
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -372,10 +372,51 @@ def checkImage(request):
         return HttpResponse(1)
     return HttpResponse(0)
 
+
 @csrf_exempt
 def observeCam(request):
     if request.method == "POST":
-        imageData=request.POST.get("observeImg") 
+        imageData = request.POST.get("observeImg")
+        # print(imageData)
+
+        user_obj = get_user(request)
+        userid = user_obj.email
+        dp_url = user_obj.profile_pic_url
+
+        # print(dp_url)
+        # image = imageData[]
+
+        path = staticfiles_storage.path("data/" + userid + "/original.png")
+
+        # response = urllib.request.urlopen(str(imageData))
+        # with open(path, "wb") as f:
+        #     f.write(response.file.read())
+
+        # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
+        detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
+
+        fd = open(staticfiles_storage.path("data/" + userid + "/original.png"), "rb")
+        imageFile = fd.read()
+
+        out = sp.check_output(
+            f'curl -s -F "file=@{path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
+            shell=True,
+        )
+
+        print(out.decode())
+
+        # requests.post(original, data={"file": dp_url})  # detect face
+        # matched = requests.post(detect, data={"file": imageFile})
+
+        # print(imageFile)
+        # print(imageData)
+
+        # print(matched.text)
+
+        # if matched.get("success") == "OK":
+        #     return HttpResponse(1)
+        # else:
+        #     return HttpResponse(0)
+
         return HttpResponse(1)
     return HttpResponse(0)
- 
