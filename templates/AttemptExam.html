@@ -488,10 +488,10 @@
   }
 
 
-  setInterval(takePictureForCheck,5000);
+  setInterval(takePictureForCheck,20000);
   function takePictureForCheck() { 
     takepicture(); 
-    // console.log(imageData);
+    console.log(imageData);
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;

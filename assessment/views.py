@@ -2,6 +2,9 @@ import json
 from math import ceil
 import requests
 import subprocess as sp
+import base64
+from PIL import Image
+import io
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
@@ -350,7 +353,7 @@ def checkImage(request):
         dp_url = user_obj.profile_pic_url
 
         image = request.POST.get("currImg")
-        print(image)
+        # print(image)
         # original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
         # with open(original_img_path, "wb") as original_image:
         #     original_image.write(requests.get(image))
@@ -372,51 +375,24 @@ def checkImage(request):
         return HttpResponse(1)
     return HttpResponse(0)
 
+def save_image(data_uri,stored_path):
+    im =  Image.open(io.BytesIO(base64.b64decode(str(data_uri).split(',')[1])))
+    im.save(stored_path, 'PNG')
 
 @csrf_exempt
 def observeCam(request):
     if request.method == "POST":
-        imageData = request.POST.get("observeImg")
-        # print(imageData)
-
-        user_obj = get_user(request)
-        userid = user_obj.email
-        dp_url = user_obj.profile_pic_url
-
-        # print(dp_url)
-        # image = imageData[]
-
-        path = staticfiles_storage.path("data/" + userid + "/original.png")
-
-        # response = urllib.request.urlopen(str(imageData))
-        # with open(path, "wb") as f:
-        #     f.write(response.file.read())
-
-        # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
-        detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
-
-        fd = open(staticfiles_storage.path("data/" + userid + "/original.png"), "rb")
-        imageFile = fd.read()
+        imageData = request.POST.get("observeImg") 
+        user=get_user(request)
+        user_id=user.email
+        path = staticfiles_storage.path("data/" + user_id + "/original1.png")
+ 
+        # save_image(imageData[1:len(imageData)-1],str(path))
 
         out = sp.check_output(
             f'curl -s -F "file=@{path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
             shell=True,
         )
-
-        print(out.decode())
-
-        # requests.post(original, data={"file": dp_url})  # detect face
-        # matched = requests.post(detect, data={"file": imageFile})
-
-        # print(imageFile)
-        # print(imageData)
-
-        # print(matched.text)
-
-        # if matched.get("success") == "OK":
-        #     return HttpResponse(1)
-        # else:
-        #     return HttpResponse(0)
-
+        print(out.decode()) 
         return HttpResponse(1)
     return HttpResponse(0)
