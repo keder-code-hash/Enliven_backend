@@ -395,8 +395,8 @@ def observeCam(request):
         # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
         detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
 
-        fd = open(staticfiles_storage.path("data/" + userid + "/original.png"), "rb")
-        imageFile = fd.read()
+        # fd = open(staticfiles_storage.path("data/" + userid + "/original.png"), "rb")
+        # imageFile = fd.read()
 
         out = sp.check_output(
             f'curl -s -F "file=@{path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
