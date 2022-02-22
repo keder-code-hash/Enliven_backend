@@ -367,6 +367,9 @@
     setInterval(remainingTimeCounter,1000);
     function remainingTimeCounter(){
         remainingSeconds--;
+        if(remainingSeconds<=0){
+            finalSubmit();
+        }
         var second=formatting(parseInt(remainingSeconds%60));
         var minute=formatting(parseInt(remainingSeconds/60));
         var hour=formatting(parseInt(minute/60));
@@ -375,6 +378,7 @@
         document.getElementById("remaining_second_counter").innerHTML=second;
         return remainingSeconds;
     }
+
 
     function formatting(val){
       var str=val+"";

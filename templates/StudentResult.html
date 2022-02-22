@@ -90,6 +90,9 @@
           </div>
           <div class="col-sm-2 text-center">
               <h5><span id="status">Right</span> (<span id="percentage">90%</span>) </h5>
+              {% if user.user_role == 't' %}
+                <button class="btn btn-warning" id="enableManualCheckBtn" onclick="enableManualCheck()">Manual Check</button>
+              {% endif %}
           </div>
         </div>
         <label>
@@ -203,7 +206,17 @@
             txt.substr(1).toLowerCase();});
     }
 
-    
+    function enableManualCheck(){
+      let maxMarks = document.getElementById("marks").innerHTML;
+      let s = window.location.search.split("&");
+      let examId = s[0].split("=")[1];
+      let email = s[1].split("=")[1];
+
+      document.getElementById("marksGot").innerHTML = '<form class="wrapper"><input type="text" name="exam_id" value="'+examId+'" hidden><input type="text" name="email" value="'+email+'" hidden><input type="number" class="form-control" min=0 max='+maxMarks+' name="updatedMarks" required><input class="form-check-input" type="radio" name="ansStatus" id="right" value="right"><label class="form-check-label" for="right">Right</label><br><input class="form-check-input" type="radio" name="ansStatus" id="wrong" value="wrong" checked><label class="form-check-label" for="wrong">Wrong</label><br><button type="submit" name="command" class="btn btn-warning" value="save">Save</button><br></form>';
+      document.getElementById("percentage").innerHTML = '';
+      document.getElementById("status").innerHTML = '';
+      $("#enableManualCheckBtn").remove();
+    }
 
   </script>
 </div>

@@ -215,6 +215,7 @@ def final_submit(request):
 @csrf_exempt
 def final_ans_submit(request):
     # set_student_answer(exam_id,question_id,answer,answer_duration,answered_by)
+    # print("file_url")
     answered_by = get_user(request)
     exam_id = 0
     file_url = staticfiles_storage.path("data/"+answered_by.email+"/all_questions.json")

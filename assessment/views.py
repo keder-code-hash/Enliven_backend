@@ -69,10 +69,18 @@ def load_assessment_result(request):
 
 # for teacher
 def load_assessment_result_teacher(request):
-    if request.method=="GET":
+    user = get_user(request)
+    if request.method=="GET" and user.user_role == 't':
+        have_to_save = request.GET.get("command")
+        if have_to_save is not None:
+            marks = request.GET.get("updatedMarks")
+            ansStatus = request.GET.get("ansStatus")
+            print(marks, ansStatus)
+            # Backend code for manual marks updation...
+
+
         exam_id = request.GET.get("exam_id")
         email = request.GET.get("email")
-        user = get_user(request)
         assessment_json_gen(exam_id, email, user.email)
         try:
             file_url = staticfiles_storage.path('data/'+user.email+'/assessment_details.json')
@@ -238,7 +246,7 @@ def assessment(request):
                 "minute": main_data.get("duration").get("minute")
             },
         }
-
+        
         json_data.close() 
     except FileNotFoundError:
         pass 
