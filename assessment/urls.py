@@ -13,6 +13,7 @@ from .views import (
     eval_exam,
     load_assessment_result_teacher,
     checkImage,
+    observeCam
 )
 from .queries import test
 
@@ -31,7 +32,10 @@ urlpatterns = (
         path("fetch_stnd_qna/", fetch_stnd_QnA, name="fetch_stnd_qna"),
         path("fetch_exam_qn/", save_assessment_answer, name="fetch_exam_qn"),
         path("evalexam/", eval_exam, name="eval_exam"),
+        
         path("checkImage/", checkImage, name="checkImage"),
+        path("observeCam/",observeCam,name="observeCam"),
+
         path("testing_db/", test, name="test"),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

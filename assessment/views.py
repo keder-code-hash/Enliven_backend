@@ -1,11 +1,11 @@
+from http.client import HTTPResponse
 import json
 from math import ceil
 import requests
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from soupsieve import match
+from django.shortcuts import render 
 from users.models import Register
 from users.views import is_authenticated_user, get_user, get_user_type
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -351,23 +351,31 @@ def checkImage(request):
 
         image = request.POST.get("currImg")
         print(image)
-        original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
-        with open(original_img_path, "wb") as original_image:
-            original_image.write(requests.get(image))
+        # original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
+        # with open(original_img_path, "wb") as original_image:
+        #     original_image.write(requests.get(image))
 
-        original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
-        detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
+        # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
+        # detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
 
-        requests.post(url=original, json={"file": original_img_path})
-        # if initial:
-        matched = requests.post(url=detect, json={"file": dp_url})
+        # requests.post(url=original, json={"file": original_img_path})
+        # # if initial:
+        # matched = requests.post(url=detect, json={"file": dp_url})
+        # # else:
+        # #     matched = post(detect, data={"file": latest_url})
+
+        # if matched.get("success") == "OK":
+        #     return HttpResponse(1)
         # else:
-        #     matched = post(detect, data={"file": latest_url})
-
-        if matched.get("success") == "OK":
-            return HttpResponse(1)
-        else:
-            return HttpResponse(0)
+        #     return HttpResponse(0)
 
         return HttpResponse(1)
     return HttpResponse(0)
+
+@csrf_exempt
+def observeCam(request):
+    if request.method == "POST":
+        imageData=request.POST.get("observeImg") 
+        return HttpResponse(1)
+    return HttpResponse(0)
+ 

@@ -250,14 +250,17 @@ def final_ans_submit(request):
         # print(main_data)
         question_data = main_data.get("questions") 
         # print(question_data)
-        for q in question_data:
-            try:
-                answer_duration = datetime.time(0,int(q['time_taken']['minute']),int(q['time_taken']['second']))
-            except:
-                answer_duration = datetime.time(0,0,0)
-            flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
-            if(flag == False):
-                break
+        try :
+            for q in question_data:
+                try:
+                    answer_duration = datetime.time(0,int(q['time_taken']['minute']),int(q['time_taken']['second']))
+                except:
+                    answer_duration = datetime.time(0,0,0)
+                flag = set_student_answer(q.get("exam_id"),q.get("id"),q.get("student_answer"),answer_duration,answered_by)[1]
+                if(flag == False):
+                    break
+        except:
+            print("answer is null")
     
     file = open(file_url, "w")
     file.write("{ }")
