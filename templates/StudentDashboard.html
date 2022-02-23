@@ -271,7 +271,7 @@
     }
     xhttp.open("POST", "{% url 'checkImage' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("currImg=" + JSON.stringify(imageData));
+    xhttp.send("currImg=" + encodeURIComponent(imageData));
     }
 
   function loadImage(examid) {

@@ -345,36 +345,29 @@ def eval_exam(request):
 
 @csrf_exempt
 def checkImage(request):
-    # global initial
-    # initial = True
-
     if request.method == "POST":
-        user_obj = get_user(request)
+        try:
+            user_obj = get_user(request)
+            userid = user_obj.email
+            imageData = request.POST.get("currImg")
+            # * save image
+            original_img_path = staticfiles_storage.path(
+                "data/"
+                + userid
+                + "/"
+                + f"original_{userid.replace('.com', '')}"
+                + ".png"
+            )
+            save_image(imageData, original_img_path)
 
-        userid = user_obj.email
-        dp_url = user_obj.profile_pic_url
-
-        image = request.POST.get("currImg")
-        # print(image)
-        # original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
-        # with open(original_img_path, "wb") as original_image:
-        #     original_image.write(requests.get(image))
-
-        # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
-        # detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
-
-        # requests.post(url=original, json={"file": original_img_path})
-        # # if initial:
-        # matched = requests.post(url=detect, json={"file": dp_url})
-        # # else:
-        # #     matched = post(detect, data={"file": latest_url})
-
-        # if matched.get("success") == "OK":
-        #     return HttpResponse(1)
-        # else:
-        #     return HttpResponse(0)
-
-        return HttpResponse(1)
+            print(original_img_path)
+            rec = sp.check_output(
+                f'curl -s -F "file=@{original_img_path}" http://127.0.0.1:5000/original',
+                shell=True,
+            )
+            return HttpResponse(1)
+        except:
+            return HttpResponse(2)
     return HttpResponse(0)
 
 
@@ -399,32 +392,27 @@ def observeCam(request):
     if request.method == "POST":
         user_obj = get_user(request)
         userid = user_obj.email
-        dp_url = user_obj.profile_pic_url
 
         imageData = request.POST.get("observeImg")
-        with (open("/tmp/imageData.txt", "w")) as img:
-            img.write(imageData)
-
-        uri = DataURI(imageData)
-
-        with (open("/tmp/img.data", "w")) as img:
-            img.write(uri)
-
         # * save image
         curr_img_path = staticfiles_storage.path(
             "data/" + userid + "/" + str(int(time())) + ".png"
         )
         save_image(imageData, curr_img_path)
-        path = staticfiles_storage.path("data/" + userid + "/original.png")
 
         # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
         # detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
         out = sp.check_output(
-            f'curl -s -F "file=@{curr_img_path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
+            f'curl -s -F "file=@{curr_img_path}" http://127.0.0.1:5000/detect',
             shell=True,
         )
 
-        print(out.decode())
+        rec = sp.check_output(
+            f'curl -s -F "file=@{curr_img_path}" -d "userid={userid.replace(".", "")}" http://127.0.0.1:5000/recognize',
+            shell=True,
+        )
+
+        print(rec.decode())
         try:
             status = json.loads(out.decode())
 
