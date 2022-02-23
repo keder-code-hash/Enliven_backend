@@ -111,6 +111,10 @@
     <!-- Histogram View -->
   </div>
   <script>
+
+    var currentQnId = 0;
+    var examId = 0;
+    var stdEmail = '';
     
     var standard_ans_quill = new Quill('#standard_ans_editor', {
       theme: 'snow'
@@ -129,6 +133,10 @@
 
       xhttp.onload = function () {
         var obj = JSON.parse(this.response)["actual_ans"];
+        console.log(obj);
+        currentQnId = obj["id"];
+        examId = obj["exam_id"];
+        stdEmail = obj["std_email"];
         document.getElementById("status").innerHTML = sentenceCase(obj["status"]);
         document.getElementById("status").setAttribute("class", obj["status"]);
         document.getElementById("percentage").innerHTML = obj["percentage"].toFixed(2) + "%";
@@ -208,11 +216,7 @@
 
     function enableManualCheck(){
       let maxMarks = document.getElementById("marks").innerHTML;
-      let s = window.location.search.split("&");
-      let examId = s[0].split("=")[1];
-      let email = s[1].split("=")[1];
-
-      document.getElementById("marksGot").innerHTML = '<form class="wrapper"><input type="text" name="exam_id" value="'+examId+'" hidden><input type="text" name="email" value="'+email+'" hidden><input type="number" class="form-control" min=0 max='+maxMarks+' name="updatedMarks" required><input class="form-check-input" type="radio" name="ansStatus" id="right" value="right"><label class="form-check-label" for="right">Right</label><br><input class="form-check-input" type="radio" name="ansStatus" id="wrong" value="wrong" checked><label class="form-check-label" for="wrong">Wrong</label><br><button type="submit" name="command" class="btn btn-warning" value="save">Save</button><br></form>';
+      document.getElementById("marksGot").innerHTML = '<form method="POST" class="wrapper"><input type="text" name="exam_id" value="'+examId+'" hidden><input type="number" name="q_id" value="'+currentQnId+'" hidden><input type="text" name="email" value="'+stdEmail+'" hidden><input type="number" class="form-control" min=0 max='+maxMarks+' name="updatedMarks" required><input class="form-check-input" type="radio" name="ansStatus" id="right" value="right"><label class="form-check-label" for="right">Right</label><br><input class="form-check-input" type="radio" name="ansStatus" id="wrong" value="wrong" checked><label class="form-check-label" for="wrong">Wrong</label><br><button type="submit" class="btn btn-warning">Save</button><br></form>';
       document.getElementById("percentage").innerHTML = '';
       document.getElementById("status").innerHTML = '';
       $("#enableManualCheckBtn").remove();

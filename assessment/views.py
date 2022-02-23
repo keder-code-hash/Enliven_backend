@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 # Custom module imports
 from assessment.models import Answer, Exam, Question
-from assessment.queries import fetch_exam_details_by_id
+from assessment.queries import fetch_exam_details_by_id, submit_manual_check
 from assessment.model_prediction import make_prediction
 
 def assessment_json_gen(exam_id, email_id, user_id):
@@ -30,6 +30,7 @@ def assessment_json_gen(exam_id, email_id, user_id):
                 question['percentage'] = student_answer.match_percentage
                 question['status'] = student_answer.remarks
                 question['marks'] = student_answer.marks
+                question['std_email'] = email_id
                 score += student_answer.marks
                 question.pop("created_at") 
             exam_dets=list(exam_dets)[0] 
@@ -68,19 +69,22 @@ def load_assessment_result(request):
 
 
 # for teacher
+@csrf_exempt
 def load_assessment_result_teacher(request):
     user = get_user(request)
-    if request.method=="GET" and user.user_role == 't':
-        have_to_save = request.GET.get("command")
-        if have_to_save is not None:
-            marks = request.GET.get("updatedMarks")
-            ansStatus = request.GET.get("ansStatus")
-            print(marks, ansStatus)
-            # Backend code for manual marks updation...
+    if user.user_role == 't':
+        if request.method=="POST":
+            exam_id = request.POST.get("exam_id")
+            email = request.POST.get("email")
+            question_id = request.POST.get("q_id")
+            marks = request.POST.get("updatedMarks")
+            ansStatus = request.POST.get("ansStatus")
+            submit_manual_check(email,exam_id,question_id,marks,ansStatus)
 
+        elif request.method=="GET":
+            exam_id = request.GET.get("exam_id")
+            email = request.GET.get("email")  
 
-        exam_id = request.GET.get("exam_id")
-        email = request.GET.get("email")
         assessment_json_gen(exam_id, email, user.email)
         try:
             file_url = staticfiles_storage.path('data/'+user.email+'/assessment_details.json')
@@ -102,7 +106,7 @@ def load_assessment_result_teacher(request):
         return render(request, "StudentResult.html", context)
 
     else:
-        err_log = {"msg": "Invaild Request"}
+        err_log = {"msg": "Invaild Request!"}
         return render(request, "Error.html", err_log)
 
 # test results
