@@ -190,10 +190,8 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- <div class="camera"> -->
-        {% comment %} <video id="video">Video stream not available.</video> {% endcomment %}
-      <!-- </div>  -->
-    {% comment %} <canvas id="canvas" hidden></canvas> {% endcomment %}
+    <div id='warning-msg'>
+    </div>
 
     <div class="row">
         <div class="exam_details col-md-8">
@@ -485,7 +483,7 @@
     // js image
 
 
-    var width = 320; // We will scale the photo width to this
+  var width = 720; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
   var imageData;
   var streaming = false;
@@ -561,25 +559,32 @@
       clearphoto();
     }
   }
+  // takePictureForCheck();
+  setInterval(takePictureForCheck,15000);
 
-
-  setInterval(takePictureForCheck,20000);
   function takePictureForCheck() { 
+<<<<<<< HEAD
     takepicture(); 
     // console.log(imageData);
+=======
+    takepicture();
+    var imgObj = {"image": imageData}
+>>>>>>> 97b479c16dac74465fafe370802b8852df85e93d
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;
-        if (flag === '1') {
-            console.log("Success");
-        }
-        else {
-            // alert("Multiple Face detected.");
+        console.log(flag);
+        if (flag === '0') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">No Face Detected!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        } else if (flag === '2') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">Multiple Face Detected!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        } else if (flag === '3') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">Face is not Matching!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
         }
     }
     xhttp.open("POST", "{% url 'observeCam' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("observeImg=" + JSON.stringify(imageData));
+    xhttp.send("observeImg=" + encodeURIComponent(imageData));
     } 
 
 
