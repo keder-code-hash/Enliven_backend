@@ -1,11 +1,17 @@
-from http.client import HTTPResponse
+import os
 import json
-from math import ceil
 import requests
+from math import ceil
+import subprocess as sp
+import base64
+from time import time
+from PIL import Image, ImageFile
+import io
+# from datauri import DataURI
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render 
+from django.shortcuts import render
 from users.models import Register
 from users.views import is_authenticated_user, get_user, get_user_type
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -345,44 +351,80 @@ def eval_exam(request):
     else:
         return HttpResponse(0)
 
+def save_image(data_uri, stored_path):
+    with open("tmp.data", "w") as f:
+        f.write(data_uri)
+
+    # preprocessing
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    data_uri = data_uri[1:-1]
+    length = len(data_uri) - len("data:image/png;base64,")
+    data_uri += "=" * (length % 4)
+
+    print("Length:", length)
+
+    im = Image.open(io.BytesIO(base64.b64decode(str(data_uri).split(",")[1])))
+    im.save(stored_path, "png")
+
+
+face_api_url = "https://face-detect-arghyasahoo.cloud.okteto.net"
 
 @csrf_exempt
 def checkImage(request):
-    # global initial
-    # initial = True
-
     if request.method == "POST":
-        user_obj = get_user(request)
-
-        userid = user_obj.email
-        dp_url = user_obj.profile_pic_url
-
-        image = request.POST.get("currImg")
-        print(image)
-        # original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
-        # with open(original_img_path, "wb") as original_image:
-        #     original_image.write(requests.get(image))
-
-        # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
-        # detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
-
-        # requests.post(url=original, json={"file": original_img_path})
-        # # if initial:
-        # matched = requests.post(url=detect, json={"file": dp_url})
-        # # else:
-        # #     matched = post(detect, data={"file": latest_url})
-
-        # if matched.get("success") == "OK":
-        #     return HttpResponse(1)
-        # else:
-        #     return HttpResponse(0)
-
-        return HttpResponse(1)
-    return HttpResponse(0)
+        try:
+            user_obj = get_user(request)
+            userid = user_obj.email
+            imageData = request.POST.get("currImg")
+            # * save image
+            original_img_path = staticfiles_storage.path("data/"+ userid+ "/"+ f"original_{userid.replace('.com', '')}"+ ".png"
+            )
+            save_image(imageData, original_img_path)
+            img_file = open(original_img_path, 'rb')
+            files = {'file': img_file}
+            getdata = requests.post(face_api_url+'/detect', files=files)
+            img_file.close()
+            if getdata.json().get("success") == "OK":
+                return HttpResponse(1)
+            else:
+                return HttpResponse(0)
+        except:
+            return HttpResponse(2)
 
 @csrf_exempt
 def observeCam(request):
     if request.method == "POST":
-        imageData=request.POST.get("observeImg") 
-        return HttpResponse(1)
-    return HttpResponse(0)
+        user_obj = get_user(request)
+        userid = user_obj.email
+
+        imageData = request.POST.get("observeImg")
+        # * save image
+        curr_img_path = staticfiles_storage.path(
+            "data/" + userid + "/" + str(int(time())) + ".png"
+        )
+        save_image(imageData, curr_img_path)
+        img_file = open(curr_img_path, 'rb')
+        files = {'file': img_file}
+        detection = requests.post(face_api_url+'/detect', files=files)
+        orig_img_path = staticfiles_storage.path("data/"+ userid+ "/"+ f"original_{userid.replace('.com', '')}"+ ".png")
+        orig_file = open(orig_img_path, 'rb')
+        files = {
+            'file1': img_file,
+            'file2': orig_file
+        }
+        rec = requests.post(face_api_url+'/recognize', files=files)
+        img_file.close()
+        orig_file.close()
+        os.unlink(curr_img_path)
+        if str(list(detection.json().keys())[0]) == "success":
+            rec = rec.json()
+            print(rec)
+            if(rec.get("status")):
+                return HttpResponse(1)
+            else:
+                return HttpResponse(3)
+        else:
+            if detection.json().get("error") == "MFD":
+                return HttpResponse(2)
+            elif detection.json().get("error") == "EXPT":
+                return HttpResponse(0)

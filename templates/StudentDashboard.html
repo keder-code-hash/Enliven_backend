@@ -171,7 +171,7 @@
   }
   /* JS comes here */
 
-  var width = 320; // We will scale the photo width to this
+  var width = 720; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
   var imageData;
   var streaming = false;
@@ -271,8 +271,8 @@
     }
     xhttp.open("POST", "{% url 'checkImage' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("currImg=" + JSON.stringify(imageData));
-    }
+    xhttp.send("currImg=" + encodeURIComponent(imageData));
+  }
 
   function loadImage(examid) {
     startup();
