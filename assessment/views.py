@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Custom module imports
 from assessment.models import Answer, Exam, Question
-from assessment.queries import fetch_exam_details_by_id
+from assessment.queries import fetch_exam_details_by_id, submit_manual_check
 from assessment.model_prediction import make_prediction
 
 
@@ -30,16 +30,13 @@ def assessment_json_gen(exam_id, email_id, user_id):
             )
             json_data = open(file_url, mode="w", encoding="utf-8")
             for question in all_questions:
-                student_answer = Answer.objects.get(
-                    exam_id=exam_id,
-                    question_id=question["id"],
-                    answered_by__email=email_id,
-                )
-                question["student_answer"] = student_answer.answer
-                question["eval_details"] = student_answer.eval_details
-                question["percentage"] = student_answer.match_percentage
-                question["status"] = student_answer.remarks
-                question["marks"] = student_answer.marks
+                student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
+                question['student_answer'] = student_answer.answer
+                question['eval_details'] = student_answer.eval_details
+                question['percentage'] = student_answer.match_percentage
+                question['status'] = student_answer.remarks
+                question['marks'] = student_answer.marks
+                question['std_email'] = email_id
                 score += student_answer.marks
                 question.pop("created_at")
             exam_dets = list(exam_dets)[0]
@@ -75,11 +72,22 @@ def load_assessment_result(request):
 
 
 # for teacher
+@csrf_exempt
 def load_assessment_result_teacher(request):
-    if request.method == "GET":
-        exam_id = request.GET.get("exam_id")
-        email = request.GET.get("email")
-        user = get_user(request)
+    user = get_user(request)
+    if user.user_role == 't':
+        if request.method=="POST":
+            exam_id = request.POST.get("exam_id")
+            email = request.POST.get("email")
+            question_id = request.POST.get("q_id")
+            marks = request.POST.get("updatedMarks")
+            ansStatus = request.POST.get("ansStatus")
+            submit_manual_check(email,exam_id,question_id,marks,ansStatus)
+
+        elif request.method=="GET":
+            exam_id = request.GET.get("exam_id")
+            email = request.GET.get("email")  
+
         assessment_json_gen(exam_id, email, user.email)
         try:
             file_url = staticfiles_storage.path(
@@ -103,7 +111,7 @@ def load_assessment_result_teacher(request):
         return render(request, "StudentResult.html", context)
 
     else:
-        err_log = {"msg": "Invaild Request"}
+        err_log = {"msg": "Invaild Request!"}
         return render(request, "Error.html", err_log)
 
 
@@ -252,8 +260,8 @@ def assessment(request):
                 "minute": main_data.get("duration").get("minute"),
             },
         }
-
-        json_data.close()
+        
+        json_data.close() 
     except FileNotFoundError:
         pass
 
@@ -378,4 +386,3 @@ def observeCam(request):
         imageData=request.POST.get("observeImg") 
         return HttpResponse(1)
     return HttpResponse(0)
- 

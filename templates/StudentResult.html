@@ -90,6 +90,9 @@
           </div>
           <div class="col-sm-2 text-center">
               <h5><span id="status">Right</span> (<span id="percentage">90%</span>) </h5>
+              {% if user.user_role == 't' %}
+                <button class="btn btn-warning" id="enableManualCheckBtn" onclick="enableManualCheck()">Manual Check</button>
+              {% endif %}
           </div>
         </div>
         <label>
@@ -108,6 +111,10 @@
     <!-- Histogram View -->
   </div>
   <script>
+
+    var currentQnId = 0;
+    var examId = 0;
+    var stdEmail = '';
     
     var standard_ans_quill = new Quill('#standard_ans_editor', {
       theme: 'snow'
@@ -126,6 +133,10 @@
 
       xhttp.onload = function () {
         var obj = JSON.parse(this.response)["actual_ans"];
+        console.log(obj);
+        currentQnId = obj["id"];
+        examId = obj["exam_id"];
+        stdEmail = obj["std_email"];
         document.getElementById("status").innerHTML = sentenceCase(obj["status"]);
         document.getElementById("status").setAttribute("class", obj["status"]);
         document.getElementById("percentage").innerHTML = obj["percentage"].toFixed(2) + "%";
@@ -203,7 +214,13 @@
             txt.substr(1).toLowerCase();});
     }
 
-    
+    function enableManualCheck(){
+      let maxMarks = document.getElementById("marks").innerHTML;
+      document.getElementById("marksGot").innerHTML = '<form method="POST" class="wrapper"><input type="text" name="exam_id" value="'+examId+'" hidden><input type="number" name="q_id" value="'+currentQnId+'" hidden><input type="text" name="email" value="'+stdEmail+'" hidden><input type="number" class="form-control" min=0 max='+maxMarks+' name="updatedMarks" required><input class="form-check-input" type="radio" name="ansStatus" id="right" value="right"><label class="form-check-label" for="right">Right</label><br><input class="form-check-input" type="radio" name="ansStatus" id="wrong" value="wrong" checked><label class="form-check-label" for="wrong">Wrong</label><br><button type="submit" class="btn btn-warning">Save</button><br></form>';
+      document.getElementById("percentage").innerHTML = '';
+      document.getElementById("status").innerHTML = '';
+      $("#enableManualCheckBtn").remove();
+    }
 
   </script>
 </div>
