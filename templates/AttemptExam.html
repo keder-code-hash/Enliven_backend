@@ -152,10 +152,8 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- <div class="camera"> -->
-        {% comment %} <video id="video">Video stream not available.</video> {% endcomment %}
-      <!-- </div>  -->
-    {% comment %} <canvas id="canvas" hidden></canvas> {% endcomment %}
+    <div id='warning-msg'>
+    </div>
 
     <div class="row">
         <div class="exam_details col-md-8">
@@ -486,25 +484,29 @@
       clearphoto();
     }
   }
+  // takePictureForCheck();
+  setInterval(takePictureForCheck,10000);
 
-
-  setInterval(takePictureForCheck,5000);
   function takePictureForCheck() { 
-    takepicture(); 
-    // console.log(imageData);
+    takepicture();
+    var imgObj = {"image": imageData}
+    console.log(imageData);
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;
-        if (flag === '1') {
+        if (flag === 1) {
             console.log("Success");
-        }
-        else {
-            // alert("Multiple Face detected.");
+        } else if (flag === 2) {
+            document.getElementById("warning-msg").innerHTML = "<div class=\"alert alert-primary\" role=\"alert\"> Multiple Face Detected </div>"
+            // alert("MFD")
+        } else {
+            document.getElementById("warning-msg").innerHTML = "<div class=\"alert alert-primary\" role=\"alert\"> No Face Detected </div>"
+            // alert("NFD")
         }
     }
     xhttp.open("POST", "{% url 'observeCam' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("observeImg=" + JSON.stringify(imageData));
+    xhttp.send("observeImg=" + encodeURIComponent(imageData));
     } 
 </script>
 {% endblock %}

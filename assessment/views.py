@@ -1,7 +1,12 @@
 import json
 from math import ceil
-import requests
 import subprocess as sp
+import base64
+from time import time
+from PIL import Image, ImageFile
+import io
+from datauri import DataURI
+import json
 
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
@@ -350,7 +355,7 @@ def checkImage(request):
         dp_url = user_obj.profile_pic_url
 
         image = request.POST.get("currImg")
-        print(image)
+        # print(image)
         # original_img_path = staticfiles_storage.path("data/" + userid + "/original.png")
         # with open(original_img_path, "wb") as original_image:
         #     original_image.write(requests.get(image))
@@ -373,50 +378,69 @@ def checkImage(request):
     return HttpResponse(0)
 
 
+def save_image(data_uri, stored_path):
+    with open("tmp.data", "w") as f:
+        f.write(data_uri)
+
+    # preprocessing
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    data_uri = data_uri[1:-1]
+    length = len(data_uri) - len("data:image/png;base64,")
+    data_uri += "=" * (length % 4)
+
+    print("Length:", length)
+
+    im = Image.open(io.BytesIO(base64.b64decode(str(data_uri).split(",")[1])))
+    im.save(stored_path, "PNG")
+
+
 @csrf_exempt
 def observeCam(request):
     if request.method == "POST":
-        imageData = request.POST.get("observeImg")
-        # print(imageData)
-
         user_obj = get_user(request)
         userid = user_obj.email
         dp_url = user_obj.profile_pic_url
 
-        # print(dp_url)
-        # image = imageData[]
+        imageData = request.POST.get("observeImg")
+        with (open("/tmp/imageData.txt", "w")) as img:
+            img.write(imageData)
 
+        uri = DataURI(imageData)
+
+        with (open("/tmp/img.data", "w")) as img:
+            img.write(uri)
+
+        # * save image
+        curr_img_path = staticfiles_storage.path(
+            "data/" + userid + "/" + str(int(time())) + ".png"
+        )
+        save_image(imageData, curr_img_path)
         path = staticfiles_storage.path("data/" + userid + "/original.png")
 
-        # response = urllib.request.urlopen(str(imageData))
-        # with open(path, "wb") as f:
-        #     f.write(response.file.read())
-
         # original = "https://face-detect-arghyasahoo.cloud.okteto.net/original"
-        detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
-
-        # fd = open(staticfiles_storage.path("data/" + userid + "/original.png"), "rb")
-        # imageFile = fd.read()
-
+        # detect = "https://face-detect-arghyasahoo.cloud.okteto.net/detect"
         out = sp.check_output(
-            f'curl -s -F "file=@{path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
+            f'curl -s -F "file=@{curr_img_path}" https://face-detect-arghyasahoo.cloud.okteto.net/detect',
             shell=True,
         )
 
         print(out.decode())
+        try:
+            status = json.loads(out.decode())
 
-        # requests.post(original, data={"file": dp_url})  # detect face
-        # matched = requests.post(detect, data={"file": imageFile})
+            print(status)
 
-        # print(imageFile)
-        # print(imageData)
-
-        # print(matched.text)
-
-        # if matched.get("success") == "OK":
-        #     return HttpResponse(1)
-        # else:
-        #     return HttpResponse(0)
-
-        return HttpResponse(1)
+            if status.keys()[0] == "success":
+                return HttpResponse(1)
+            elif status.keys()[0] == "error":
+                if status["error"] == "MFD":
+                    return HttpResponse(2)
+                elif status["error"] == "EXPT":
+                    return HttpResponse(0)
+                else:
+                    return HttpResponse(0)
+            else:
+                return HttpResponse(0)
+        except:
+            return HttpResponse(0)
     return HttpResponse(0)
