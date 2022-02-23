@@ -332,16 +332,19 @@ def eval_exam(request):
                 for ans in ans_list:
                     a_id = ans.get("id")
                     stn_ans = ans.get("answer")
-                    sts, remarks, percentage, full_respond = make_prediction(
-                        stn_ans, std_ans, 0
-                    )
-                    if sts:
-                        ans_obj = Answer.objects.get(id=a_id)
-                        ans_obj.remarks = remarks
-                        ans_obj.marks = (percentage / 100) * qn_marks
-                        ans_obj.match_percentage = percentage
-                        ans_obj.eval_details = full_respond
-                        ans_obj.save()
+                    try:
+                        sts, remarks, percentage, full_respond = make_prediction(
+                            stn_ans, std_ans, 0
+                        )
+                        if sts:
+                            ans_obj = Answer.objects.get(id=a_id)
+                            ans_obj.remarks = remarks
+                            ans_obj.marks = (percentage / 100) * qn_marks
+                            ans_obj.match_percentage = percentage
+                            ans_obj.eval_details = full_respond
+                            ans_obj.save()
+                    except:
+                        pass
 
             return HttpResponse(1)
 
