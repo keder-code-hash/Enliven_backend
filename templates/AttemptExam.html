@@ -152,13 +152,11 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- <div class="camera"> -->
-        <video id="video">Video stream not available.</video>
-      <!-- </div>  -->
-    <canvas id="canvas" hidden></canvas>
+    <div id='warning-msg'>
+    </div>
 
     <div class="row">
-        <div class="exam_details">
+        <div class="exam_details col-md-8">
             <h2 class='display-4'>{{ exam.exam_name }}</h2>
             <h4 style="font-weight: 300;">Full Marks: <b>{{ exam.marks }}</b></h4> 
             <h4 style="font-weight: 300;">Total Time: <b>0{{ exam.duration.hour }}:{{ exam.duration.minute }}</b></h4>
@@ -169,6 +167,10 @@
                 Remaining Time:
                 <label id="remaining_hour_counter"></label>:<label id="remaining_minute_counter"></label>:<label id="remaining_second_counter"></label>
             </p>
+        </div>
+        <div class="observation col-md-2">
+            <video id="video">Video stream not available.</video>
+            <canvas id="canvas" hidden></canvas>
         </div>
     </div>
 
@@ -406,7 +408,7 @@
     // js image
 
 
-    var width = 320; // We will scale the photo width to this
+  var width = 720; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
   var imageData;
   var streaming = false;
@@ -482,25 +484,27 @@
       clearphoto();
     }
   }
+  // takePictureForCheck();
+  setInterval(takePictureForCheck,15000);
 
-
-  setInterval(takePictureForCheck,5000);
   function takePictureForCheck() { 
-    takepicture(); 
-    // console.log(imageData);
+    takepicture();
+    var imgObj = {"image": imageData}
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;
-        if (flag === '1') {
-            console.log("Success");
-        }
-        else {
-            alert("Multiple Face detected.");
+        console.log(flag);
+        if (flag === '0') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">No Face Detected!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        } else if (flag === '2') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">Multiple Face Detected!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        } else if (flag === '3') {
+            document.getElementById("warning-msg").innerHTML = '<div class="alert alert-warning alert-dismissible fade show" role="alert">Face is not Matching!<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
         }
     }
     xhttp.open("POST", "{% url 'observeCam' %}");
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("observeImg=" + JSON.stringify(imageData));
+    xhttp.send("observeImg=" + encodeURIComponent(imageData));
     } 
 </script>
 {% endblock %}
