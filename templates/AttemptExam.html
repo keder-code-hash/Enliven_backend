@@ -134,7 +134,7 @@
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+     
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -149,8 +149,9 @@
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    border: 1px solid #888; 
+    width: 100%;  
+    height: 100%;  
     }
 
     /* The Close Button */
@@ -223,18 +224,21 @@
         </div>
         <div class="col-sm-10">
 
+
+
             <button id="myPauseBtn" class="btn btn-warning" onclick="ClearInterval()">Take Break</button>
             <div id="myModal" class="modal"> 
-                <div class="modal-content">
-                  <span class="close">&times;</span>
-                  <p>
+                <div class="modal-content" style="padding-top: 100px;justify-content: center; align-items: center;"> 
+                    <p class="test-center" >
                     Time:
                     <label id="pause_minute_counter"></label>:<label id="pause_second_counter"></label> 
                     <br>
                   </p>
-                  <button class="btn btn-outline btn-warning" onclick="SetInterval()">Pause Exam</button>
+                  <button id="resumeExm" class="btn btn-outline btn-warning" onclick="SetInterval()" style="width: 20%;">Resume Exam</button>
                 </div>
             </div>
+
+
 
             <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
                 <label>Question: <b>(Marks: <span id="marks"></span>)</b></label>
@@ -439,29 +443,7 @@
         return remainingSeconds;
     }
     
-    function ClearInterval(){
-        clearInterval(qsTimeInterval);
-        clearInterval(mnTimeInterval); 
-
-        
-    }
-
-    // function SetInterval(){
-    //     console.log("Hii"+remainingSeconds);
-    //     setInterval(qsTimeInterval);
-    //     setInterval(mnTimeInterval);
-    // }
-    
-    var pauseTime=0;
-    setInterval(checkPauseTimer,1000);
-    function checkPauseTimer(){
-        pauseTime++;
-        var second=formatting(parseInt(pauseTime%60));
-        var minute=formatting(parseInt(pauseTime/60));
-        document.getElementById("pause_minute_counter").innerHTML=minute;
-        document.getElementById("pause_second_counter").innerHTML=second; 
-    }
-
+     
 
     function formatting(val){
       var str=val+"";
@@ -483,7 +465,7 @@
     // js image
 
 
-  var width = 720; // We will scale the photo width to this
+  var width = 320; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
   var imageData;
   var streaming = false;
@@ -563,13 +545,8 @@
   setInterval(takePictureForCheck,15000);
 
   function takePictureForCheck() { 
-<<<<<<< HEAD
-    takepicture(); 
-    // console.log(imageData);
-=======
     takepicture();
     var imgObj = {"image": imageData}
->>>>>>> 97b479c16dac74465fafe370802b8852df85e93d
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;
@@ -589,17 +566,33 @@
 
 
   // exam pause modal
-
     var modal = document.getElementById("myModal"); 
     var btn = document.getElementById("myPauseBtn"); 
-    var span = document.getElementsByClassName("close")[0]; 
+    // var span = document.getElementsByClassName("close")[0]; 
+    var resumeButton=document.getElementById("resumeExm");
+    var pauseTime=0;
+    var pauseTimer=null;
+    function checkPauseTimer(){
+        pauseTime++;
+        var second=formatting(parseInt(pauseTime%60));
+        var minute=formatting(parseInt(pauseTime/60));
+        document.getElementById("pause_minute_counter").innerHTML=minute;
+        document.getElementById("pause_second_counter").innerHTML=second; 
+    } 
+    
     btn.onclick = function() {
         modal.style.display = "block";
-        ClearInterval();
+        pauseTime=0; 
+        pauseTimer = setInterval(checkPauseTimer,1000); 
     } 
-    span.onclick = function() {
-        SetInterval();
+    
+    resumeButton.onclick = function  ( ) {
+        remainingSeconds-=pauseTime;
+        totalSeconds-=pauseTime;
+        clearInterval(pauseTimer);
+        pauseTimer=null;
         modal.style.display = "none";
+        pauseTime=0;
     }
 
 </script>
