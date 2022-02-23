@@ -33,18 +33,6 @@ def assessment_json_gen(exam_id, email_id, user_id):
             )
             json_data = open(file_url, mode="w", encoding="utf-8")
             for question in all_questions:
-<<<<<<< HEAD
-                student_answer = Answer.objects.get(
-                    exam_id=exam_id,
-                    question_id=question["id"],
-                    answered_by__email=email_id,
-                )
-                question["student_answer"] = student_answer.answer
-                question["eval_details"] = student_answer.eval_details
-                question["percentage"] = student_answer.match_percentage
-                question["status"] = student_answer.remarks
-                question["marks"] = student_answer.marks
-=======
                 student_answer=Answer.objects.get(exam_id=exam_id,question_id=question["id"],answered_by__email=email_id) 
                 question['student_answer'] = student_answer.answer
                 question['eval_details'] = student_answer.eval_details
@@ -52,7 +40,6 @@ def assessment_json_gen(exam_id, email_id, user_id):
                 question['status'] = student_answer.remarks
                 question['marks'] = student_answer.marks
                 question['std_email'] = email_id
->>>>>>> c322129c0b85bcdc54cc4c0afc98d292acfb54c2
                 score += student_answer.marks
                 question.pop("created_at")
             exam_dets = list(exam_dets)[0]
@@ -90,12 +77,6 @@ def load_assessment_result(request):
 # for teacher
 @csrf_exempt
 def load_assessment_result_teacher(request):
-<<<<<<< HEAD
-    if request.method == "GET":
-        exam_id = request.GET.get("exam_id")
-        email = request.GET.get("email")
-        user = get_user(request)
-=======
     user = get_user(request)
     if user.user_role == 't':
         if request.method=="POST":
@@ -110,7 +91,6 @@ def load_assessment_result_teacher(request):
             exam_id = request.GET.get("exam_id")
             email = request.GET.get("email")  
 
->>>>>>> c322129c0b85bcdc54cc4c0afc98d292acfb54c2
         assessment_json_gen(exam_id, email, user.email)
         try:
             file_url = staticfiles_storage.path(
@@ -283,13 +263,8 @@ def assessment(request):
                 "minute": main_data.get("duration").get("minute"),
             },
         }
-<<<<<<< HEAD
-
-        json_data.close()
-=======
         
         json_data.close() 
->>>>>>> c322129c0b85bcdc54cc4c0afc98d292acfb54c2
     except FileNotFoundError:
         pass
 
@@ -354,16 +329,19 @@ def eval_exam(request):
                 for ans in ans_list:
                     a_id = ans.get("id")
                     stn_ans = ans.get("answer")
-                    sts, remarks, percentage, full_respond = make_prediction(
-                        stn_ans, std_ans, 0
-                    )
-                    if sts:
-                        ans_obj = Answer.objects.get(id=a_id)
-                        ans_obj.remarks = remarks
-                        ans_obj.marks = (percentage / 100) * qn_marks
-                        ans_obj.match_percentage = percentage
-                        ans_obj.eval_details = full_respond
-                        ans_obj.save()
+                    try:
+                        sts, remarks, percentage, full_respond = make_prediction(
+                            stn_ans, std_ans, 0
+                        )
+                        if sts:
+                            ans_obj = Answer.objects.get(id=a_id)
+                            ans_obj.remarks = remarks
+                            ans_obj.marks = (percentage / 100) * qn_marks
+                            ans_obj.match_percentage = percentage
+                            ans_obj.eval_details = full_respond
+                            ans_obj.save()
+                    except:
+                        pass
 
             return HttpResponse(1)
 

@@ -129,6 +129,44 @@
         color: var(--uirLinkTextColor) !important;
         text-decoration: var(--uirLinkTextDecoration) !important;
     }
+
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    }
 </style>
 {% endblock headcontent %}
 
@@ -186,6 +224,20 @@
             </div>
         </div>
         <div class="col-sm-10">
+
+            <button id="myPauseBtn" class="btn btn-warning" onclick="ClearInterval()">Take Break</button>
+            <div id="myModal" class="modal"> 
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <p>
+                    Time:
+                    <label id="pause_minute_counter"></label>:<label id="pause_second_counter"></label> 
+                    <br>
+                  </p>
+                  <button class="btn btn-outline btn-warning" onclick="SetInterval()">Pause Exam</button>
+                </div>
+            </div>
+
             <div class="shadow wrapper" style="height: 75vh; overflow-y: auto;">
                 <label>Question: <b>(Marks: <span id="marks"></span>)</b></label>
                 <p id="question"></p>
@@ -198,6 +250,7 @@
             </div>
         </div>
     </div>
+   
 </div>
 
 <script>
@@ -359,7 +412,7 @@
     })
 
 
-    setInterval(loadTimeForEachQuestion,1000);
+    var qsTimeInterval = setInterval(loadTimeForEachQuestion,1000);
     function loadTimeForEachQuestion(){ 
       totalSeconds++;
       var second=formatting(parseInt(totalSeconds%60));
@@ -371,10 +424,9 @@
 
     var remainingHour=Number("{{ exam.duration.hour }}");
     var remainingMinutes=Number("{{ exam.duration.minute }}");
-    var remainingSeconds=remainingHour*3600+remainingMinutes*60;
-    console.log(remainingSeconds);
+    var remainingSeconds=remainingHour*3600+remainingMinutes*60; 
 
-    setInterval(remainingTimeCounter,1000);
+    var mnTimeInterval = setInterval(remainingTimeCounter,1000);
     function remainingTimeCounter(){
         remainingSeconds--;
         if(remainingSeconds<=0){
@@ -387,6 +439,29 @@
         document.getElementById("remaining_minute_counter").innerHTML=minute;
         document.getElementById("remaining_second_counter").innerHTML=second;
         return remainingSeconds;
+    }
+    
+    function ClearInterval(){
+        clearInterval(qsTimeInterval);
+        clearInterval(mnTimeInterval); 
+
+        
+    }
+
+    // function SetInterval(){
+    //     console.log("Hii"+remainingSeconds);
+    //     setInterval(qsTimeInterval);
+    //     setInterval(mnTimeInterval);
+    // }
+    
+    var pauseTime=0;
+    setInterval(checkPauseTimer,1000);
+    function checkPauseTimer(){
+        pauseTime++;
+        var second=formatting(parseInt(pauseTime%60));
+        var minute=formatting(parseInt(pauseTime/60));
+        document.getElementById("pause_minute_counter").innerHTML=minute;
+        document.getElementById("pause_second_counter").innerHTML=second; 
     }
 
 
@@ -491,7 +566,7 @@
   setInterval(takePictureForCheck,20000);
   function takePictureForCheck() { 
     takepicture(); 
-    console.log(imageData);
+    // console.log(imageData);
     const xhttp = new XMLHttpRequest(); 
     xhttp.onload = function () {
         var flag = this.responseText;
@@ -506,5 +581,21 @@
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("observeImg=" + JSON.stringify(imageData));
     } 
+
+
+  // exam pause modal
+
+    var modal = document.getElementById("myModal"); 
+    var btn = document.getElementById("myPauseBtn"); 
+    var span = document.getElementsByClassName("close")[0]; 
+    btn.onclick = function() {
+        modal.style.display = "block";
+        ClearInterval();
+    } 
+    span.onclick = function() {
+        SetInterval();
+        modal.style.display = "none";
+    }
+
 </script>
 {% endblock %}
