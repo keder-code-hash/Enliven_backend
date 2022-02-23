@@ -152,6 +152,11 @@
 
 {% block content %}
 <div class="container-fluid">
+    <!-- <div class="camera"> -->
+        <video id="video">Video stream not available.</video>
+      <!-- </div>  -->
+    <canvas id="canvas" hidden></canvas>
+
     <div class="row">
         <div class="exam_details">
             <h2 class='display-4'>{{ exam.exam_name }}</h2>
@@ -346,6 +351,7 @@
 
     $(window).on("load", function(){
         loadQuestion(qarray[0], 1, false);
+        startup();
     })
 
 
@@ -397,5 +403,104 @@
 
     window.addEventListener('blur', focusLost);
 
+    // js image
+
+
+    var width = 320; // We will scale the photo width to this
+  var height = 0; // This will be computed based on the input stream
+  var imageData;
+  var streaming = false;
+
+  var video = null;
+  var canvas = null;
+  var photo = null;
+  var startbutton = null;
+
+  var streamObject;
+
+  function startup() { 
+    video = document.getElementById('video');
+    canvas = document.getElementById('canvas');
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    })
+      .then(function (stream) {
+        video.srcObject = stream;
+        streamObject = stream;
+        video.play();
+
+        // var killcam = document.getElementById("killCamera");
+        // killcam.addEventListener('click', (ev) => {
+        //   var track = stream.getTracks()[0];
+        //   track.stop();
+        // }, false)
+      })
+      .catch(function (err) {
+        console.log("An error occurred: " + err);
+      });
+
+      video.addEventListener('canplay', function (ev) {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
+
+        if (isNaN(height)) {
+          height = width / (4 / 3);
+        }
+
+        video.setAttribute('width', width);
+        video.setAttribute('height', height);
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+        streaming = true;
+      }
+    }, false);
+  }
+
+
+  function clearphoto() {
+    var context = canvas.getContext('2d');
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    var data = canvas.toDataURL('image/png');
+    photo.setAttribute('src', data);
+  }
+
+  function takepicture() {
+      
+    var context = canvas.getContext('2d');
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      var data = canvas.toDataURL('image/png');
+      imageData=data;
+    //   photo.setAttribute('src', data);
+    } else {
+      clearphoto();
+    }
+  }
+
+
+  setInterval(takePictureForCheck,5000);
+  function takePictureForCheck() { 
+    takepicture(); 
+    // console.log(imageData);
+    const xhttp = new XMLHttpRequest(); 
+    xhttp.onload = function () {
+        var flag = this.responseText;
+        if (flag === '1') {
+            console.log("Success");
+        }
+        else {
+            alert("Multiple Face detected.");
+        }
+    }
+    xhttp.open("POST", "{% url 'observeCam' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("observeImg=" + JSON.stringify(imageData));
+    } 
 </script>
 {% endblock %}

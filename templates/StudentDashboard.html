@@ -134,7 +134,7 @@
         </p>
       </div>
       <p align="center">
-        <a href={% url 'assessment' %} class="btn btn-info" role="button">Enter Assessment</a>
+        <a class="btn btn-info" role="button" onclick="validateImage()">Enter Assessment</a>
       </p>
     </div>
   </div>
@@ -173,7 +173,7 @@
 
   var width = 320; // We will scale the photo width to this
   var height = 0; // This will be computed based on the input stream
-
+  var imageData;
   var streaming = false;
 
   var video = null;
@@ -252,11 +252,27 @@
       context.drawImage(video, 0, 0, width, height);
 
       var data = canvas.toDataURL('image/png');
+      imageData=data;
       photo.setAttribute('src', data);
     } else {
       clearphoto();
     }
   }
+  function validateImage() { 
+    const xhttp = new XMLHttpRequest(); 
+    xhttp.onload = function () {
+        var flag = this.responseText;
+        if (flag === '1') {
+          window.location.href = "{% url 'assessment' %}";
+        }
+        else {
+            alert("Error");
+        }
+    }
+    xhttp.open("POST", "{% url 'checkImage' %}");
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("currImg=" + JSON.stringify(imageData));
+    }
 
   function loadImage(examid) {
     startup();
