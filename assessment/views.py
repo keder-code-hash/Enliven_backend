@@ -12,6 +12,7 @@ import io
 # importing Django modules
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from assessment.face_rec_script import faceRec
 from users.models import Register
 from users.views import is_authenticated_user, get_user, get_user_type
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -409,19 +410,10 @@ def observeCam(request):
         img_file = open(curr_img_path, 'rb')
         files = {'file': img_file}
         detection = requests.post(face_api_url+'/detect', files=files)
-        orig_img_path = staticfiles_storage.path("data/"+ userid+ "/"+ f"original_{userid.replace('.com', '')}"+ ".png")
-        orig_file = open(orig_img_path, 'rb')
-        files = {
-            'file1': img_file,
-            'file2': orig_file
-        }
-        rec = requests.post(face_api_url+'/recognize', files=files)
-        img_file.close()
-        orig_file.close()
-        os.unlink(curr_img_path)
         if str(list(detection.json().keys())[0]) == "success":
-            rec = rec.json()
-            print(rec)
+            orig_img_path = staticfiles_storage.path("data/"+ userid+ "/"+ f"original_{userid.replace('.com', '')}"+ ".png")
+            rec = faceRec(orig_img_path, curr_img_path)
+            os.unlink(curr_img_path)
             if(rec.get("status")):
                 return HttpResponse(1)
             else:
