@@ -31,6 +31,189 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href={% static 'css/Home.css' %}>
     <link rel="stylesheet" href={% static 'css/App.css' %}>
+    <style> 
+      .timeline {
+        position: relative;
+        width: 100%;
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 15px 0;
+      }
+
+      .timeline::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        background: #006E51;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -1px;
+      }
+
+      .containertimeline {
+        padding: 15px 30px;
+        position: relative;
+        background: inherit;
+        width: 50%;
+      }
+
+      .containertimeline.left {
+        left: 0;
+      }
+
+      .containertimeline.right {
+        left: 50%;
+      }
+
+      .containertimeline::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: calc(50% - 8px);
+        right: -8px;
+        background: #ffffff;
+        border: 2px solid #006E51;
+        border-radius: 16px;
+        z-index: 1;
+      }
+
+      .containertimeline.right::after {
+        left: -8px;
+      }
+
+      .containertimeline::before {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 2px;
+        top: calc(50% - 1px);
+        right: 8px;
+        background: #006E51;
+        z-index: 1;
+      }
+
+      .containertimeline.right::before {
+        left: 8px;
+      }
+
+      .containertimeline .date {
+        position: absolute;
+        display: inline-block;
+        top: calc(50% - 8px);
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: #006E51;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        z-index: 1;
+      }
+
+      .containertimeline.left .date {
+        right: -75px;
+      }
+
+      .containertimeline.right .date {
+        left: -75px;
+      }
+
+      .containertimeline .icon {
+        position: absolute;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        padding: 9px 0;
+        top: calc(50% - 20px);
+        background: #F6D155;
+        border: 2px solid #006E51;
+        border-radius: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: #006E51;
+        z-index: 1;
+      }
+
+      .containertimeline.left .icon {
+        right: 56px;
+      }
+
+      .containertimeline.right .icon {
+        left: 56px;
+      }
+
+      .containertimeline .content {
+        padding: 30px 90px 30px 30px;
+        background: #F6D155;
+        position: relative;
+        border-radius: 0 500px 500px 0;
+      }
+
+      .containertimeline.right .content {
+        padding: 30px 30px 30px 90px;
+        border-radius: 500px 0 0 500px;
+      }
+
+      .containertimeline .content h2 {
+        margin: 0 0 10px 0;
+        font-size: 18px;
+        font-weight: normal;
+        color: #006E51;
+      }
+
+      .containertimeline .content p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 22px;
+        color: #000000;
+      }
+
+      @media (max-width: 767.98px) {
+        .timeline::after {
+          left: 90px;
+        }
+
+        .containertimeline {
+          width: 100%;
+          padding-left: 120px;
+          padding-right: 30px;
+        }
+
+        .containertimeline.right {
+          left: 0%;
+        }
+
+        .containertimeline.left::after, 
+        .containertimeline.right::after {
+          left: 82px;
+        }
+
+        .containertimeline.left::before,
+        .containertimeline.right::before {
+          left: 100px;
+          border-color: transparent #006E51 transparent transparent;
+        }
+
+        .containertimeline.left .date,
+        .containertimeline.right .date {
+          right: auto;
+          left: 15px;
+        }
+
+        .containertimeline.left .icon,
+        .containertimeline.right .icon {
+          right: auto;
+          left: 146px;
+        }
+
+        .containertimeline.left .content,
+        .containertimeline.right .content {
+          padding: 30px 30px 30px 90px;
+          border-radius: 500px 0 0 500px;
+        }
+      }
+    </style>
 {% endblock headcontent %}
 
 {% block content %}
@@ -54,6 +237,68 @@
         </div>  
     </header>
 </form>
+<div class="timeline">
+  <div class="containertimeline left">
+    <div class="date">1</div>
+    <i class="icon fa fa-home"></i>
+    <div class="content">
+      <h2>Register yourself</h2>
+      <p>
+        register yourself as a student or as a teacher respectively.
+      </p>
+    </div>
+  </div>
+  <div class="containertimeline right">
+    <div class="date">2</div>
+    <i class="icon fa fa-gift"></i>
+    <div class="content">
+      <h2>Set An Exam</h2>
+      <p>
+        Set an Exam with proper exam question set and limited timeframe.
+      </p>
+    </div>
+  </div>
+  <div class="containertimeline left">
+    <div class="date">3</div>
+    <i class="icon fa fa-user"></i>
+    <div class="content">
+      <h2>Attend appropiate Examination</h2>
+      <p>
+        Any register student can attend any exam for evalution.
+      </p>
+    </div>
+  </div>
+  <div class="containertimeline right">
+    <div class="date">4</div>
+    <i class="icon fa fa-running"></i>
+    <div class="content">
+      <h2>Exam Process</h2>
+      <p>
+        Regiter your face and start exam.During the examination you will be monitered.
+      </p>
+    </div>
+  </div>
+  <div class="containertimeline left">
+    <div class="date">5</div>
+    <i class="icon fa fa-cog"></i>
+    <div class="content">
+      <h2>Exam Evaluation</h2>
+      <p>
+        As deadline of an exam is over,Every answer will be automatically evaluated.
+      </p>
+    </div>
+  </div>
+  <div class="containertimeline right">
+    <div class="date">6</div>
+    <i class="icon fa fa-certificate"></i>
+    <div class="content">
+      <h2>Result and Evaluation Details</h2>
+      <p>
+        After the evaluation step,Result will be shown to the users with proper answers set.
+      </p>
+    </div>
+  </div>
+</div>
 <script>
   document.addEventListener('visibilitychange', function() {
     document.hidden;
