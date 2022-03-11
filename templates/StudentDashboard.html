@@ -103,7 +103,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Please take your picture properly.This will be used for evaluation during exam.</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -113,9 +113,6 @@
           <div class="row">
             <div class="col">
               <div class="contentarea">
-                <h1>
-                  Using Javascript to capture Photo
-                </h1>
                 <div class="camera">
                   <video id="video">Video stream not available.</video>
                 </div>
@@ -128,10 +125,10 @@
             </div>
           </div>
         </div>
-        <p align="center">
+        <!-- <p align="center">
           <button type="button" class="btn btn-primary" onclick="saveExamName()">Enter</button>
           <button id="killCamera" type="button" class="btn btn-primary">Killcamera</button>
-        </p>
+        </p> -->
       </div>
       <p align="center">
         <a class="btn btn-info" role="button" onclick="validateImage()">Enter Assessment</a>
@@ -198,11 +195,11 @@
         streamObject = stream;
         video.play();
 
-        var killcam = document.getElementById("killCamera");
-        killcam.addEventListener('click', (ev) => {
-          var track = stream.getTracks()[0];
-          track.stop();
-        }, false)
+        // var killcam = document.getElementById("killCamera");
+        // killcam.addEventListener('click', (ev) => {
+        //   var track = stream.getTracks()[0];
+        //   track.stop();
+        // }, false)
       })
       .catch(function (err) {
         console.log("An error occurred: " + err);
