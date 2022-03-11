@@ -30,12 +30,12 @@ class Question(models.Model):
 class Answer(models.Model):
     exam_id = models.BigIntegerField(blank=False)
     question_id = models.BigIntegerField(blank=False)
-    answer = models.CharField(max_length=130, blank=False)
+    answer = models.CharField(max_length=300, blank=False)
     answer_duration = models.TimeField(blank=False)
     answered_by = models.ManyToManyField(Register)
     answered_at = models.DateTimeField(auto_now_add=True)
     # w -> wrong ; r -> right ; m -> manual checking
-    remarks = models.CharField(max_length=1, default='', blank=True)
+    remarks = models.CharField(max_length=5, default='', blank=True)
     marks = models.FloatField(blank=False, default=0.0)
     match_percentage = models.FloatField(blank=False, default=0.0)
     eval_details = models.CharField(max_length=600, default='', blank=True)
