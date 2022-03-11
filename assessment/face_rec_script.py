@@ -1,3 +1,4 @@
+import os
 import requests
 
 face_api_url = "https://face-detect-arghyasahoo.cloud.okteto.net"
@@ -12,6 +13,7 @@ def faceRec(original_img, current_img):
     rec = requests.post(face_api_url+'/recognize', files=files)
     curr_img.close()
     orig_img.close()
+    # os.unlink(current_img)
     rec = rec.json()
     print(rec)
     return rec

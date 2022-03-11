@@ -17,12 +17,12 @@
                 <div class="card text-blank border-8">
                     <div class="card-body">
                         <div class="card-title text-center">
-                            <h5>login here</h5>
+                            <h5>Login Here</h5>
                         </div>
                         <div class="card-text">
                             <div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="enter your regestired email" name="emailid"
+                                    <input type="email" class="form-control" placeholder="Enter your regestired email" name="emailid"
                                     value="{{ emailid }}">
                                 </div>
                                 {% if form.emailid.errors %}
@@ -31,7 +31,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="enter the password" name="user_password"
+                                    <input type="password" class="form-control" placeholder="Enter the password" name="user_password"
                                     value="{{ user_password }}">
                                 </div>
                                 {% if form.user_password.errors %}
@@ -41,13 +41,13 @@
                                 {% endif %}
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-block btn-warning">
-                                        LogIn
+                                        Login
                                     </button>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
                                 <a class="btn btn-link" href="{%url 'register' %}">
-                                    Don't have an account?create here.
+                                    Don't have an account? Create here.
                                 </a>
                             </div> 
                         </div>
