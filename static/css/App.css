@@ -102,8 +102,21 @@ body{
 /* tag */
 
 
+.title {
+  margin-top: 8vh;
+  margin-bottom: 35vh;
+  /* margin-left: -10rem; */
+  font-size: 6rem !important;
+}
 
+footer {
+  border-top: 2px solid #00B7C5;
+  margin-top: 5rem !important;
+}
 
+.content {
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
 
 .md-chip {
   display: inline-block;
