@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+body{
+  font-family: 'Rubik', monospace;
+}
+
 /* @import url('https://fonts.googleapis.com/css?family=Roboto');   */
 /* @import url('https://fonts.googleapis.com/css?family=Comfortaa:300,400,700');
  body {
@@ -102,8 +108,21 @@ body{
 /* tag */
 
 
+.title {
+  margin-top: 8vh;
+  margin-bottom: 35vh;
+  /* margin-left: -10rem; */
+  font-size: 6rem !important;
+}
 
+footer {
+  border-top: 2px solid #00B7C5;
+  margin-top: 5rem !important;
+}
 
+.content {
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
 
 .md-chip {
   display: inline-block;
@@ -365,17 +384,6 @@ input[type="checkbox"]:checked + label {
 .fade:not(.show) {
   opacity: 1;
 }
-
-
-
-
-/* @import url('https://fonts.googleapis.com/css?family=Lato:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i'); */
-
-* {
-  font-family: Lato, sans-serif;
-  box-sizing: border-box;
-}
-
 
 
 section.cards {
