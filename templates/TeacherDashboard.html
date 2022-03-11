@@ -221,7 +221,7 @@
             <h6 class="card-subtitle mb-2 text-muted">{{ i.course }}</h6>
             <p class="card-text">
               Full Marks: {{ i.marks }}<br>
-              Duration: {{ i.duration }}<br>
+              Duration: {{ i.duration.hour }}Hr:{{ i.duration.minute }}Min<br>
               Description: {{ i.description }}
             </p>
             {% if i.editable is True %}
