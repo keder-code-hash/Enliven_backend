@@ -29,6 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href={% static 'dynamicLoad.css' %}>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href={% static 'css/Home.css' %}>
     <link rel="stylesheet" href={% static 'css/App.css' %}>
     <style> 
@@ -213,34 +214,115 @@
           border-radius: 500px 0 0 500px;
         }
       }
+
+      .bg-01 {
+          position: relative;
+          margin-top: -5rem;
+          width: 100%; }
+          .bg-01 .wrapper {
+            background: #fff;
+            position: relative;
+            padding: 2.5rem 1.875rem;
+            display: block;
+            width: 100%;
+            box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.15);
+            z-index: 9; }
+            .bg-01 .wrapper .content {
+              display: block;
+              position: relative;
+              transition: all ease-in-out 0.5s;
+              margin: .625rem 0;
+            box-shadow: none; }
+              .bg-01 .wrapper .content ol .dashed {
+                border-right: 1px dashed #ddd; }
+              .bg-01 .wrapper .content ol li {
+                display: inline-block;
+                position: relative;
+                padding: .625rem 0; }
+                .bg-01 .wrapper .content ol li i {
+                  display: block;
+                  font-size: 2.5rem;
+                  color: #fd580b; }
+                .bg-01 .wrapper .content ol li h3 {
+                  font-size: 1.25rem;
+                  color: #222222;
+                  text-transform: capitalize;
+                  font-weight: 600;
+                  display: inline-block;
+                  margin: .625rem 0; }
+                .bg-01 .wrapper .content ol li p {
+                  display: block;
+                  font-size: 1rem;
+                  color: #373738;
+                  line-height: 1.5rem;
+                  margin: 0 0 .625rem 0; }
+                
     </style>
 {% endblock headcontent %}
 
 {% block content %}
-<form action="{% url 'homePage' %}" method="get">
-    <header id="header" class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-xl-5">
-                    <div class="text-container">
-                        <div class="display-1 title" style="background-image: linear-gradient(110deg, #380036, #0cbaba);-webkit-background-clip: text;color: transparent;-webkit-text-fill-color: transparent;
-                        "><img src={% static 'images/lamp_icon.png' %} alt="" width="64" style="margin-left: 165px; margin-bottom: -56px"><span>ENLIVEN</span></div>
-                    </div> 
-                </div> 
-                <div class="col-lg-6 col-xl-7">
-                    <div class="image-container">
-                        <img class="img-fluid" src={% static 'images/landing_bg.png' %} alt="alternative">
-                    </div> 
-                </div> 
-                <div><p class="h3">We believe <strong>Education is Must to All</strong>. Smart Assessment is a system to put that belief in action. It makes assessing students easier than ever. Smart Assessment provides top notch user experience for both student and teacher.</p></div>
-                <br>
-                <div class="h1">What's New ?</div>
-                <div><p>Smart Assessment is capable of evaluating students based on Short Answer type Questions along with Multiple choice questions. This opens up a whole new world to the assessor taking the assessment</p></div>
+<!-- <form action="{% url 'homePage' %}" method="get"> -->
+    <div class="container" style="margin-top: 5%;">
+        <div class="row">
+            <div class="col-sm-6">
+              <img class="img-fluid" src={% static 'images/enliven.png' %}>
             </div> 
-        </div>  
-    </header>
+            <div class="col-sm-6">
+                <img class="img-fluid" src={% static 'images/landing_bg.png' %} alt="alternative">
+            </div>
+        </div>
+        <p class="h3">We believe <strong>Education is Must to All</strong>. Smart Assessment is a system to put that belief in action. It makes assessing students easier than ever. Smart Assessment provides top notch user experience for both student and teacher.</p>
+            <br>
+            <div class="h1">What's New ?</div>
+            <div><p>Smart Assessment is capable of evaluating students based on Short Answer type Questions along with Multiple choice questions. This opens up a whole new world to the assessor taking the assessment</p></div>
+    </div>
 </form>
-<div class="timeline">
+<section class="bg-01" style="margin-top:10%;">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="wrapper">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="content">
+                <ol>
+                  <li class="dashed">
+                    <i class="fal fa-hourglass-start"></i>
+                    <h3>Less Time In Evaluation</h3>
+                    <p>Make Evaluation More Faster</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="content">
+                <ol>
+                  <li class="dashed">
+                    <i class="fal fa-user-times"></i>
+                    <h3>Proper Evaluation</h3>
+                    <p>Evaluate analytical thinking.</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6">
+              <div class="content">
+                <ol>
+                  <li>
+                    <i class="fal fa-balance-scale"></i>
+                      <h3>Easy Process</h3>
+                      <p>Follow some few steps to get evaluated.</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="timeline" style="margin-top:10%;">
   <div class="containertimeline left">
     <!-- <div class="date">1</div> -->
     <i class="icon fa fa-home"></i>
