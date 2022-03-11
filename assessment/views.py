@@ -412,7 +412,7 @@ def observeCam(request):
         detection = requests.post(face_api_url+'/detect', files=files)
         if str(list(detection.json().keys())[0]) == "success":
             orig_img_path = staticfiles_storage.path("data/"+ userid+ "/"+ f"original_{userid.replace('.com', '')}"+ ".png")
-            rec = faceRec(orig_img_path, curr_img_path)
+            rec = faceRec(orig_img_path, curr_img_path) 
             if(rec.get("status")):
                 return HttpResponse(1)
             else:

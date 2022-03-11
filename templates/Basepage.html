@@ -24,6 +24,8 @@
         rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href={% static 'css/App.css' %}>
+    <link rel="stylesheet" type="text/css" href={% static 'css/footer/style.css' %}>
+
 
     <!-- <link href={% static 'css/bootstrap.min.css' %} rel="stylesheet"> -->
     <link href={% static 'css/fontawesome-all.min.css' %} rel="stylesheet">
@@ -52,7 +54,7 @@
     <div class="container-fluid"  style="overflow: auto;">
         <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light shadow pt-1" aria-label="Main navigation">
             <div class="container-fluid">
-    
+
                 <!-- Image Logo --> 
                 <a class="navbar-brand logo-image" href={% url 'homePage' %}><img src={% static 'images/favicon.png' %} style="width:2rem;"></a>
     
@@ -85,96 +87,81 @@
         </nav>
         
     </div>
-    <br></br>
-    <br></br>
+    <br>
+    <br>
     {% block content %}
 
     {% endblock %}
     <br>
-
-    <!-- Footer -->
-    <footer class="page-footer font-small pt-4 shadow">
-        <br>
-        <!-- Footer Links -->
-        <div class="container-fluid text-center text-md-left">
-    
-        <!-- Grid row -->
-        <div class="row">
-    
-            <!-- Grid column -->
-            <div class="col-md-6 mt-md-0 mt-3">
-    
-            <!-- Content -->
-            <h5 class="text-uppercase">Smart Assessment</h5>
-            <p>An automation based smart assessment system</p>
-    
-            </div>
-            <!-- Grid column -->
-    
-            <hr class="clearfix w-100 d-md-none pb-3">
-    
-            <!-- Grid column -->
-            <div class="col-md-3 mb-md-0 mb-3">
-    
-            <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
-    
-            <ul class="list-unstyled">
-                <li>
-                <a href="#!">Link 1</a>
-                </li>
-                <li>
-                <a href="#!">Link 2</a>
-                </li>
-                <li>
-                <a href="#!">Link 3</a>
-                </li>
-                <li>
-                <a href="#!">Link 4</a>
-                </li>
-            </ul>
-    
-            </div>
-            <!-- Grid column -->
-    
-            <!-- Grid column -->
-            <div class="col-md-3 mb-md-0 mb-3">
-    
-            <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
-    
-            <ul class="list-unstyled">
-                <li>
-                <a href="#!">Link 1</a>
-                </li>
-                <li>
-                <a href="#!">Link 2</a>
-                </li>
-                <li>
-                <a href="#!">Link 3</a>
-                </li>
-                <li>
-                <a href="#!">Link 4</a>
-                </li>
-            </ul>
-    
-            </div>
-            <!-- Grid column -->
-    
-        </div>
-        <!-- Grid row -->
-    
-        </div>
-        <!-- Footer Links -->
-    
-        <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">© 2022 Copyright:
-        KAP
-        </div>
-        <!-- Copyright -->
   
-  </footer>
-  <!-- Footer -->
+    <footer class="footer-08">
+        <div class="container-fluid px-lg-5">
+            <div class="row">
+                <div class="col-md-9 py-5">
+                    <div class="row">
+                        <div class="col-md-4 mb-md-0 mb-4">
+                            <h2 class="footer-heading">About us</h2>
+                            <p>We are Sudoers, a passionate team of three members focused on developing software based solutions for various problems</p>
+                            <ul class="ftco-footer-social p-0">
+                <li><a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><svg xmlns="http://www.w3.org/2000/svg" data-name="Ebene 1" viewBox="0 0 1024 1024"><path fill="#1877f2" d="M1024,512C1024,229.23016,794.76978,0,512,0S0,229.23016,0,512c0,255.554,187.231,467.37012,432,505.77777V660H302V512H432V399.2C432,270.87982,508.43854,200,625.38922,200,681.40765,200,740,210,740,210V336H675.43713C611.83508,336,592,375.46667,592,415.95728V512H734L711.3,660H592v357.77777C836.769,979.37012,1024,767.554,1024,512Z"/><path fill="#fff" d="M711.3,660,734,512H592V415.95728C592,375.46667,611.83508,336,675.43713,336H740V210s-58.59235-10-114.61078-10C508.43854,200,432,270.87982,432,399.2V512H302V660H432v357.77777a517.39619,517.39619,0,0,0,160,0V660Z"/></svg></a></li>
+                <li><a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#03A9F4" d="M16 3.539a6.839 6.839 0 0 1-1.89.518 3.262 3.262 0 0 0 1.443-1.813 6.555 6.555 0 0 1-2.08.794 3.28 3.28 0 0 0-5.674 2.243c0 .26.022.51.076.748a9.284 9.284 0 0 1-6.761-3.431 3.285 3.285 0 0 0 1.008 4.384A3.24 3.24 0 0 1 .64 6.578v.036a3.295 3.295 0 0 0 2.628 3.223 3.274 3.274 0 0 1-.86.108 2.9 2.9 0 0 1-.621-.056 3.311 3.311 0 0 0 3.065 2.285 6.59 6.59 0 0 1-4.067 1.399c-.269 0-.527-.012-.785-.045A9.234 9.234 0 0 0 5.032 15c6.036 0 9.336-5 9.336-9.334 0-.145-.005-.285-.012-.424A6.544 6.544 0 0 0 16 3.539z"/></svg></a></li>
+                <li><a href="#" data-toggle="tooltip" data-placement="top" title="Linked in"><svg xmlns="http://www.w3.org/2000/svg"viewBox="0 0 72 72"><g fill="none" fill-rule="evenodd"><rect width="72" height="72" fill="#117EB8" rx="4"/><path fill="#FFF" d="M13.139 27.848h9.623V58.81h-9.623V27.848zm4.813-15.391c3.077 0 5.577 2.5 5.577 5.577 0 3.08-2.5 5.581-5.577 5.581a5.58 5.58 0 1 1 0-11.158zm10.846 15.39h9.23v4.231h.128c1.285-2.434 4.424-5 9.105-5 9.744 0 11.544 6.413 11.544 14.75V58.81h-9.617V43.753c0-3.59-.066-8.209-5-8.209-5.007 0-5.776 3.911-5.776 7.95V58.81h-9.615V27.848z"/></g></svg></a></li>
+                </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row justify-content-center">
+                                <div class="col-md-12 col-lg-9">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-md-0 mb-4">
+                                            <h2 class="footer-heading">Members</h2>
+                                            <ul class="list-unstyled">
+                                <li><a href="http://keder-nath-mallick.netlify.app/" class="py-1 d-block">Keder Nath Mallick</a></li>
+                                <li><a href="https://purnadip-manna.github.io/" class="py-1 d-block">Purnadip Manna</a></li>
+                                <li><a href="https://arghyasahoo.netlify.app/" class="py-1 d-block">Arghya Sahoo</a></li>
+                                </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-md-5">
+                        <div class="col-md-12">
+                            <p class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved<p style="color: #00B7C5">Sudoers</p>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 py-md-5 py-4 aside-stretch-right pl-lg-5">
+                    <h2 class="footer-heading footer-heading-white">Contact us</h2>
+                    <form action="#" class="contact-form">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Your Name">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Your Email">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Subject">
+        </div>
+        <div class="form-group">
+            <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Message"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="form-control submit px-3">Send</button>
+        </div>
+        </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
 
     <script>
         $(document).on('submit', "#contactForm", function (event) {

@@ -218,28 +218,24 @@
 
 {% block content %}
 <form action="{% url 'homePage' %}" method="get">
-    <header id="header" class="header">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-xl-5">
-                    <div class="text-container">
-                        <div class="section-title" style="font-weight: 500;font-size: 1rem;">Welcome to SmartAssessment</div>
-                        <h1 class="h1-large" style="font-weight: 900;font-size: 3rem;">An automation based smart assessment system</h1>
-                        <p class="p-large">Self Assessment is more easier than you think!!😊😊</p> 
-                    </div> 
+                <div class="col-sm-6">
+                  <img src={% static 'images/enliven.png' %}>
                 </div> 
-                <div class="col-lg-6 col-xl-7">
-                    <div class="image-container">
-                        <img class="img-fluid" src={% static 'images/exam-back.png' %} alt="alternative">
-                    </div> 
-                </div> 
-            </div> 
-        </div>  
-    </header>
+                <div class="col-sm-6">
+                    <img class="img-fluid" src={% static 'images/landing_bg.png' %} alt="alternative">
+                </div>
+            </div>
+            <p class="h3">We believe <strong>Education is Must to All</strong>. Smart Assessment is a system to put that belief in action. It makes assessing students easier than ever. Smart Assessment provides top notch user experience for both student and teacher.</p>
+                <br>
+                <div class="h1">What's New ?</div>
+                <div><p>Smart Assessment is capable of evaluating students based on Short Answer type Questions along with Multiple choice questions. This opens up a whole new world to the assessor taking the assessment</p></div>
+        </div>
 </form>
 <div class="timeline">
   <div class="containertimeline left">
-    <div class="date">1</div>
+    <!-- <div class="date">1</div> -->
     <i class="icon fa fa-home"></i>
     <div class="content">
       <h2>Register yourself</h2>
@@ -249,7 +245,7 @@
     </div>
   </div>
   <div class="containertimeline right">
-    <div class="date">2</div>
+    <!-- <div class="date">2</div> -->
     <i class="icon fa fa-gift"></i>
     <div class="content">
       <h2>Set An Exam</h2>
@@ -259,7 +255,7 @@
     </div>
   </div>
   <div class="containertimeline left">
-    <div class="date">3</div>
+    <!-- <div class="date">3</div> -->
     <i class="icon fa fa-user"></i>
     <div class="content">
       <h2>Attend appropiate Examination</h2>
@@ -269,7 +265,7 @@
     </div>
   </div>
   <div class="containertimeline right">
-    <div class="date">4</div>
+    <!-- <div class="date">4</div> -->
     <i class="icon fa fa-running"></i>
     <div class="content">
       <h2>Exam Process</h2>
@@ -279,7 +275,7 @@
     </div>
   </div>
   <div class="containertimeline left">
-    <div class="date">5</div>
+    <!-- <div class="date">5</div> -->
     <i class="icon fa fa-cog"></i>
     <div class="content">
       <h2>Exam Evaluation</h2>
@@ -289,7 +285,7 @@
     </div>
   </div>
   <div class="containertimeline right">
-    <div class="date">6</div>
+    <!-- <div class="date">6</div> -->
     <i class="icon fa fa-certificate"></i>
     <div class="content">
       <h2>Result and Evaluation Details</h2>

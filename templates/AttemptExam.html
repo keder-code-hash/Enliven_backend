@@ -256,6 +256,9 @@
 </div>
 
 <script>
+    var noOfBreak=2;
+    var maxBreakTime=1;
+
     var qarray=[];
     var questionId;
     var currentQnNo = 1;
@@ -568,11 +571,15 @@
   // exam pause modal
     var modal = document.getElementById("myModal"); 
     var btn = document.getElementById("myPauseBtn"); 
+    var remaingingPause=noOfBreak;
     // var span = document.getElementsByClassName("close")[0]; 
     var resumeButton=document.getElementById("resumeExm");
     var pauseTime=0;
     var pauseTimer=null;
     function checkPauseTimer(){
+        if(pauseTime>=(maxBreakTime*60)){
+            document.getElementById("resumeExm").click();
+        }
         pauseTime++;
         var second=formatting(parseInt(pauseTime%60));
         var minute=formatting(parseInt(pauseTime/60));
@@ -581,18 +588,21 @@
     } 
     
     btn.onclick = function() {
+        remaingingPause--;
+        if(remaingingPause===0){
+            document.getElementById("myPauseBtn").style.display="none";
+        }
         modal.style.display = "block";
         pauseTime=0; 
         pauseTimer = setInterval(checkPauseTimer,1000); 
     } 
     
-    resumeButton.onclick = function  ( ) { 
-        totalSeconds-=pauseTime;
+    resumeButton.onclick = function  ( ) {  
         clearInterval(pauseTimer);
         pauseTimer=null;
         modal.style.display = "none";
         pauseTime=0;
     }
-
+ 
 </script>
 {% endblock %}
