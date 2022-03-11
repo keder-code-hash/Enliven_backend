@@ -29,6 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href={% static 'dynamicLoad.css' %}>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href={% static 'css/Home.css' %}>
     <link rel="stylesheet" href={% static 'css/App.css' %}>
     <style> 
@@ -213,27 +214,160 @@
           border-radius: 500px 0 0 500px;
         }
       }
+
+      .bg-01 {
+          position: relative;
+          margin-top: -5rem;
+          width: 100%; }
+          .bg-01 .wrapper {
+            background: #fff;
+            position: relative;
+            padding: 2.5rem 1.875rem;
+            display: block;
+            width: 100%;
+            box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.15);
+            z-index: 9; }
+            .bg-01 .wrapper .content {
+              display: block;
+              position: relative;
+              transition: all ease-in-out 0.5s;
+              margin: .625rem 0;
+            box-shadow: none; }
+              .bg-01 .wrapper .content ol .dashed {
+                border-right: 1px dashed #ddd; }
+              .bg-01 .wrapper .content ol li {
+                display: inline-block;
+                position: relative;
+                padding: .625rem 0; }
+                .bg-01 .wrapper .content ol li i {
+                  display: block;
+                  font-size: 2.5rem;
+                  color: #fd580b; }
+                .bg-01 .wrapper .content ol li h3 {
+                  font-size: 1.25rem;
+                  color: #222222;
+                  text-transform: capitalize;
+                  font-weight: 600;
+                  display: inline-block;
+                  margin: .625rem 0; }
+                .bg-01 .wrapper .content ol li p {
+                  display: block;
+                  font-size: 1rem;
+                  color: #373738;
+                  line-height: 1.5rem;
+                  margin: 0 0 .625rem 0; }
+
+      #firstDiv{
+        height: 90vh;
+      }
+      #secondDiv{
+        padding-top:5rem;
+        padding-bottom:5rem;
+        border: 1px solid #eff4fa;
+        border-radius:0px 80px 0px 80px;        
+        background-color: #eff4fa;
+      }
+                
     </style>
 {% endblock headcontent %}
 
 {% block content %}
-<form action="{% url 'homePage' %}" method="get">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                  <img src={% static 'images/enliven.png' %}>
-                </div> 
-                <div class="col-sm-6">
-                    <img class="img-fluid" src={% static 'images/landing_bg.png' %} alt="alternative">
-                </div>
-            </div>
-            <p class="h3">We believe <strong>Education is Must to All</strong>. Smart Assessment is a system to put that belief in action. It makes assessing students easier than ever. Smart Assessment provides top notch user experience for both student and teacher.</p>
-                <br>
-                <div class="h1">What's New ?</div>
-                <div><p>Smart Assessment is capable of evaluating students based on Short Answer type Questions along with Multiple choice questions. This opens up a whole new world to the assessor taking the assessment</p></div>
+<div class="container" style="margin-top: 5%;">
+    <div class="row" id="firstDiv">
+        <div class="col-sm-6">
+          <img class="img-fluid" src={% static 'images/enliven.png' %}>
+        </div> 
+        <div class="col-sm-6">
+            <img class="img-fluid" src={% static 'images/landing_bg.png' %} alt="alternative">
         </div>
-</form>
-<div class="timeline">
+    </div>
+</div>
+    <div id="secondDiv" class="shadow">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="h1">We believe <br>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-quote mb-5" viewBox="0 0 16 16">
+                <path d="M12 12a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1h-1.388c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 9 7.558V11a1 1 0 0 0 1 1h2Zm-6 0a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1H4.612c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 3 7.558V11a1 1 0 0 0 1 1h2Z"/>
+              </svg>
+              <strong>Education is Must to All</strong>.
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-quote mb-5" viewBox="0 0 16 16" style="transform: scaleX(-1);">
+                <path d="M12 12a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1h-1.388c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 9 7.558V11a1 1 0 0 0 1 1h2Zm-6 0a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1H4.612c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 3 7.558V11a1 1 0 0 0 1 1h2Z"/>
+              </svg>
+            </div> 
+            <p style="font-size: 1.5rem;">Enliven is a system to put that belief in action. It makes assessing students easier than ever. Enliven provides top notch user experience for both student and teacher.</p>
+          </div>
+          <div class="col-sm-6">
+            <div class="h1">
+              <h1 align="right">
+              <strong>What's New ? 
+              </strong>
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-chat-left-quote" viewBox="0 0 16 16">
+                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                <path d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z"/>
+              </svg>
+            </h1>
+            </div>
+            <p style="font-size: 1.5rem;">Enliven is capable of evaluating students based on Short Answer type Questions along with Multiple choice questions. This opens up a whole new world to the assessor taking the assessment</p>
+          </div>
+        </div>      
+      </div>
+      <section class="bg-01" style="margin-top:5%;">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="wrapper">
+                <div class="row">
+                  <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="content">
+                      <ol>
+                        <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                            <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
+                          </svg><br>
+                          <h3>Less Time In Evaluation</h3>
+                          <p>Make Evaluation More Faster</p>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="content">
+                      <ol>
+                        <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
+                            <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+                            <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                          </svg><br>
+                          <h3>Proper Evaluation</h3>
+                          <p>Evaluate analytical thinking.</p>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="content">
+                      <ol>
+                        <li>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                          </svg><br>
+                            <h3>Easy Process</h3>
+                            <p>Follow some few steps to get evaluated.</p>
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+<div class="timeline" style="margin-top:10%;">
   <div class="containertimeline left">
     <!-- <div class="date">1</div> -->
     <i class="icon fa fa-home"></i>
