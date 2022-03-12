@@ -4,11 +4,16 @@ url1 = "https://smartassessment-keder-code-hash.cloud.okteto.net/saq1/analyze"
 url2 = "https://smartassessment-keder-code-hash.cloud.okteto.net/saq2/analyze"
 
 def make_prediction(student_answer,standard_answer,depth): 
+    if(len(student_answer) <= 128 and len(standard_answer) <= 128):
+        url = url1
+    else:
+        url = url2
+
     headers = {
         'content-type': 'application/json'
     }
     req=requests.post(
-        url= url2,
+        url= url,
         headers=headers,
         json=
             {
@@ -26,7 +31,7 @@ def make_prediction(student_answer,standard_answer,depth):
 
     # setting dominant index
 
-    dominant_index=0.15
+    dominant_index=0.086
 
     if (entailment-neutral)>=dominant_index and (entailment-contradiction)>=dominant_index:
         # entailment 

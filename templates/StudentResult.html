@@ -95,10 +95,21 @@
               {% endif %}
           </div>
         </div>
-        <label>
-          Your Answer:
-        </label>
-        <div id='student_ans_editor' style="height: 200px;"></div>
+        <div class="row">
+          <div class="col-10">
+            <label>
+              Your Answer:
+            </label>
+            <div id='student_ans_editor' style="height: 200px;"></div>
+          </div>
+          <div class="col-2">
+            <br>
+            <br>
+            <div class="wrapper shadow">
+              Confidance Level: <b><span id="confLevel"></span></b>
+            </div>
+          </div>
+        </div>
         <br>
         <label>
           Correct Answer:
@@ -132,8 +143,40 @@
       const xhttp = new XMLHttpRequest();
 
       xhttp.onload = function () {
-        var obj = JSON.parse(this.response)["actual_ans"];
-        console.log(obj);
+        const res = this.response;
+        var obj = JSON.parse(res)["actual_ans"];
+        var c = JSON.parse(res)["contradiction"].toFixed(2);
+        var e = JSON.parse(res)["entailment"].toFixed(2);
+        var n = JSON.parse(res)["neutral"].toFixed(2);
+        //console.log(c);
+        //console.log(e);
+        //console.log(n);
+        d = Math.max(c, e, n)*100;
+        //console.log(d);
+        document.getElementById("confLevel").innerHTML =d.toFixed(2) + "%";
+
+        /*
+        let conf;
+        
+        if (d == c){
+          //contradiction
+          conf = (c-n/2)*100;
+          document.getElementById("confLevel").innerHTML =conf.toFixed(2) + "%<br>Contradiction"; 
+        }
+
+        else if (d == e){
+          //entailment
+          conf = (e-n/2)*100;
+          document.getElementById("confLevel").innerHTML =conf.toFixed(2) + "%<br>Entailment"; 
+        }
+
+        else{
+          //neutral
+          conf = (n-(c+e)/4)*100;
+          document.getElementById("confLevel").innerHTML = conf.toFixed(2) + "%<br>Neutral"; 
+        }
+        */
+
         currentQnId = obj["id"];
         examId = obj["exam_id"];
         stdEmail = obj["std_email"];

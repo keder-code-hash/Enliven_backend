@@ -165,9 +165,14 @@ def fetch_stnd_QnA(request):
                     actual_ans = qna
                     break
             json_data.close()
-            # print(actual_ans)
+            # print(actual_ans.get("eval_details"))
+            eval_details = actual_ans.get("eval_details").replace("'", '"')
+            eval_details = json.loads(eval_details)
             context = {
                 "actual_ans": actual_ans,
+                "contradiction": eval_details.get("contradiction"),
+                "entailment": eval_details.get("entailment"),
+                "neutral": eval_details.get("neutral")
             }
             return JsonResponse(context)
         except:
@@ -337,13 +342,13 @@ def eval_exam(request):
                         sts, remarks, percentage, full_respond = make_prediction(
                             stn_ans, std_ans, 0
                         )
-                        if sts:
-                            ans_obj = Answer.objects.get(id=a_id)
-                            ans_obj.remarks = remarks
-                            ans_obj.marks = (percentage / 100) * qn_marks
-                            ans_obj.match_percentage = percentage
-                            ans_obj.eval_details = full_respond
-                            ans_obj.save()
+                        
+                        ans_obj = Answer.objects.get(id=a_id)
+                        ans_obj.remarks = remarks
+                        ans_obj.marks = (percentage / 100) * qn_marks
+                        ans_obj.match_percentage = percentage
+                        ans_obj.eval_details = full_respond
+                        ans_obj.save()
                     except:
                         pass
 
